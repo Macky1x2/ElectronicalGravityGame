@@ -146,6 +146,10 @@ void Player::Add_volume(int add_volume) {
 	Change_radiusbyvolume(volume);			//‘ÌÏ‚ª•Ï‰»‚µ‚½‚½‚ß”¼Œa‚à•Ï‰»‚³‚¹‚é
 }
 
+void Player::Add_charge(int add_charge) {
+	charge += add_charge;
+}
+
 NonMovableBall::NonMovableBall(double first_x, double first_y) {
 	volume = 3;
 	radius = 50 * pow(volume / 5.0, 1.0 / 3);
