@@ -30,6 +30,7 @@ public:
 	double Return_force_x();
 	double Return_force_y();
 	void Add_volume(int);
+	void Add_charge(int);
 	void Change_radiusbyvolume(int);
 	void Decide_force_x(double);
 	void Decide_force_y(double);

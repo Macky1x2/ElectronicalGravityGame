@@ -27,6 +27,8 @@ void TestGameScene::HitConbine() {
 	if (player && testchargedball) {
 		if (HitChecker_PlayerandMovableChargedBall(player, testchargedball)) {
 			player->Add_volume(testchargedball->Return_volume());
+			player->Add_charge(testchargedball->Return_charge());
+			printfDx("%d\n", player->Return_charge());
 			testchargedball.reset();
 		}
 	}
