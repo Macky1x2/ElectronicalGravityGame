@@ -26,6 +26,14 @@ void TestGameScene::HitConbine() {
 	//プレイヤーと可動な電気を帯びたボール間について
 	if (player && testchargedball) {
 		if (HitChecker_PlayerandMovableChargedBall(player, testchargedball)) {
+			//運動量保存則
+			double m_p = player->Return_density() * player->Return_volume() + testchargedball->Return_density() * testchargedball->Return_volume();
+			player->Decide_speed_x((player->Return_density() * player->Return_volume() * player->Return_speed_x() + testchargedball->Return_density() * testchargedball->Return_volume() * testchargedball->Return_speed_x()) / m_p);
+			player->Decide_speed_y((player->Return_density() * player->Return_volume() * player->Return_speed_y() + testchargedball->Return_density() * testchargedball->Return_volume() * testchargedball->Return_speed_y()) / m_p);
+			player->Decide_force_x(0.0);
+			player->Decide_force_y(0.0);
+
+			//プレイヤー側に加算
 			player->Add_volume(testchargedball->Return_volume());
 			player->Add_charge(testchargedball->Return_charge());
 			testchargedball.reset();
