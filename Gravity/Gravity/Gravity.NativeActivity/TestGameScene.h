@@ -9,7 +9,7 @@
 class TestGameScene :public SceneBase {
 	std::shared_ptr<Player> player;
 	std::shared_ptr<NonMovableBall> size_up_ball[3];
-	std::shared_ptr<MovableChargedBall> charged_ball;
+	std::shared_ptr<MovableChargedBall> charged_ball[3];
 public:
 	TestGameScene();
 	~TestGameScene();

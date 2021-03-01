@@ -5,7 +5,9 @@ TestGameScene::TestGameScene() {
 	size_up_ball[0] = std::make_shared<NonMovableBall>(300, 1000);		//初期座標は別ファイルから読み取るのがいいかもしれない
 	size_up_ball[1] = std::make_shared<NonMovableBall>(600, 1500);
 	size_up_ball[2] = std::make_shared<NonMovableBall>(1050, 300);
-	charged_ball = std::make_shared<MovableChargedBall>(750, 1200);
+	charged_ball[0] = std::make_shared<MovableChargedBall>(750, 400);
+	charged_ball[1] = std::make_shared<MovableChargedBall>(100, 1100);
+	charged_ball[2] = std::make_shared<MovableChargedBall>(250, 1700);
 }
 
 TestGameScene::~TestGameScene() {
@@ -24,19 +26,21 @@ void TestGameScene::HitConbine() {
 	}
 
 	//プレイヤーと可動な電気を帯びたボール間について
-	if (player && charged_ball) {
-		if (HitChecker_PlayerandMovableChargedBall(player, charged_ball)) {
-			//運動量保存則
-			double m_p = player->Return_density() * player->Return_volume() + charged_ball->Return_density() * charged_ball->Return_volume();
-			player->Decide_speed_x((player->Return_density() * player->Return_volume() * player->Return_speed_x() + charged_ball->Return_density() * charged_ball->Return_volume() * charged_ball->Return_speed_x()) / m_p);
-			player->Decide_speed_y((player->Return_density() * player->Return_volume() * player->Return_speed_y() + charged_ball->Return_density() * charged_ball->Return_volume() * charged_ball->Return_speed_y()) / m_p);
-			player->Decide_force_x(0.0);
-			player->Decide_force_y(0.0);
+	for (int i = 0; i < 3; i++) {
+		if (player && charged_ball[i]) {
+			if (HitChecker_PlayerandMovableChargedBall(player, charged_ball[i])) {
+				//運動量保存則
+				double m_p = player->Return_density() * player->Return_volume() + charged_ball[i]->Return_density() * charged_ball[i]->Return_volume();
+				player->Decide_speed_x((player->Return_density() * player->Return_volume() * player->Return_speed_x() + charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_x()) / m_p);
+				player->Decide_speed_y((player->Return_density() * player->Return_volume() * player->Return_speed_y() + charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_y()) / m_p);
+				player->Decide_force_x(0.0);
+				player->Decide_force_y(0.0);
 
-			//プレイヤー側に加算
-			player->Add_volume(charged_ball->Return_volume());
-			player->Add_charge(charged_ball->Return_charge());
-			charged_ball.reset();
+				//プレイヤー側に加算
+				player->Add_volume(charged_ball[i]->Return_volume());
+				player->Add_charge(charged_ball[i]->Return_charge());
+				charged_ball[i].reset();
+			}
 		}
 	}
 }
@@ -47,18 +51,22 @@ void TestGameScene::Gravity() {
 		player->Decide_force_x(0.0);
 		player->Decide_force_y(0.0);
 	}
-	if (charged_ball) {
-		charged_ball->Decide_force_x(0.0);
-		charged_ball->Decide_force_y(0.0);
+	for (int i = 0; i < 3; i++) {
+		if (charged_ball[i]) {
+			charged_ball[i]->Decide_force_x(0.0);
+			charged_ball[i]->Decide_force_y(0.0);
+		}
 	}
 
 	//プレイヤー・電荷を帯びた可動なボール間の引力
-	if (player && charged_ball) {
-		double r = pow((charged_ball->Return_position_x() - player->Return_position_x()) * (charged_ball->Return_position_x() - player->Return_position_x()) + (charged_ball->Return_position_y() - player->Return_position_y()) * (charged_ball->Return_position_y() - player->Return_position_y()), 1.0 / 2);
-		player->Decide_force_x(-COULOMB_CONSTANT * player->Return_charge() * charged_ball->Return_charge() * (charged_ball->Return_position_x() - player->Return_position_x()) / (r * r * r));
-		player->Decide_force_y(-COULOMB_CONSTANT * player->Return_charge() * charged_ball->Return_charge() * (charged_ball->Return_position_y() - player->Return_position_y()) / (r * r * r));
-		charged_ball->Decide_force_x(-player->Return_force_x());
-		charged_ball->Decide_force_y(-player->Return_force_y());
+	for (int i = 0; i < 3; i++) {
+		if (player && charged_ball[i]) {
+			double r = pow((charged_ball[i]->Return_position_x() - player->Return_position_x()) * (charged_ball[i]->Return_position_x() - player->Return_position_x()) + (charged_ball[i]->Return_position_y() - player->Return_position_y()) * (charged_ball[i]->Return_position_y() - player->Return_position_y()), 1.0 / 2);
+			player->Decide_force_x(-COULOMB_CONSTANT * player->Return_charge() * charged_ball[i]->Return_charge() * (charged_ball[i]->Return_position_x() - player->Return_position_x()) / (r * r * r));
+			player->Decide_force_y(-COULOMB_CONSTANT * player->Return_charge() * charged_ball[i]->Return_charge() * (charged_ball[i]->Return_position_y() - player->Return_position_y()) / (r * r * r));
+			charged_ball[i]->Decide_force_x(-player->Return_force_x());
+			charged_ball[i]->Decide_force_y(-player->Return_force_y());
+		}
 	}
 }
 
@@ -67,8 +75,10 @@ void TestGameScene::Update() {
 	if (player) {
 		player->Update();
 	}
-	if (charged_ball) {
-		charged_ball->Update();
+	for (int i = 0; i < 3; i++) {
+		if (charged_ball[i]) {
+			charged_ball[i]->Update();
+		}
 	}
 	HitConbine();				//衝突then結合処理
 }
@@ -79,8 +89,10 @@ void TestGameScene::Draw()const {
 			size_up_ball[i]->Draw();
 		}
 	}
-	if (charged_ball) {
-		charged_ball->Draw();
+	for (int i = 0; i < 3; i++) {
+		if (charged_ball[i]) {
+			charged_ball[i]->Draw();
+		}
 	}
 	if (player) {
 		player->Draw();
