@@ -13,6 +13,7 @@ Player::Player() {
 	tap_checker_now = false;
 	speed_x = 0;
 	speed_y = 0;
+	charge = 5;
 	charge_THandle= CreateFontToHandle(NULL, 20, 6, DX_FONTTYPE_NORMAL);					//調節必須:フォントに適したフォントサイズ
 	if (charge > 0) {
 		charge_text_width = GetDrawFormatStringWidthToHandle(charge_THandle, "+%d", charge);
@@ -31,7 +32,6 @@ Player::Player() {
 	SetDrawScreen(DX_SCREEN_BACK);
 	accel_arrowGHandle = LoadGraph("V_arrow_red.png");
 	accel_arrow_num = 0;
-	charge = 5;
 	acceleration_x = 0;
 	acceleration_y = 0;
 	force_x = 0;
@@ -87,21 +87,6 @@ void Player::Update() {
 	position_x += speed_x;
 	position_y += speed_y;
 	//体積決定処理が終了後
-	if (charge > 0) {
-		charge_text_width = GetDrawFormatStringWidthToHandle(charge_THandle, "+%d", charge);
-	}
-	else{
-		charge_text_width = GetDrawFormatStringWidthToHandle(charge_THandle, "%d", charge);
-	}
-	charge_temp_GHandle = MakeScreen(charge_text_width, 20, TRUE);
-	SetDrawScreen(charge_temp_GHandle);
-	if (charge > 0) {
-		DrawFormatStringToHandle(0, -3, charge_text_color, charge_THandle, "+%d", charge);
-	}
-	else {
-		DrawFormatStringToHandle(0, -3, charge_text_color, charge_THandle, "%d", charge);
-	}
-	SetDrawScreen(DX_SCREEN_BACK);
 	//tap判定処理が終了後
 	if (tap_checker_now == true) {
 		tap_checker_now = false;
@@ -114,7 +99,7 @@ void Player::Update() {
 
 void Player::Draw()const {
 	DrawCircle(position_x, position_y, radius, own_color, TRUE);							//自分描画
-	DrawRotaGraph(position_x, position_y, 3.0, 0.0, charge_temp_GHandle, TRUE, FALSE);		//体積文字描画
+	DrawRotaGraph(position_x, position_y, 3.0 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);		//体積文字描画
 	//加速矢印描画
 	for (int i = 0; i < accel_arrow_num; i++) {
 		DrawRotaGraph(position_x - (i + 1) * (radius * 1.5) * cos(accel_arrow_direction), position_y - (i + 1) * (radius * 1.5) * sin(accel_arrow_direction), 0.3, accel_arrow_direction, accel_arrowGHandle, TRUE, FALSE);
@@ -188,6 +173,24 @@ void Player::Add_volume(int add_volume) {
 
 void Player::Add_charge(int add_charge) {
 	charge += add_charge;
+}
+
+void Player::Make_TGHandle() {
+	if (charge > 0) {
+		charge_text_width = GetDrawFormatStringWidthToHandle(charge_THandle, "+%d", charge);
+	}
+	else {
+		charge_text_width = GetDrawFormatStringWidthToHandle(charge_THandle, "%d", charge);
+	}
+	charge_temp_GHandle = MakeScreen(charge_text_width, 20, TRUE);
+	SetDrawScreen(charge_temp_GHandle);
+	if (charge > 0) {
+		DrawFormatStringToHandle(0, -3, charge_text_color, charge_THandle, "+%d", charge);
+	}
+	else {
+		DrawFormatStringToHandle(0, -3, charge_text_color, charge_THandle, "%d", charge);
+	}
+	SetDrawScreen(DX_SCREEN_BACK);
 }
 
 NonMovableBall::NonMovableBall(double first_x, double first_y) {

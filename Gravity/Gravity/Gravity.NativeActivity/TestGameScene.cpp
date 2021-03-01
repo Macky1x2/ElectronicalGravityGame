@@ -39,6 +39,7 @@ void TestGameScene::HitConbine() {
 				//ƒvƒŒƒCƒ„[‘¤‚É‰ÁZ
 				player->Add_volume(charged_ball[i]->Return_volume());
 				player->Add_charge(charged_ball[i]->Return_charge());
+				player->Make_TGHandle();
 				charged_ball[i].reset();
 			}
 		}

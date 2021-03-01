@@ -39,6 +39,7 @@ public:
 	void Decide_force_y(double);
 	void Decide_speed_x(double);
 	void Decide_speed_y(double);
+	void Make_TGHandle();
 };
 
 //“®‚©‚È‚¢ˆø—Í‚È‚µ‚Ìƒ{[ƒ‹
