@@ -5,7 +5,7 @@
 //ëÄçÏÇ∑ÇÈÉ{Å[Éã
 class Player {
 	bool tap_checker_pre, tap_checker_now;
-	int volume, volume_THandle, volume_temp_GHandle, volume_text_width;
+	int volume;
 	unsigned int own_color, volume_text_color;
 	double radius;
 	double position_x, position_y;
@@ -13,7 +13,7 @@ class Player {
 	int accel_start_x, accel_start_y, accel_end_x, accel_end_y, accel_temp_x, accel_temp_y;
 	double accel_power, accel_vector_size, accel_arrow_direction;
 	int accel_arrowGHandle, accel_arrow_num;
-	int charge;
+	int charge, charge_THandle, charge_temp_GHandle, charge_text_width;
 	double acceleration_x, acceleration_y;
 	double force_x, force_y;
 	double density;
