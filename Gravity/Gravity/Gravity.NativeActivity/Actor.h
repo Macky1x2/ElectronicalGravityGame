@@ -26,14 +26,19 @@ public:
 	int Return_charge();
 	double Return_position_x();
 	double Return_position_y();
+	double Return_speed_x();
+	double Return_speed_y();
 	double Return_radius();
 	double Return_force_x();
 	double Return_force_y();
+	double Return_density();
 	void Add_volume(int);
 	void Add_charge(int);
 	void Change_radiusbyvolume(int);
 	void Decide_force_x(double);
 	void Decide_force_y(double);
+	void Decide_speed_x(double);
+	void Decide_speed_y(double);
 };
 
 //動かない引力なしのボール
@@ -54,6 +59,7 @@ public:
 	double Return_position_x();
 	double Return_position_y();
 	double Return_radius();
+	double Return_density();
 };
 
 //可動な、電気を帯びたボール(電荷0も含む)
@@ -67,6 +73,8 @@ public:
 	~MovableChargedBall();
 	void Update();
 	int Return_charge();
+	double Return_speed_x();
+	double Return_speed_y();
 	void Decide_force_x(double);
 	void Decide_force_y(double);
 };

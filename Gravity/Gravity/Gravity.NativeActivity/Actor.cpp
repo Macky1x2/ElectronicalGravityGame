@@ -117,6 +117,14 @@ double Player::Return_position_y() {
 	return position_y;
 }
 
+double Player::Return_speed_x() {
+	return speed_x;
+}
+
+double Player::Return_speed_y() {
+	return speed_y;
+}
+
 double Player::Return_radius() {
 	return radius;
 }
@@ -129,12 +137,24 @@ double Player::Return_force_y() {
 	return force_y;
 }
 
+double Player::Return_density() {
+	return density;
+}
+
 void Player::Decide_force_x(double decide_x) {
 	force_x = decide_x;
 }
 
 void Player::Decide_force_y(double decide_y) {
 	force_y = decide_y;
+}
+
+void Player::Decide_speed_x(double decide_x) {
+	speed_x = decide_x;
+}
+
+void Player::Decide_speed_y(double decide_y) {
+	speed_y = decide_y;
 }
 
 void Player::Change_radiusbyvolume(int _volume) {
@@ -188,6 +208,10 @@ double NonMovableBall::Return_radius() {
 	return radius;
 }
 
+double NonMovableBall::Return_density() {
+	return density;
+}
+
 MovableChargedBall::MovableChargedBall(double first_x, double first_y) :NonMovableBall(first_x, first_y) {
 	charge = -5;
 	speed_x = 0;
@@ -217,6 +241,14 @@ void MovableChargedBall::Update() {
 
 int MovableChargedBall::Return_charge() {
 	return charge;
+}
+
+double MovableChargedBall::Return_speed_x() {
+	return speed_x;
+}
+
+double MovableChargedBall::Return_speed_y() {
+	return speed_y;
 }
 
 void MovableChargedBall::Decide_force_x(double decide_x) {
