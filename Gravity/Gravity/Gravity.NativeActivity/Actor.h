@@ -6,7 +6,7 @@
 class Player {
 	bool tap_checker_pre, tap_checker_now;
 	int volume;
-	unsigned int own_color, volume_text_color;
+	unsigned int own_color, charge_text_color;
 	double radius;
 	double position_x, position_y;
 	double speed_x, speed_y;
@@ -43,12 +43,11 @@ public:
 
 //動かない引力なしのボール
 class NonMovableBall {
-	double radius;
-	unsigned int volume_text_color;
 protected:
 	int volume;
 	unsigned int own_color;
 	double position_x, position_y;
+	double radius;
 	double density;
 public:
 	NonMovableBall(double, double);				//引数(初期x座標,初期y座標)
@@ -64,7 +63,8 @@ public:
 
 //可動な、電気を帯びたボール(電荷0も含む)
 class MovableChargedBall :public NonMovableBall {
-	int charge;
+	int charge, charge_THandle, charge_temp_GHandle, charge_text_width;
+	unsigned int charge_text_color;
 	double speed_x, speed_y;
 	double acceleration_x, acceleration_y;
 	double force_x, force_y;
@@ -72,6 +72,7 @@ public:
 	MovableChargedBall(double, double);
 	~MovableChargedBall();
 	void Update();
+	void Draw()const;
 	int Return_charge();
 	double Return_speed_x();
 	double Return_speed_y();
