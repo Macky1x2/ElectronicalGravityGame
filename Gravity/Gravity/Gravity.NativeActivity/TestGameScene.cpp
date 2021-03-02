@@ -26,7 +26,7 @@ void TestGameScene::HitConbine() {
 	}
 
 	//プレイヤーと可動な電気を帯びたボール間について
-	for (int i = 0; i < std::extent<decltype(player), 0>::value; i++) {
+	for (int i = 0; i < std::extent<decltype(charged_ball), 0>::value; i++) {
 		if (player && charged_ball[i]) {
 			if (HitChecker_PlayerandMovableChargedBall(player, charged_ball[i])) {
 				//運動量保存則
