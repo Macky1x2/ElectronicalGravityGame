@@ -88,5 +88,7 @@ public:
 	void Add_force_x(double);
 	void Add_force_y(double);
 	void Add_volume(int);
+	void Add_charge(int);
 	void Change_radiusbyvolume(int);
+	void Make_TGHandle();
 };

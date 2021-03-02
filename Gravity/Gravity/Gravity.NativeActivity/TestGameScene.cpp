@@ -66,6 +66,40 @@ void TestGameScene::HitConbine() {
 			}
 		}
 	}
+
+	//可動な電気を帯びたボール同士について
+	for (int i = 0; i < std::extent<decltype(charged_ball), 0>::value; i++) {
+		for (int j = i + 1; j < std::extent<decltype(charged_ball), 0>::value; j++) {
+			if (charged_ball[i] && charged_ball[j]) {
+				if (HitChecker_MovableChargedBallandNonMovableBall(charged_ball[i], charged_ball[j])) {		//MovableChargedBallはNonMovableBallの継承クラス
+					if (charged_ball[i]->Return_volume() >= charged_ball[j]->Return_volume()) {				//でかい方の位置を合体後のボールの位置とする
+						//運動量保存則
+						double m = charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume();
+						charged_ball[i]->Decide_speed_x((charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_x() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume() * charged_ball[j]->Return_speed_x()) / m);
+						charged_ball[i]->Decide_speed_y((charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_y() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume() * charged_ball[j]->Return_speed_y()) / m);
+
+						//プレイヤー側に加算
+						charged_ball[i]->Add_volume(charged_ball[j]->Return_volume());
+						charged_ball[i]->Add_charge(charged_ball[j]->Return_charge());
+						charged_ball[i]->Make_TGHandle();
+						charged_ball[j].reset();
+					}
+					else {
+						//運動量保存則
+						double m = charged_ball[j]->Return_density() * charged_ball[j]->Return_volume() + charged_ball[i]->Return_density() * charged_ball[i]->Return_volume();
+						charged_ball[j]->Decide_speed_x((charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_x() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume() * charged_ball[j]->Return_speed_x()) / m);
+						charged_ball[j]->Decide_speed_y((charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_y() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume() * charged_ball[j]->Return_speed_y()) / m);
+
+						//プレイヤー側に加算
+						charged_ball[j]->Add_volume(charged_ball[i]->Return_volume());
+						charged_ball[j]->Add_charge(charged_ball[i]->Return_charge());
+						charged_ball[j]->Make_TGHandle();
+						charged_ball[i].reset();
+					}
+				}
+			}
+		}
+	}
 }
 
 void TestGameScene::Gravity() {

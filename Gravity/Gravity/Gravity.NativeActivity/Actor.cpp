@@ -267,6 +267,7 @@ MovableChargedBall::MovableChargedBall(double first_x, double first_y) :NonMovab
 	else {
 		DrawFormatStringToHandle(0, -3, charge_text_color, charge_THandle, "%d", charge);
 	}
+	SetDrawScreen(DX_SCREEN_BACK);
 }
 
 MovableChargedBall::~MovableChargedBall() {
@@ -284,21 +285,6 @@ void MovableChargedBall::Update() {
 	position_x += speed_x;
 	position_y += speed_y;
 	//‘ÌÏŒˆ’èˆ—‚ªI—¹Œã
-	if (charge > 0) {
-		charge_text_width = GetDrawFormatStringWidthToHandle(charge_THandle, "+%d", charge);
-	}
-	else {
-		charge_text_width = GetDrawFormatStringWidthToHandle(charge_THandle, "%d", charge);
-	}
-	charge_temp_GHandle = MakeScreen(charge_text_width, 20, TRUE);
-	SetDrawScreen(charge_temp_GHandle);
-	if (charge > 0) {
-		DrawFormatStringToHandle(0, -3, charge_text_color, charge_THandle, "+%d", charge);
-	}
-	else {
-		DrawFormatStringToHandle(0, -3, charge_text_color, charge_THandle, "%d", charge);
-	}
-	SetDrawScreen(DX_SCREEN_BACK);
 }
 
 void MovableChargedBall::Draw()const {
@@ -355,6 +341,28 @@ void MovableChargedBall::Add_volume(int add_volume) {
 	Change_radiusbyvolume(volume);			//‘ÌÏ‚ª•Ï‰»‚µ‚½‚½‚ß”¼Œa‚à•Ï‰»‚³‚¹‚é
 }
 
+void MovableChargedBall::Add_charge(int add_charge) {
+	charge += add_charge;
+}
+
 void MovableChargedBall::Change_radiusbyvolume(int _volume) {
 	radius = 50 * pow(_volume / 5.0, 1.0 / 3);
+}
+
+void MovableChargedBall::Make_TGHandle() {
+	if (charge > 0) {
+		charge_text_width = GetDrawFormatStringWidthToHandle(charge_THandle, "+%d", charge);
+	}
+	else {
+		charge_text_width = GetDrawFormatStringWidthToHandle(charge_THandle, "%d", charge);
+	}
+	charge_temp_GHandle = MakeScreen(charge_text_width, 20, TRUE);
+	SetDrawScreen(charge_temp_GHandle);
+	if (charge > 0) {
+		DrawFormatStringToHandle(0, -3, charge_text_color, charge_THandle, "+%d", charge);
+	}
+	else {
+		DrawFormatStringToHandle(0, -3, charge_text_color, charge_THandle, "%d", charge);
+	}
+	SetDrawScreen(DX_SCREEN_BACK);
 }
