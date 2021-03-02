@@ -1,12 +1,13 @@
 #include "TestGameScene.h"
 
 TestGameScene::TestGameScene() {
+	air_resistance_coefficient = 0.01;
 	player = std::make_shared<Player>(500, 500, 5, 8, 0.5);						//引数(初期x座標, 初期y座標, 電荷, 体積, 密度)//初期座標は別ファイルから読み取るのがいいかもしれない
 	size_up_ball[0] = std::make_shared<NonMovableBall>(300, 1000, 3, 0.5);				//引数(初期x座標, 初期y座標, 体積, 密度)
 	size_up_ball[1] = std::make_shared<NonMovableBall>(600, 1500, 3, 0.5);
 	size_up_ball[2] = std::make_shared<NonMovableBall>(1050, 300, 3, 0.5);
 	charged_ball[0] = std::make_shared<MovableChargedBall>(750, 400, 5, 8, 0.5);			//引数(初期x座標, 初期y座標, 電荷, 体積, 密度)
-	charged_ball[1] = std::make_shared<MovableChargedBall>(100, 1100, 105, 8, 50000);
+	charged_ball[1] = std::make_shared<MovableChargedBall>(100, 1100, 5, 8, 50000);
 	charged_ball[2] = std::make_shared<MovableChargedBall>(250, 1700, -5, 8, 0.5);
 }
 
@@ -125,7 +126,7 @@ void TestGameScene::Gravity() {
 		}
 	}
 
-	//プレイヤー・電荷を帯びた可動なボール間の引力
+	//プレイヤー・電荷を帯びた可動なボール間のクーロン力
 	for (int i = 0; i < std::extent<decltype(charged_ball), 0>::value; i++) {
 		if (player && charged_ball[i]) {
 			double r = pow((charged_ball[i]->Return_position_x() - player->Return_position_x()) * (charged_ball[i]->Return_position_x() - player->Return_position_x()) + (charged_ball[i]->Return_position_y() - player->Return_position_y()) * (charged_ball[i]->Return_position_y() - player->Return_position_y()), 1.0 / 2);
@@ -139,7 +140,7 @@ void TestGameScene::Gravity() {
 		}
 	}
 
-	//電荷を帯びた可動なボール同士の引力
+	//電荷を帯びた可動なボール同士のクーロン力
 	for (int i = 0; i < std::extent<decltype(charged_ball), 0>::value; i++) {
 		for (int j = i + 1; j < std::extent<decltype(charged_ball), 0>::value; j++) {
 			if (charged_ball[i] && charged_ball[j]) {
@@ -157,7 +158,8 @@ void TestGameScene::Gravity() {
 }
 
 void TestGameScene::Update() {
-	Gravity();					//引力処理
+	Gravity();					//クーロン力処理
+	AirResistance();			//空気抵抗処理
 	if (player) {
 		player->Update();
 	}
@@ -212,5 +214,21 @@ bool TestGameScene::HitChecker_MovableChargedBallandNonMovableBall(std::shared_p
 	}
 	else {
 		return false;
+	}
+}
+
+void TestGameScene::AirResistance() {
+	//プレイヤーについて
+	if (player) {
+		player->Add_force_x(-air_resistance_coefficient * player->Return_speed_x());
+		player->Add_force_y(-air_resistance_coefficient * player->Return_speed_y());
+	}
+
+	//電荷を帯びた可動なボールについて
+	for (int i = 0; i < std::extent<decltype(charged_ball), 0>::value; i++) {
+		if (charged_ball[i]) {
+			charged_ball[i]->Add_force_x(-air_resistance_coefficient * charged_ball[i]->Return_speed_x());
+			charged_ball[i]->Add_force_y(-air_resistance_coefficient * charged_ball[i]->Return_speed_y());
+		}
 	}
 }
