@@ -25,6 +25,8 @@ void TestGameScene::HitConbine() {
 				player->Decide_speed_y(player->Return_density() * player->Return_volume() * player->Return_speed_y() / m);
 				
 				//プレイヤー側に加算
+				//密度計算
+				player->Decide_density((player->Return_density() * player->Return_volume() + size_up_ball[i]->Return_density() * size_up_ball[i]->Return_volume()) / (player->Return_volume() + size_up_ball[i]->Return_volume()));
 				player->Add_volume(size_up_ball[i]->Return_volume());
 				size_up_ball[i].reset();
 			}
@@ -41,6 +43,8 @@ void TestGameScene::HitConbine() {
 				player->Decide_speed_y((player->Return_density() * player->Return_volume() * player->Return_speed_y() + charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_y()) / m);
 
 				//プレイヤー側に加算
+				//密度計算
+				player->Decide_density((player->Return_density() * player->Return_volume() + charged_ball[i]->Return_density() * charged_ball[i]->Return_volume()) / (player->Return_volume() + charged_ball[i]->Return_volume()));
 				player->Add_volume(charged_ball[i]->Return_volume());
 				player->Add_charge(charged_ball[i]->Return_charge());
 				player->Make_TGHandle();
@@ -60,6 +64,8 @@ void TestGameScene::HitConbine() {
 					charged_ball[i]->Decide_speed_y(charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_y() / m);
 
 					//可動な電気を帯びたボール側に加算
+					//密度計算
+					charged_ball[i]->Decide_density((charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() + size_up_ball[j]->Return_density() * size_up_ball[j]->Return_volume()) / (charged_ball[i]->Return_volume() + size_up_ball[j]->Return_volume()));
 					charged_ball[i]->Add_volume(size_up_ball[j]->Return_volume());
 					size_up_ball[j].reset();
 				}
@@ -79,6 +85,8 @@ void TestGameScene::HitConbine() {
 						charged_ball[i]->Decide_speed_y((charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_y() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume() * charged_ball[j]->Return_speed_y()) / m);
 
 						//プレイヤー側に加算
+						//密度計算
+						charged_ball[i]->Decide_density((charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume()) / (charged_ball[i]->Return_volume() + charged_ball[j]->Return_volume()));
 						charged_ball[i]->Add_volume(charged_ball[j]->Return_volume());
 						charged_ball[i]->Add_charge(charged_ball[j]->Return_charge());
 						charged_ball[i]->Make_TGHandle();
@@ -91,6 +99,8 @@ void TestGameScene::HitConbine() {
 						charged_ball[j]->Decide_speed_y((charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_y() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume() * charged_ball[j]->Return_speed_y()) / m);
 
 						//プレイヤー側に加算
+						//密度計算
+						charged_ball[j]->Decide_density((charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume()) / (charged_ball[i]->Return_volume() + charged_ball[j]->Return_volume()));
 						charged_ball[j]->Add_volume(charged_ball[i]->Return_volume());
 						charged_ball[j]->Add_charge(charged_ball[i]->Return_charge());
 						charged_ball[j]->Make_TGHandle();

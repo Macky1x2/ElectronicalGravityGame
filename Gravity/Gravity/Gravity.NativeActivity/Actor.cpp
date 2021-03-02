@@ -162,6 +162,10 @@ void Player::Decide_speed_y(double decide_y) {
 	speed_y = decide_y;
 }
 
+void Player::Decide_density(double decide_den) {
+	density = decide_den;
+}
+
 void Player::Change_radiusbyvolume(int _volume) {
 	radius = 50 * pow(_volume / 5.0, 1.0 / 3);
 }
@@ -326,6 +330,10 @@ void MovableChargedBall::Decide_speed_x(double decide_x) {
 
 void MovableChargedBall::Decide_speed_y(double decide_y) {
 	speed_y = decide_y;
+}
+
+void MovableChargedBall::Decide_density(double decide_den) {
+	density = decide_den;
 }
 
 void MovableChargedBall::Add_force_x(double add_force) {
