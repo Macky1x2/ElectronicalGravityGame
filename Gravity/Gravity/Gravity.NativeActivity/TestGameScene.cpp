@@ -1,13 +1,13 @@
 #include "TestGameScene.h"
 
 TestGameScene::TestGameScene() {
-	player = std::make_shared<Player>();
-	size_up_ball[0] = std::make_shared<NonMovableBall>(300, 1000);		//初期座標は別ファイルから読み取るのがいいかもしれない
-	size_up_ball[1] = std::make_shared<NonMovableBall>(600, 1500);
-	size_up_ball[2] = std::make_shared<NonMovableBall>(1050, 300);
-	charged_ball[0] = std::make_shared<MovableChargedBall>(750, 400);
-	charged_ball[1] = std::make_shared<MovableChargedBall>(100, 1100);
-	charged_ball[2] = std::make_shared<MovableChargedBall>(250, 1700);
+	player = std::make_shared<Player>(500, 500, 5, 8, 0.5);						//引数(初期x座標, 初期y座標, 電荷, 体積, 密度)//初期座標は別ファイルから読み取るのがいいかもしれない
+	size_up_ball[0] = std::make_shared<NonMovableBall>(300, 1000, 3, 0.5);				//引数(初期x座標, 初期y座標, 体積, 密度)
+	size_up_ball[1] = std::make_shared<NonMovableBall>(600, 1500, 3, 0.5);
+	size_up_ball[2] = std::make_shared<NonMovableBall>(1050, 300, 3, 0.5);
+	charged_ball[0] = std::make_shared<MovableChargedBall>(750, 400, 5, 8, 0.5);			//引数(初期x座標, 初期y座標, 電荷, 体積, 密度)
+	charged_ball[1] = std::make_shared<MovableChargedBall>(100, 1100, 105, 8, 50000);
+	charged_ball[2] = std::make_shared<MovableChargedBall>(250, 1700, -5, 8, 0.5);
 }
 
 TestGameScene::~TestGameScene() {

@@ -18,7 +18,7 @@ class Player {
 	double force_x, force_y;
 	double density;
 public:
-	Player();
+	Player(double, double, int, int, double);		//引数(初期x座標, 初期y座標, 電荷, 体積, 密度)
 	~Player();
 	void Update();
 	void Draw()const;
@@ -54,7 +54,7 @@ protected:
 	double radius;
 	double density;
 public:
-	NonMovableBall(double, double);				//引数(初期x座標,初期y座標)
+	NonMovableBall(double, double, int, double);				//引数(初期x座標, 初期y座標, 体積, 密度)
 	~NonMovableBall();
 	void Update();
 	void Draw()const;
@@ -73,7 +73,7 @@ class MovableChargedBall :public NonMovableBall {
 	double acceleration_x, acceleration_y;
 	double force_x, force_y;
 public:
-	MovableChargedBall(double, double);
+	MovableChargedBall(double, double, int, int, double);		//引数(初期x座標, 初期y座標, 電荷, 体積, 密度)
 	~MovableChargedBall();
 	void Update();
 	void Draw()const;

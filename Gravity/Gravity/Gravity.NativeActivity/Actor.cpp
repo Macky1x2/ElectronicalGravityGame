@@ -2,18 +2,18 @@
 #include <cmath>
 #include <math.h>
 
-Player::Player() {
-	volume = 5;
-	radius = 50;
+Player::Player(double first_x, double first_y, int _charge, int _volume, double _density) {
+	volume = _volume;
+	radius = 50 * pow(volume / 5.0, 1.0 / 3);
 	own_color = GetColor(0, 255, 255);
 	charge_text_color = GetColor(255, 0, 0);
-	position_x = 500;
-	position_y = 500;
+	position_x = first_x;
+	position_y = first_y;
 	tap_checker_pre = false;
 	tap_checker_now = false;
 	speed_x = 0;
 	speed_y = 0;
-	charge = 5;
+	charge = _charge;
 	charge_THandle= CreateFontToHandle(NULL, 20, 6, DX_FONTTYPE_NORMAL);					//調節必須:フォントに適したフォントサイズ
 	if (charge > 0) {
 		charge_text_width = GetDrawFormatStringWidthToHandle(charge_THandle, "+%d", charge);
@@ -36,7 +36,7 @@ Player::Player() {
 	acceleration_y = 0;
 	force_x = 0;
 	force_y = 0;
-	density = 0.5;
+	density = _density;
 }
 
 Player::~Player() {
@@ -205,13 +205,13 @@ void Player::Make_TGHandle() {
 	SetDrawScreen(DX_SCREEN_BACK);
 }
 
-NonMovableBall::NonMovableBall(double first_x, double first_y) {
-	volume = 3;
+NonMovableBall::NonMovableBall(double first_x, double first_y, int _volume, double _density) {
+	volume = _volume;
 	radius = 50 * pow(volume / 5.0, 1.0 / 3);
 	own_color = GetColor(255, 255, 255);
 	position_x = first_x;
 	position_y = first_y;
-	density = 0.5;
+	density = _density;
 }
 
 NonMovableBall::~NonMovableBall() {
@@ -246,8 +246,8 @@ double NonMovableBall::Return_density() {
 	return density;
 }
 
-MovableChargedBall::MovableChargedBall(double first_x, double first_y) :NonMovableBall(first_x, first_y) {
-	charge = -5;
+MovableChargedBall::MovableChargedBall(double first_x, double first_y, int _charge, int _volume, double _density) :NonMovableBall(first_x, first_y, _volume, _density) {
+	charge = _charge;
 	speed_x = 0;
 	speed_y = 0;
 	acceleration_x = 0;
