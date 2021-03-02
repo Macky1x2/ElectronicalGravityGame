@@ -19,6 +19,12 @@ void TestGameScene::HitConbine() {
 	for (int i = 0; i < std::extent<decltype(size_up_ball), 0>::value; i++) {
 		if (player && size_up_ball[i]) {
 			if (HitChecker_PlayerandNonMovableBall(player, size_up_ball[i])) {
+				//運動量保存則
+				double m = player->Return_density() * player->Return_volume() + size_up_ball[i]->Return_density() * size_up_ball[i]->Return_volume();
+				player->Decide_speed_x(player->Return_density() * player->Return_volume() * player->Return_speed_x() / m);
+				player->Decide_speed_y(player->Return_density() * player->Return_volume() * player->Return_speed_y() / m);
+				
+				//プレイヤー側に加算
 				player->Add_volume(size_up_ball[i]->Return_volume());
 				size_up_ball[i].reset();
 			}
@@ -30,11 +36,9 @@ void TestGameScene::HitConbine() {
 		if (player && charged_ball[i]) {
 			if (HitChecker_PlayerandMovableChargedBall(player, charged_ball[i])) {
 				//運動量保存則
-				double m_p = player->Return_density() * player->Return_volume() + charged_ball[i]->Return_density() * charged_ball[i]->Return_volume();
-				player->Decide_speed_x((player->Return_density() * player->Return_volume() * player->Return_speed_x() + charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_x()) / m_p);
-				player->Decide_speed_y((player->Return_density() * player->Return_volume() * player->Return_speed_y() + charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_y()) / m_p);
-				player->Decide_force_x(0.0);
-				player->Decide_force_y(0.0);
+				double m = player->Return_density() * player->Return_volume() + charged_ball[i]->Return_density() * charged_ball[i]->Return_volume();
+				player->Decide_speed_x((player->Return_density() * player->Return_volume() * player->Return_speed_x() + charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_x()) / m);
+				player->Decide_speed_y((player->Return_density() * player->Return_volume() * player->Return_speed_y() + charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_y()) / m);
 
 				//プレイヤー側に加算
 				player->Add_volume(charged_ball[i]->Return_volume());
@@ -47,8 +51,19 @@ void TestGameScene::HitConbine() {
 
 	//可動な電気を帯びたボールと動かないボール間について
 	for (int i = 0; i < std::extent<decltype(charged_ball), 0>::value; i++) {
-		for (int j = i + 1; j < std::extent<decltype(size_up_ball), 0>::value; j++) {
-			
+		for (int j = 0; j < std::extent<decltype(size_up_ball), 0>::value; j++) {
+			if (charged_ball[i] && size_up_ball[j]) {
+				if (HitChecker_MovableChargedBallandNonMovableBall(charged_ball[i], size_up_ball[j])) {
+					//運動量保存則
+					double m = charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() + size_up_ball[j]->Return_density() * size_up_ball[j]->Return_volume();
+					charged_ball[i]->Decide_speed_x(charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_x() / m);
+					charged_ball[i]->Decide_speed_y(charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_y() / m);
+
+					//可動な電気を帯びたボール側に加算
+					charged_ball[i]->Add_volume(size_up_ball[j]->Return_volume());
+					size_up_ball[j].reset();
+				}
+			}
 		}
 	}
 }
@@ -139,6 +154,16 @@ bool TestGameScene::HitChecker_PlayerandNonMovableBall(std::shared_ptr<Player> _
 bool TestGameScene::HitChecker_PlayerandMovableChargedBall(std::shared_ptr<Player> _player, std::shared_ptr<MovableChargedBall> _charged_ball) {
 	//if(当たっているならば)
 	if ((_player->Return_position_x() - _charged_ball->Return_position_x()) * (_player->Return_position_x() - _charged_ball->Return_position_x()) + (_player->Return_position_y() - _charged_ball->Return_position_y()) * (_player->Return_position_y() - _charged_ball->Return_position_y()) < (_player->Return_radius() + _charged_ball->Return_radius()) * (_player->Return_radius() + _charged_ball->Return_radius())) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+bool TestGameScene::HitChecker_MovableChargedBallandNonMovableBall(std::shared_ptr<MovableChargedBall> _charged_ball, std::shared_ptr<NonMovableBall> _size_up_ball) {
+	//if(当たっているならば)
+	if ((_charged_ball->Return_position_x() - _size_up_ball->Return_position_x()) * (_charged_ball->Return_position_x() - _size_up_ball->Return_position_x()) + (_charged_ball->Return_position_y() - _size_up_ball->Return_position_y()) * (_charged_ball->Return_position_y() - _size_up_ball->Return_position_y()) < (_charged_ball->Return_radius() + _size_up_ball->Return_radius()) * (_charged_ball->Return_radius() + _size_up_ball->Return_radius())) {
 		return true;
 	}
 	else {

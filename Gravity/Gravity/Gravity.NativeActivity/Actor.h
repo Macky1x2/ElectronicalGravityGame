@@ -83,6 +83,10 @@ public:
 	double Return_force_y();
 	void Decide_force_x(double);
 	void Decide_force_y(double);
+	void Decide_speed_x(double);
+	void Decide_speed_y(double);
 	void Add_force_x(double);
 	void Add_force_y(double);
+	void Add_volume(int);
+	void Change_radiusbyvolume(int);
 };

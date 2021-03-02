@@ -303,7 +303,7 @@ void MovableChargedBall::Update() {
 
 void MovableChargedBall::Draw()const {
 	DrawCircle(position_x, position_y, radius, own_color, TRUE);							//©•ª•`‰æ
-	DrawRotaGraph(position_x, position_y, 3.0, 0.0, charge_temp_GHandle, TRUE, FALSE);		//‘ÌÏ•¶š•`‰æ
+	DrawRotaGraph(position_x, position_y, 3.0 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);		//‘ÌÏ•¶š•`‰æ
 }
 
 int MovableChargedBall::Return_charge() {
@@ -334,10 +334,27 @@ void MovableChargedBall::Decide_force_y(double decide_y) {
 	force_y = decide_y;
 }
 
+void MovableChargedBall::Decide_speed_x(double decide_x) {
+	speed_x = decide_x;
+}
+
+void MovableChargedBall::Decide_speed_y(double decide_y) {
+	speed_y = decide_y;
+}
+
 void MovableChargedBall::Add_force_x(double add_force) {
 	force_x += add_force;
 }
 
 void MovableChargedBall::Add_force_y(double add_force) {
 	force_y += add_force;
+}
+
+void MovableChargedBall::Add_volume(int add_volume) {
+	volume += add_volume;
+	Change_radiusbyvolume(volume);			//‘ÌÏ‚ª•Ï‰»‚µ‚½‚½‚ß”¼Œa‚à•Ï‰»‚³‚¹‚é
+}
+
+void MovableChargedBall::Change_radiusbyvolume(int _volume) {
+	radius = 50 * pow(_volume / 5.0, 1.0 / 3);
 }
