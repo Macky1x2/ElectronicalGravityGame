@@ -1,5 +1,6 @@
 #pragma once
 #include "DxLib.h"
+#include <iostream>
 #include <memory>
 
 using namespace std;

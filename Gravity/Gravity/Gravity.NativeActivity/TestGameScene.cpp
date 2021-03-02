@@ -16,7 +16,7 @@ TestGameScene::~TestGameScene() {
 
 void TestGameScene::HitConbine() {
 	//プレイヤーと動かないボール間について
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < std::extent<decltype(size_up_ball), 0>::value; i++) {
 		if (player && size_up_ball[i]) {
 			if (HitChecker_PlayerandNonMovableBall(player, size_up_ball[i])) {
 				player->Add_volume(size_up_ball[i]->Return_volume());
@@ -26,7 +26,7 @@ void TestGameScene::HitConbine() {
 	}
 
 	//プレイヤーと可動な電気を帯びたボール間について
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < std::extent<decltype(player), 0>::value; i++) {
 		if (player && charged_ball[i]) {
 			if (HitChecker_PlayerandMovableChargedBall(player, charged_ball[i])) {
 				//運動量保存則
@@ -44,6 +44,13 @@ void TestGameScene::HitConbine() {
 			}
 		}
 	}
+
+	//可動な電気を帯びたボールと動かないボール間について
+	for (int i = 0; i < std::extent<decltype(charged_ball), 0>::value; i++) {
+		for (int j = i + 1; j < std::extent<decltype(size_up_ball), 0>::value; j++) {
+			
+		}
+	}
 }
 
 void TestGameScene::Gravity() {
@@ -52,7 +59,7 @@ void TestGameScene::Gravity() {
 		player->Decide_force_x(0.0);
 		player->Decide_force_y(0.0);
 	}
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < std::extent<decltype(charged_ball), 0>::value; i++) {
 		if (charged_ball[i]) {
 			charged_ball[i]->Decide_force_x(0.0);
 			charged_ball[i]->Decide_force_y(0.0);
@@ -60,7 +67,7 @@ void TestGameScene::Gravity() {
 	}
 
 	//プレイヤー・電荷を帯びた可動なボール間の引力
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < std::extent<decltype(charged_ball), 0>::value; i++) {
 		if (player && charged_ball[i]) {
 			double r = pow((charged_ball[i]->Return_position_x() - player->Return_position_x()) * (charged_ball[i]->Return_position_x() - player->Return_position_x()) + (charged_ball[i]->Return_position_y() - player->Return_position_y()) * (charged_ball[i]->Return_position_y() - player->Return_position_y()), 1.0 / 2);
 			double temp_x, temp_y;
@@ -74,8 +81,8 @@ void TestGameScene::Gravity() {
 	}
 
 	//電荷を帯びた可動なボール同士の引力
-	for (int i = 0; i < 3; i++) {
-		for (int j = i + 1; j < 3; j++) {
+	for (int i = 0; i < std::extent<decltype(charged_ball), 0>::value; i++) {
+		for (int j = i + 1; j < std::extent<decltype(charged_ball), 0>::value; j++) {
 			if (charged_ball[i] && charged_ball[j]) {
 				double r = pow((charged_ball[i]->Return_position_x() - charged_ball[j]->Return_position_x()) * (charged_ball[i]->Return_position_x() - charged_ball[j]->Return_position_x()) + (charged_ball[i]->Return_position_y() - charged_ball[j]->Return_position_y()) * (charged_ball[i]->Return_position_y() - charged_ball[j]->Return_position_y()), 1.0 / 2);
 				double temp_x, temp_y;
@@ -95,7 +102,7 @@ void TestGameScene::Update() {
 	if (player) {
 		player->Update();
 	}
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < std::extent<decltype(charged_ball), 0>::value; i++) {
 		if (charged_ball[i]) {
 			charged_ball[i]->Update();
 		}
@@ -104,12 +111,12 @@ void TestGameScene::Update() {
 }
 
 void TestGameScene::Draw()const {
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < std::extent<decltype(size_up_ball), 0>::value; i++) {
 		if (size_up_ball[i]) {
 			size_up_ball[i]->Draw();
 		}
 	}
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < std::extent<decltype(charged_ball), 0>::value; i++) {
 		if (charged_ball[i]) {
 			charged_ball[i]->Draw();
 		}
