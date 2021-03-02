@@ -175,6 +175,14 @@ void Player::Add_charge(int add_charge) {
 	charge += add_charge;
 }
 
+void Player::Add_force_x(double add_force) {
+	force_x += add_force;
+}
+
+void Player::Add_force_y(double add_force) {
+	force_y += add_force;
+}
+
 void Player::Make_TGHandle() {
 	if (charge > 0) {
 		charge_text_width = GetDrawFormatStringWidthToHandle(charge_THandle, "+%d", charge);
@@ -310,10 +318,26 @@ double MovableChargedBall::Return_speed_y() {
 	return speed_y;
 }
 
+double MovableChargedBall::Return_force_x() {
+	return force_x;
+}
+
+double MovableChargedBall::Return_force_y() {
+	return force_y;
+}
+
 void MovableChargedBall::Decide_force_x(double decide_x) {
 	force_x = decide_x;
 }
 
 void MovableChargedBall::Decide_force_y(double decide_y) {
 	force_y = decide_y;
+}
+
+void MovableChargedBall::Add_force_x(double add_force) {
+	force_x += add_force;
+}
+
+void MovableChargedBall::Add_force_y(double add_force) {
+	force_y += add_force;
 }

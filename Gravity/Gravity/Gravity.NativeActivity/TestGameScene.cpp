@@ -63,10 +63,29 @@ void TestGameScene::Gravity() {
 	for (int i = 0; i < 3; i++) {
 		if (player && charged_ball[i]) {
 			double r = pow((charged_ball[i]->Return_position_x() - player->Return_position_x()) * (charged_ball[i]->Return_position_x() - player->Return_position_x()) + (charged_ball[i]->Return_position_y() - player->Return_position_y()) * (charged_ball[i]->Return_position_y() - player->Return_position_y()), 1.0 / 2);
-			player->Decide_force_x(-COULOMB_CONSTANT * player->Return_charge() * charged_ball[i]->Return_charge() * (charged_ball[i]->Return_position_x() - player->Return_position_x()) / (r * r * r));
-			player->Decide_force_y(-COULOMB_CONSTANT * player->Return_charge() * charged_ball[i]->Return_charge() * (charged_ball[i]->Return_position_y() - player->Return_position_y()) / (r * r * r));
-			charged_ball[i]->Decide_force_x(-player->Return_force_x());
-			charged_ball[i]->Decide_force_y(-player->Return_force_y());
+			double temp_x, temp_y;
+			temp_x = -COULOMB_CONSTANT * player->Return_charge() * charged_ball[i]->Return_charge() * (charged_ball[i]->Return_position_x() - player->Return_position_x()) / (r * r * r);
+			temp_y = -COULOMB_CONSTANT * player->Return_charge() * charged_ball[i]->Return_charge() * (charged_ball[i]->Return_position_y() - player->Return_position_y()) / (r * r * r);
+			player->Add_force_x(temp_x);
+			player->Add_force_y(temp_y);
+			charged_ball[i]->Add_force_x(-temp_x);
+			charged_ball[i]->Add_force_y(-temp_y);
+		}
+	}
+
+	//“d‰×‚ğ‘Ñ‚Ñ‚½‰Â“®‚Èƒ{[ƒ‹“¯m‚Ìˆø—Í
+	for (int i = 0; i < 3; i++) {
+		for (int j = i + 1; j < 3; j++) {
+			if (charged_ball[i] && charged_ball[j]) {
+				double r = pow((charged_ball[i]->Return_position_x() - charged_ball[j]->Return_position_x()) * (charged_ball[i]->Return_position_x() - charged_ball[j]->Return_position_x()) + (charged_ball[i]->Return_position_y() - charged_ball[j]->Return_position_y()) * (charged_ball[i]->Return_position_y() - charged_ball[j]->Return_position_y()), 1.0 / 2);
+				double temp_x, temp_y;
+				temp_x = -COULOMB_CONSTANT * charged_ball[j]->Return_charge() * charged_ball[i]->Return_charge() * (charged_ball[i]->Return_position_x() - charged_ball[j]->Return_position_x()) / (r * r * r);
+				temp_y = -COULOMB_CONSTANT * charged_ball[j]->Return_charge() * charged_ball[i]->Return_charge() * (charged_ball[i]->Return_position_y() - charged_ball[j]->Return_position_y()) / (r * r * r);
+				charged_ball[j]->Add_force_x(temp_x);
+				charged_ball[j]->Add_force_y(temp_y);
+				charged_ball[i]->Add_force_x(-temp_x);
+				charged_ball[i]->Add_force_y(-temp_y);
+			}
 		}
 	}
 }
