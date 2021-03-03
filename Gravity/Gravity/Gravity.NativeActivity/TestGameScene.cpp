@@ -243,11 +243,13 @@ void TestGameScene::AirResistance() {
 void TestGameScene::TimeControl() {
 	if (operate->Return_one_touch_frame_result() != -1) {
 		if (operate->Return_one_touch_frame_result() <= 10) {
-			if (time_advances) {
-				time_advances = false;
-			}
-			else {
-				time_advances = true;
+			if (operate->Return_one_touch_result_distance2() < 10) {
+				if (time_advances) {
+					time_advances = false;
+				}
+				else {
+					time_advances = true;
+				}
 			}
 		}
 	}
