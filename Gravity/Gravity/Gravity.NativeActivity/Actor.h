@@ -5,6 +5,7 @@
 //操作するボール
 class Player {
 	bool tap_checker_pre, tap_checker_now;
+	bool checker_when_time_stopped;
 	int volume;
 	unsigned int own_color, charge_text_color;
 	double radius;
@@ -32,6 +33,7 @@ public:
 	double Return_force_x();
 	double Return_force_y();
 	double Return_density();
+	bool Return_checker_when_time_stopped();
 	void Add_volume(int);
 	void Add_charge(int);
 	void Add_force_x(double);
@@ -43,6 +45,7 @@ public:
 	void Decide_speed_y(double);
 	void Decide_density(double);
 	void Make_TGHandle();
+	void Shoot_Operation();
 };
 
 //動かない引力なしのボール

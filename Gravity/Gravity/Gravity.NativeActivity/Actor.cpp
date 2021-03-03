@@ -11,6 +11,7 @@ Player::Player(double first_x, double first_y, int _charge, int _volume, double 
 	position_y = first_y;
 	tap_checker_pre = false;
 	tap_checker_now = false;
+	checker_when_time_stopped = false;
 	speed_x = 0;
 	speed_y = 0;
 	charge = _charge;
@@ -51,50 +52,12 @@ void Player::Update() {
 	speed_x += acceleration_x;
 	speed_y += acceleration_y;
 
-	if (GetTouchInputNum() == 1) {
-		tap_checker_now = true;
-	}
-
-	//移動操作
-	if (tap_checker_now == true && tap_checker_pre == false) {
-		GetTouchInput(0, &accel_start_x, &accel_start_y, NULL, NULL);
-		accel_temp_x = accel_start_x;
-		accel_temp_y = accel_start_y;
-	}
-	else if (tap_checker_now == false && tap_checker_pre == true) {
-		accel_end_x = accel_temp_x;
-		accel_end_y = accel_temp_y;
-		accel_vector_size = std::sqrt(((accel_start_x - accel_end_x) * (accel_start_x - accel_end_x) + (accel_start_y - accel_end_y) * (accel_start_y - accel_end_y))*1.0);
-		accel_power = accel_vector_size / 50;
-		accel_arrow_num = 0;
-		if (accel_vector_size != 0) {
-			speed_x += accel_power * ((accel_start_x - accel_end_x) / accel_vector_size);
-			speed_y += accel_power * ((accel_start_y - accel_end_y) / accel_vector_size);
-		}
-	}
-	else if(tap_checker_now == true && tap_checker_pre == true){
-		GetTouchInput(0, &accel_temp_x, &accel_temp_y, NULL, NULL);
-		if (!(accel_start_x - accel_temp_x == 0 && accel_start_y - accel_temp_y == 0)) {
-			accel_arrow_direction = std::atan2(accel_start_y - accel_temp_y, accel_start_x - accel_temp_x);
-			accel_arrow_num = std::sqrt(((accel_start_x - accel_temp_x) * (accel_start_x - accel_temp_x) + (accel_start_y - accel_temp_y) * (accel_start_y - accel_temp_y)) * 1.0) / 200;
-		}
-		else {
-			accel_arrow_num = 0;
-		}
-	}
+	Shoot_Operation();								//移動操作
 
 	//速度決定処理が終了後
 	position_x += speed_x;
 	position_y += speed_y;
 	//体積決定処理が終了後
-	//tap判定処理が終了後
-	if (tap_checker_now == true) {
-		tap_checker_now = false;
-		tap_checker_pre = true;
-	}
-	else if (tap_checker_now == false) {
-		tap_checker_pre = false;
-	}
 }
 
 void Player::Draw()const {
@@ -144,6 +107,10 @@ double Player::Return_force_y() {
 
 double Player::Return_density() {
 	return density;
+}
+
+bool Player::Return_checker_when_time_stopped() {
+	return checker_when_time_stopped;
 }
 
 void Player::Decide_force_x(double decide_x) {
@@ -203,6 +170,47 @@ void Player::Make_TGHandle() {
 		DrawFormatStringToHandle(0, -3, charge_text_color, charge_THandle, "%d", charge);
 	}
 	SetDrawScreen(DX_SCREEN_BACK);
+}
+
+void Player::Shoot_Operation() {
+	checker_when_time_stopped = false;
+	if (GetTouchInputNum() == 1) {
+		tap_checker_now = true;
+	}
+	if (tap_checker_now == true && tap_checker_pre == false) {
+		GetTouchInput(0, &accel_start_x, &accel_start_y, NULL, NULL);
+		accel_temp_x = accel_start_x;
+		accel_temp_y = accel_start_y;
+	}
+	else if (tap_checker_now == false && tap_checker_pre == true) {
+		accel_end_x = accel_temp_x;
+		accel_end_y = accel_temp_y;
+		accel_vector_size = std::sqrt(((accel_start_x - accel_end_x) * (accel_start_x - accel_end_x) + (accel_start_y - accel_end_y) * (accel_start_y - accel_end_y)) * 1.0);
+		accel_power = accel_vector_size / 50;
+		accel_arrow_num = 0;
+		if (accel_vector_size != 0) {
+			speed_x += accel_power * ((accel_start_x - accel_end_x) / accel_vector_size);
+			speed_y += accel_power * ((accel_start_y - accel_end_y) / accel_vector_size);
+			checker_when_time_stopped = true;
+		}
+	}
+	else if (tap_checker_now == true && tap_checker_pre == true) {
+		GetTouchInput(0, &accel_temp_x, &accel_temp_y, NULL, NULL);
+		if (!(accel_start_x - accel_temp_x == 0 && accel_start_y - accel_temp_y == 0)) {
+			accel_arrow_direction = std::atan2(accel_start_y - accel_temp_y, accel_start_x - accel_temp_x);
+			accel_arrow_num = std::sqrt(((accel_start_x - accel_temp_x) * (accel_start_x - accel_temp_x) + (accel_start_y - accel_temp_y) * (accel_start_y - accel_temp_y)) * 1.0) / 200;
+		}
+		else {
+			accel_arrow_num = 0;
+		}
+	}
+	if (tap_checker_now == true) {
+		tap_checker_now = false;
+		tap_checker_pre = true;
+	}
+	else if (tap_checker_now == false) {
+		tap_checker_pre = false;
+	}
 }
 
 NonMovableBall::NonMovableBall(double first_x, double first_y, int _volume, double _density) {

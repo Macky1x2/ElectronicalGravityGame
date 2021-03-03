@@ -3,7 +3,7 @@
 TestGameScene::TestGameScene() {
 	time_advances = false;
 	air_resistance_coefficient = 0.01;
-	player = std::make_shared<Player>(500, 500, 5000, 8, 50000);						//引数(初期x座標, 初期y座標, 電荷, 体積, 密度)//初期座標は別ファイルから読み取るのがいいかもしれない
+	player = std::make_shared<Player>(500, 500, 5, 8, 0.5);						//引数(初期x座標, 初期y座標, 電荷, 体積, 密度)//初期座標は別ファイルから読み取るのがいいかもしれない
 	size_up_ball[0] = std::make_shared<NonMovableBall>(300, 1000, 3, 0.5);				//引数(初期x座標, 初期y座標, 体積, 密度)
 	size_up_ball[1] = std::make_shared<NonMovableBall>(600, 1500, 3, 0.5);
 	size_up_ball[2] = std::make_shared<NonMovableBall>(1050, 300, 30, 0.5);
@@ -191,7 +191,6 @@ void TestGameScene::Draw()const {
 	if (player) {
 		player->Draw();
 	}
-	operate->Draw();
 }
 
 bool TestGameScene::HitChecker_PlayerandNonMovableBall(std::shared_ptr<Player> _player, std::shared_ptr<NonMovableBall> _size_up_ball) {
@@ -251,6 +250,14 @@ void TestGameScene::TimeControl() {
 					time_advances = true;
 				}
 			}
+		}
+	}
+	printfDx("%d\n", time_advances);
+
+	if (!time_advances) {
+		player->Shoot_Operation();
+		if (player->Return_checker_when_time_stopped()) {
+			time_advances = true;
 		}
 	}
 }
