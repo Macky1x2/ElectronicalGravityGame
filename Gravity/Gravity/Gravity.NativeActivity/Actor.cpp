@@ -38,10 +38,13 @@ Player::Player(double first_x, double first_y, int _charge, int _volume, double 
 	force_x = 0;
 	force_y = 0;
 	density = _density;
+	shoot_num = 0;
 }
 
 Player::~Player() {
-	
+	DeleteFontToHandle(charge_THandle);
+	DeleteGraph(charge_temp_GHandle);
+	DeleteGraph(accel_arrowGHandle);
 }
 
 void Player::Update() {
@@ -75,6 +78,10 @@ int Player::Return_volume() {
 
 int Player::Return_charge() {
 	return charge;
+}
+
+int Player::Return_shoot_num() {
+	return shoot_num;
 }
 
 double Player::Return_position_x() {
@@ -192,6 +199,7 @@ void Player::Shoot_Operation() {
 			speed_x += accel_power * ((accel_start_x - accel_end_x) / accel_vector_size);
 			speed_y += accel_power * ((accel_start_y - accel_end_y) / accel_vector_size);
 			checker_when_time_stopped = true;
+			shoot_num++;
 		}
 	}
 	else if (tap_checker_now == true && tap_checker_pre == true) {
@@ -283,7 +291,8 @@ MovableChargedBall::MovableChargedBall(double first_x, double first_y, int _char
 }
 
 MovableChargedBall::~MovableChargedBall() {
-
+	DeleteFontToHandle(charge_THandle);
+	DeleteGraph(charge_temp_GHandle);
 }
 
 void MovableChargedBall::Update() {

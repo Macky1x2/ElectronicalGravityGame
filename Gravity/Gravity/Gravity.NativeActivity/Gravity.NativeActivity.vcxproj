@@ -228,6 +228,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="GameClearScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Operation.cpp" />
     <ClCompile Include="TestGameScene.cpp" />
@@ -236,6 +237,7 @@
   <ItemGroup>
     <ClInclude Include="Actor.h" />
     <ClInclude Include="define.h" />
+    <ClInclude Include="GameClearScene.h" />
     <ClInclude Include="Operation.h" />
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SceneManager.h" />

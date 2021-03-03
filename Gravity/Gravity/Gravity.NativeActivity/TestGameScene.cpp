@@ -1,4 +1,5 @@
 #include "TestGameScene.h"
+#include "GameClearScene.h"
 
 TestGameScene::TestGameScene() {
 	time_advances = false;
@@ -14,7 +15,20 @@ TestGameScene::TestGameScene() {
 }
 
 TestGameScene::~TestGameScene() {
-
+	if (player) {
+		player.reset();
+	}
+	for (int i = 0; i < std::extent<decltype(size_up_ball), 0>::value; i++) {
+		if (size_up_ball[i]) {
+			size_up_ball[i].reset();
+		}
+	}
+	for (int i = 0; i < std::extent<decltype(charged_ball), 0>::value; i++) {
+		if (charged_ball[i]) {
+			charged_ball[i].reset();
+		}
+	}
+	operate.reset();
 }
 
 void TestGameScene::HitConbine() {
@@ -175,6 +189,9 @@ void TestGameScene::Update() {
 		}
 		HitConbine();				//衝突then結合処理
 	}
+	if (ClearChecker()) {			//クリア判定となればゲームクリア
+		GameClear();
+	}
 }
 
 void TestGameScene::Draw()const {
@@ -223,6 +240,15 @@ bool TestGameScene::HitChecker_MovableChargedBallandNonMovableBall(std::shared_p
 	}
 }
 
+bool TestGameScene::ClearChecker() {
+	if (player->Return_charge() <= -5) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 void TestGameScene::AirResistance() {
 	//プレイヤーについて
 	if (player) {
@@ -240,6 +266,7 @@ void TestGameScene::AirResistance() {
 }
 
 void TestGameScene::TimeControl() {
+	//画面をタップすると時間停止・進行が切り替わる
 	if (operate->Return_one_touch_frame_result() != -1) {
 		if (operate->Return_one_touch_frame_result() <= 10) {
 			if (operate->Return_one_touch_result_distance2() < 10) {
@@ -252,12 +279,26 @@ void TestGameScene::TimeControl() {
 			}
 		}
 	}
-	printfDx("%d\n", time_advances);
-
+	
+	//時間停止時、プレイヤーショットをすると時が動き出す
 	if (!time_advances) {
 		player->Shoot_Operation();
 		if (player->Return_checker_when_time_stopped()) {
 			time_advances = true;
 		}
 	}
+}
+
+void TestGameScene::GameClear() {
+	int star;								//3:星3つ, 2:星2つ, 1:星1つ
+	if (player->Return_shoot_num() <= 2) {
+		star = 3;
+	}
+	else if (player->Return_shoot_num() <= 4) {
+		star = 2;
+	}
+	else {
+		star = 1;
+	}
+	nextScene = make_shared<GameClearScene>(star);
 }

@@ -15,6 +15,7 @@ class Player {
 	double accel_power, accel_vector_size, accel_arrow_direction;
 	int accel_arrowGHandle, accel_arrow_num;
 	int charge, charge_THandle, charge_temp_GHandle, charge_text_width;
+	int shoot_num;
 	double acceleration_x, acceleration_y;
 	double force_x, force_y;
 	double density;
@@ -25,6 +26,7 @@ public:
 	void Draw()const;
 	int Return_volume();
 	int Return_charge();
+	int Return_shoot_num();
 	double Return_position_x();
 	double Return_position_y();
 	double Return_speed_x();

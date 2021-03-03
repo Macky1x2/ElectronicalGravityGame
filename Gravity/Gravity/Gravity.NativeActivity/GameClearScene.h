@@ -3,11 +3,11 @@
 #include "define.h"
 #include "SceneBase.h"
 
-class TitleScene :public SceneBase {
-
+class GameClearScene :public SceneBase {
+	int star, starGHandle;
 public:
-	TitleScene();
-	~TitleScene();
+	GameClearScene(int);
+	~GameClearScene();
 	void Update();
 	void Draw()const;
 };
