@@ -5,6 +5,7 @@
     <ClCompile Include="TestGameScene.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="Operation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SceneManager.h" />
@@ -13,5 +14,6 @@
     <ClInclude Include="TestGameScene.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Actor.h" />
+    <ClInclude Include="Operation.h" />
   </ItemGroup>
 </Project>

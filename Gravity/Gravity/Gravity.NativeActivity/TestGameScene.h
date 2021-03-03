@@ -3,14 +3,17 @@
 #include "define.h"
 #include "SceneBase.h"
 #include "Actor.h"
+#include "Operation.h"
 #include <memory>
 #include <math.h>
 
 class TestGameScene :public SceneBase {
+	bool time_advances;
 	double air_resistance_coefficient;
 	std::shared_ptr<Player> player;
 	std::shared_ptr<NonMovableBall> size_up_ball[3];
 	std::shared_ptr<MovableChargedBall> charged_ball[3];
+	std::shared_ptr<OperationInGame> operate;
 public:
 	TestGameScene();
 	~TestGameScene();
@@ -22,4 +25,5 @@ public:
 	bool HitChecker_MovableChargedBallandNonMovableBall(std::shared_ptr<MovableChargedBall>, std::shared_ptr<NonMovableBall>);
 	void Gravity();
 	void AirResistance();
+	void TimeControl();
 };

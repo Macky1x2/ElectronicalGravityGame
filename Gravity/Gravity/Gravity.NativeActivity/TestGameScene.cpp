@@ -1,14 +1,16 @@
 #include "TestGameScene.h"
 
 TestGameScene::TestGameScene() {
+	time_advances = false;
 	air_resistance_coefficient = 0.01;
-	player = std::make_shared<Player>(500, 500, 5, 8, 0.5);						//引数(初期x座標, 初期y座標, 電荷, 体積, 密度)//初期座標は別ファイルから読み取るのがいいかもしれない
+	player = std::make_shared<Player>(500, 500, 5000, 8, 50000);						//引数(初期x座標, 初期y座標, 電荷, 体積, 密度)//初期座標は別ファイルから読み取るのがいいかもしれない
 	size_up_ball[0] = std::make_shared<NonMovableBall>(300, 1000, 3, 0.5);				//引数(初期x座標, 初期y座標, 体積, 密度)
 	size_up_ball[1] = std::make_shared<NonMovableBall>(600, 1500, 3, 0.5);
-	size_up_ball[2] = std::make_shared<NonMovableBall>(1050, 300, 3, 0.5);
-	charged_ball[0] = std::make_shared<MovableChargedBall>(750, 400, 5, 8, 0.5);			//引数(初期x座標, 初期y座標, 電荷, 体積, 密度)
-	charged_ball[1] = std::make_shared<MovableChargedBall>(100, 1100, 5, 8, 50000);
+	size_up_ball[2] = std::make_shared<NonMovableBall>(1050, 300, 30, 0.5);
+	charged_ball[0] = std::make_shared<MovableChargedBall>(750, 400, -5, 8, 0.5);			//引数(初期x座標, 初期y座標, 電荷, 体積, 密度)
+	charged_ball[1] = std::make_shared<MovableChargedBall>(100, 1100, -5, 8, 0.5);
 	charged_ball[2] = std::make_shared<MovableChargedBall>(250, 1700, -5, 8, 0.5);
+	operate = std::make_shared<OperationInGame>();
 }
 
 TestGameScene::~TestGameScene() {
@@ -158,17 +160,21 @@ void TestGameScene::Gravity() {
 }
 
 void TestGameScene::Update() {
+	operate->Update();			//操作処理
+	TimeControl();				//時間処理
 	Gravity();					//クーロン力処理
-	AirResistance();			//空気抵抗処理
-	if (player) {
-		player->Update();
-	}
-	for (int i = 0; i < std::extent<decltype(charged_ball), 0>::value; i++) {
-		if (charged_ball[i]) {
-			charged_ball[i]->Update();
+	AirResistance();			//媒質抵抗処理
+	if (time_advances) {		//時が止まっているときは以下は更新しない
+		if (player) {
+			player->Update();
 		}
+		for (int i = 0; i < std::extent<decltype(charged_ball), 0>::value; i++) {
+			if (charged_ball[i]) {
+				charged_ball[i]->Update();
+			}
+		}
+		HitConbine();				//衝突then結合処理
 	}
-	HitConbine();				//衝突then結合処理
 }
 
 void TestGameScene::Draw()const {
@@ -185,6 +191,7 @@ void TestGameScene::Draw()const {
 	if (player) {
 		player->Draw();
 	}
+	operate->Draw();
 }
 
 bool TestGameScene::HitChecker_PlayerandNonMovableBall(std::shared_ptr<Player> _player, std::shared_ptr<NonMovableBall> _size_up_ball) {
@@ -229,6 +236,19 @@ void TestGameScene::AirResistance() {
 		if (charged_ball[i]) {
 			charged_ball[i]->Add_force_x(-air_resistance_coefficient * charged_ball[i]->Return_speed_x());
 			charged_ball[i]->Add_force_y(-air_resistance_coefficient * charged_ball[i]->Return_speed_y());
+		}
+	}
+}
+
+void TestGameScene::TimeControl() {
+	if (operate->Return_one_touch_frame_result() != -1) {
+		if (operate->Return_one_touch_frame_result() <= 10) {
+			if (time_advances) {
+				time_advances = false;
+			}
+			else {
+				time_advances = true;
+			}
 		}
 	}
 }
