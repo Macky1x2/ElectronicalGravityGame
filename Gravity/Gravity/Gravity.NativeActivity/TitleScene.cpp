@@ -8,7 +8,7 @@ TitleScene::TitleScene() {
 }
 
 TitleScene::~TitleScene() {
-
+	
 }
 
 void TitleScene::Update() {

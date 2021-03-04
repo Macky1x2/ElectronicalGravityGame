@@ -335,6 +335,18 @@ void GameBaseScene::GameClear() {
 void GameBaseScene::ReloadFunction(void) {
 	ReloadFileGraphAll();						// ファイルから読み込んだ画像を復元する
 
+	//テキストハンドル復元
+	for (int i = 0; i < player_num; i++) {
+		if (player[i]) {
+			player[i]->Load_THandle();
+		}
+	}
+	for (int i = 0; i < charged_ball_num; i++) {
+		if (charged_ball[i]) {
+			charged_ball[i]->Load_THandle();
+		}
+	}
+	
 	//MakeScreenのグラフィックハンドルを復元
 	for (int i = 0; i < player_num; i++) {
 		if (player[i]) {

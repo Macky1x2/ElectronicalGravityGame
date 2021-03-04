@@ -49,6 +49,7 @@ public:
 	void Decide_density(double);
 	void Make_TGHandle();
 	void Shoot_Operation();
+	void Load_THandle();
 };
 
 //“®‚©‚È‚¢ˆø—Í‚È‚µ‚Ìƒ{[ƒ‹
@@ -99,4 +100,5 @@ public:
 	void Add_charge(int);
 	void Change_radiusbyvolume(int);
 	void Make_TGHandle();
+	void Load_THandle();
 };

@@ -13,7 +13,7 @@ Player::Player(double first_x, double first_y, int _charge, int _volume, double 
 	speed_x = 0;
 	speed_y = 0;
 	charge = _charge;
-	charge_THandle= CreateFontToHandle(NULL, 20, 6, DX_FONTTYPE_NORMAL);					//調節必須:フォントに適したフォントサイズ
+	Load_THandle();					//テキストハンドル読み込み
 	if (charge > 0) {
 		charge_text_width = GetDrawFormatStringWidthToHandle(charge_THandle, "+%d", charge);
 	}
@@ -178,6 +178,10 @@ void Player::Make_TGHandle() {
 	SetDrawScreen(DX_SCREEN_BACK);
 }
 
+void Player::Load_THandle() {
+	charge_THandle = CreateFontToHandle(NULL, 20, 6, DX_FONTTYPE_NORMAL);					//調節必須:フォントに適したフォントサイズ
+}
+
 void Player::Shoot_Operation() {
 	checker_when_time_stopped = false;
 	if (GetTouchInputNum() == 1) {
@@ -271,7 +275,7 @@ MovableChargedBall::MovableChargedBall(double first_x, double first_y, int _char
 	force_y = 0;
 	own_color = GetColor(0, 255, 0);
 	charge_text_color = GetColor(255, 0, 0);
-	charge_THandle = CreateFontToHandle(NULL, 20, 6, DX_FONTTYPE_NORMAL);					//調節必須:フォントに適したフォントサイズ
+	Load_THandle();								//テキストハンドル読み込み
 	if (charge > 0) {
 		charge_text_width = GetDrawFormatStringWidthToHandle(charge_THandle, "+%d", charge);
 	}
@@ -390,4 +394,8 @@ void MovableChargedBall::Make_TGHandle() {
 		DrawFormatStringToHandle(0, -3, charge_text_color, charge_THandle, "%d", charge);
 	}
 	SetDrawScreen(DX_SCREEN_BACK);
+}
+
+void MovableChargedBall::Load_THandle() {
+	charge_THandle = CreateFontToHandle(NULL, 20, 6, DX_FONTTYPE_NORMAL);					//調節必須:フォントに適したフォントサイズ
 }
