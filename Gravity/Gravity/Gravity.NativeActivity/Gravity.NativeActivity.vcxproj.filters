@@ -7,6 +7,11 @@
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Operation.cpp" />
     <ClCompile Include="GameClearScene.cpp" />
+    <ClCompile Include="StageSelectScene.cpp" />
+    <ClCompile Include="Stage_1.cpp" />
+    <ClCompile Include="GameBaseScene.cpp" />
+    <ClCompile Include="GameBaseSceneForTest.cpp" />
+    <ClCompile Include="Stage_Test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SceneManager.h" />
@@ -17,5 +22,10 @@
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Operation.h" />
     <ClInclude Include="GameClearScene.h" />
+    <ClInclude Include="StageSelectScene.h" />
+    <ClInclude Include="Stage_1.h" />
+    <ClInclude Include="GameBaseScene.h" />
+    <ClInclude Include="GameBaseSceneForTest.h" />
+    <ClInclude Include="Stage_Test.h" />
   </ItemGroup>
 </Project>

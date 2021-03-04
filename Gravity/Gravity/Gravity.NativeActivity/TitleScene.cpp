@@ -1,5 +1,5 @@
 #include "TitleScene.h"
-#include "TestGameScene.h"
+#include "StageSelectScene.h"
 
 TitleScene::TitleScene() {
 
@@ -14,7 +14,7 @@ void TitleScene::Update() {
 		int x, y;
 		GetTouchInput(0, &x, &y, NULL, NULL);
 		if (y <= 700) {
-			nextScene = make_shared<TestGameScene>();
+			nextScene = make_shared<StageSelectScene>();
 		}
 	}
 }

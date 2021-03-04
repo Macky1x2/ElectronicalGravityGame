@@ -382,6 +382,7 @@ void MovableChargedBall::Make_TGHandle() {
 	else {
 		charge_text_width = GetDrawFormatStringWidthToHandle(charge_THandle, "%d", charge);
 	}
+	DeleteGraph(charge_temp_GHandle);
 	charge_temp_GHandle = MakeScreen(charge_text_width, 20, TRUE);
 	SetDrawScreen(charge_temp_GHandle);
 	if (charge > 0) {

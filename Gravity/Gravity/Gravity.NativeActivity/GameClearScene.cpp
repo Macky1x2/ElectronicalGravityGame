@@ -1,5 +1,5 @@
 #include "GameClearScene.h"
-#include "TitleScene.h"
+#include "StageSelectScene.h"
 
 GameClearScene::GameClearScene(int _star) {
 	star = _star;
@@ -15,7 +15,7 @@ void GameClearScene::Update() {
 		int x,y;
 		GetTouchInput(0, &x, &y, NULL, NULL);
 		if (y >= 1500) {
-			nextScene = make_shared<TitleScene>();
+			nextScene = make_shared<StageSelectScene>();
 		}
 	}
 }
