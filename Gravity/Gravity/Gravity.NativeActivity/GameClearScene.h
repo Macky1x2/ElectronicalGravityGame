@@ -1,7 +1,5 @@
 #pragma once
-#include "DxLib.h"
-#include "define.h"
-#include "SceneBase.h"
+#include "GameBaseScene.h"
 
 class GameClearScene :public SceneBase {
 	int star, starGHandle;
@@ -10,4 +8,5 @@ public:
 	~GameClearScene();
 	void Update();
 	void Draw()const;
+	void ReloadFunction(void);
 };

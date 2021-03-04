@@ -1,7 +1,5 @@
 #pragma once
-#include "DxLib.h"
-#include "define.h"
-#include "SceneBase.h"
+#include "SceneManager.h"
 
 class TitleScene :public SceneBase {
 
@@ -10,4 +8,5 @@ public:
 	~TitleScene();
 	void Update();
 	void Draw()const;
+	void ReloadFunction(void);
 };

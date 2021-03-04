@@ -1,5 +1,5 @@
 #pragma once
-#include "SceneBase.h"
+#include "TitleScene.h"
 
 class StageSelectScene :public SceneBase {
 public:
@@ -7,4 +7,5 @@ public:
 	~StageSelectScene();
 	void Update();
 	void Draw()const;
+	void ReloadFunction(void);
 };

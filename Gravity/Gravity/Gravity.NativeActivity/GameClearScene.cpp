@@ -1,9 +1,12 @@
 #include "GameClearScene.h"
 #include "StageSelectScene.h"
 
+extern SceneBase* Scene_pointer_for_Reload;
+
 GameClearScene::GameClearScene(int _star) {
 	star = _star;
 	starGHandle = LoadGraph("star.png");
+	Scene_pointer_for_Reload = this;
 }
 
 GameClearScene::~GameClearScene() {
@@ -25,4 +28,8 @@ void GameClearScene::Draw()const {
 	for (int i = 0; i < star; i++) {
 		DrawRotaGraph(300 * (i + 1), 500, 0.5, 0, starGHandle, TRUE, FALSE);
 	}
+}
+
+void GameClearScene::ReloadFunction(void) {
+	ReloadFileGraphAll();						// ƒtƒ@ƒCƒ‹‚©‚ç“Ç‚Ýž‚ñ‚¾‰æ‘œ‚ð•œŒ³‚·‚é
 }

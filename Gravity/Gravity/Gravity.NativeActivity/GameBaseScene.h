@@ -1,10 +1,7 @@
 #pragma once
-#include "DxLib.h"
-#include "define.h"
-#include "SceneBase.h"
+#include "StageSelectScene.h"
 #include "Actor.h"
 #include "Operation.h"
-#include <math.h>
 
 class GameBaseScene :public SceneBase {
 	bool time_advances;
@@ -29,4 +26,5 @@ public:
 	void AirResistance();
 	void TimeControl();
 	virtual void GameClear();
+	void ReloadFunction(void);
 };

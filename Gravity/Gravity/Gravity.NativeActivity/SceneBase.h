@@ -1,7 +1,9 @@
 #pragma once
 #include "DxLib.h"
+#include "define.h"
 #include <iostream>
 #include <memory>
+#include <math.h>
 
 using namespace std;
 
@@ -15,4 +17,5 @@ public:
 	~SceneBase(){}
 	virtual void Draw()const = 0;
 	virtual void Update() = 0;
+	virtual void ReloadFunction(void) = 0;
 };

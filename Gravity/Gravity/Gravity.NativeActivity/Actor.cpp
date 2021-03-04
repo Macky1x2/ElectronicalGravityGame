@@ -1,6 +1,4 @@
 #include "Actor.h"
-#include <cmath>
-#include <math.h>
 
 Player::Player(double first_x, double first_y, int _charge, int _volume, double _density) {
 	volume = _volume;

@@ -2,9 +2,12 @@
 #include "GameBaseSceneForTest.h"
 #include "GameClearScene.h"
 
+extern SceneBase* Scene_pointer_for_Reload;
+
 GameBaseSceneForTest::GameBaseSceneForTest() {
 	time_advances = false;
 	operate = std::make_shared<OperationInGame>();
+	Scene_pointer_for_Reload = this;
 }
 
 GameBaseSceneForTest::~GameBaseSceneForTest() {
@@ -311,6 +314,7 @@ void GameBaseSceneForTest::TimeControl() {
 
 void GameBaseSceneForTest::GameClear() {
 	int star, num;								//3:星3つ, 2:星2つ, 1:星1つ
+	num = 5;
 	for (int i = 0; i < player_num; i++) {
 		if (player[i]) {
 			num = player[i]->Return_shoot_num();
@@ -327,4 +331,20 @@ void GameBaseSceneForTest::GameClear() {
 		star = 1;
 	}
 	nextScene = make_shared<GameClearScene>(star);
+}
+
+void GameBaseSceneForTest::ReloadFunction(void) {
+	ReloadFileGraphAll();						// ファイルから読み込んだ画像を復元する
+
+	//MakeScreenのグラフィックハンドルを復元
+	for (int i = 0; i < player_num; i++) {
+		if (player[i]) {
+			player[i]->Make_TGHandle();
+		}
+	}
+	for (int i = 0; i < charged_ball_num; i++) {
+		if (charged_ball[i]) {
+			charged_ball[i]->Make_TGHandle();
+		}
+	}
 }

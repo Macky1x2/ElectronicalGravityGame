@@ -1,6 +1,7 @@
 #pragma once
 #include "DxLib.h"
 #include "define.h"
+#include <cmath>
 
 //‘€ì‚·‚éƒ{[ƒ‹
 class Player {

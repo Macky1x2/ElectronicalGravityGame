@@ -2,8 +2,10 @@
 #include "Stage_1.h"
 #include "Stage_Test.h"
 
-StageSelectScene::StageSelectScene() {
+extern SceneBase* Scene_pointer_for_Reload;
 
+StageSelectScene::StageSelectScene() {
+	Scene_pointer_for_Reload = this;
 }
 
 StageSelectScene::~StageSelectScene() {
@@ -33,4 +35,8 @@ void StageSelectScene::Draw()const {
 	for (int i = 0; i < 5; i++) {
 		DrawBox(100 + 200 * i, 200, 201 + 200 * i, 301, GetColor(0, 0, 255), TRUE);
 	}
+}
+
+void StageSelectScene::ReloadFunction(void) {
+	ReloadFileGraphAll();						// ƒtƒ@ƒCƒ‹‚©‚ç“Ç‚Ýž‚ñ‚¾‰æ‘œ‚ð•œŒ³‚·‚é
 }

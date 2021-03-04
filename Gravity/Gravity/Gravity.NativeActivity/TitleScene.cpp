@@ -1,8 +1,10 @@
 #include "TitleScene.h"
 #include "StageSelectScene.h"
 
-TitleScene::TitleScene() {
+SceneBase* Scene_pointer_for_Reload;
 
+TitleScene::TitleScene() {
+	Scene_pointer_for_Reload = this;
 }
 
 TitleScene::~TitleScene() {
@@ -21,4 +23,8 @@ void TitleScene::Update() {
 
 void TitleScene::Draw()const {
 	DrawBox(0, 0, 1081, 701, GetColor(0, 0, 255), TRUE);
+}
+
+void TitleScene::ReloadFunction(void) {
+	ReloadFileGraphAll();						// ƒtƒ@ƒCƒ‹‚©‚ç“Ç‚İ‚ñ‚¾‰æ‘œ‚ğ•œŒ³‚·‚é
 }
