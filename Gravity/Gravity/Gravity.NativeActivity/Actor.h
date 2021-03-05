@@ -42,6 +42,8 @@ public:
 	void Add_force_x(double);
 	void Add_force_y(double);
 	void Change_radiusbyvolume(int);
+	void Decide_position_x(double);
+	void Decide_position_y(double);
 	void Decide_force_x(double);
 	void Decide_force_y(double);
 	void Decide_speed_x(double);
@@ -89,6 +91,8 @@ public:
 	double Return_speed_y();
 	double Return_force_x();
 	double Return_force_y();
+	void Decide_position_x(double);
+	void Decide_position_y(double);
 	void Decide_force_x(double);
 	void Decide_force_y(double);
 	void Decide_speed_x(double);

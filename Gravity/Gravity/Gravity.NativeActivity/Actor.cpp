@@ -118,6 +118,14 @@ bool Player::Return_checker_when_time_stopped() {
 	return checker_when_time_stopped;
 }
 
+void Player::Decide_position_x(double decide_x) {
+	position_x = decide_x;
+}
+
+void Player::Decide_position_y(double decide_y) {
+	position_y = decide_y;
+}
+
 void Player::Decide_force_x(double decide_x) {
 	force_x = decide_x;
 }
@@ -199,8 +207,8 @@ void Player::Shoot_Operation() {
 		accel_power = accel_vector_size / 50;
 		accel_arrow_num = 0;
 		if (accel_vector_size != 0) {
-			speed_x += accel_power * ((accel_start_x - accel_end_x) / accel_vector_size);
-			speed_y += accel_power * ((accel_start_y - accel_end_y) / accel_vector_size);
+			speed_x += (2.5 / sqrt(density * volume)) * accel_power * ((accel_start_x - accel_end_x) / accel_vector_size);
+			speed_y += (2.5 / sqrt(density * volume)) * accel_power * ((accel_start_y - accel_end_y) / accel_vector_size);
 			checker_when_time_stopped = true;
 			shoot_num++;
 		}
@@ -334,6 +342,14 @@ double MovableChargedBall::Return_force_x() {
 
 double MovableChargedBall::Return_force_y() {
 	return force_y;
+}
+
+void MovableChargedBall::Decide_position_x(double decide_x) {
+	position_x = decide_x;
+}
+
+void MovableChargedBall::Decide_position_y(double decide_y) {
+	position_y = decide_y;
 }
 
 void MovableChargedBall::Decide_force_x(double decide_x) {

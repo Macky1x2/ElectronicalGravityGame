@@ -96,11 +96,17 @@ void GameBaseScene::HitConbine() {
 		for (int j = i + 1; j < charged_ball_num; j++) {
 			if (charged_ball[i] && charged_ball[j]) {
 				if (HitChecker_MovableChargedBallandNonMovableBall(charged_ball[i], charged_ball[j])) {		//MovableChargedBallはNonMovableBallの継承クラス
-					if (charged_ball[i]->Return_volume() >= charged_ball[j]->Return_volume()) {				//でかい方の位置を合体後のボールの位置とする
+					if (charged_ball[i]->Return_volume() >= charged_ball[j]->Return_volume()) {				//でかい方の位置を合体後のボールの位置とする(ただし等しいならば真ん中)
 						//運動量保存則
 						double m = charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume();
 						charged_ball[i]->Decide_speed_x((charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_x() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume() * charged_ball[j]->Return_speed_x()) / m);
 						charged_ball[i]->Decide_speed_y((charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_y() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume() * charged_ball[j]->Return_speed_y()) / m);
+
+						//等しいならば真ん中を中心座標にする
+						if (charged_ball[i]->Return_volume() == charged_ball[j]->Return_volume()) {
+							charged_ball[i]->Decide_position_x((charged_ball[i]->Return_position_x() + charged_ball[j]->Return_position_x()) / 2);
+							charged_ball[i]->Decide_position_y((charged_ball[i]->Return_position_y() + charged_ball[j]->Return_position_y()) / 2);
+						}
 
 						//プレイヤー側に加算
 						//密度計算
