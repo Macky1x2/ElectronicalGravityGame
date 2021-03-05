@@ -1,8 +1,8 @@
 //テスト開発用
 #pragma once
-#include "GameBaseSceneForTest.h"
+#include "GameBaseScene.h"
 
-class Stage_Test :public GameBaseSceneForTest {
+class Stage_Test :public GameBaseScene {
 public:
 	Stage_Test();
 	~Stage_Test();

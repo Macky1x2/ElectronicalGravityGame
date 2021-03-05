@@ -235,6 +235,8 @@
     <ClCompile Include="Operation.cpp" />
     <ClCompile Include="StageSelectScene.cpp" />
     <ClCompile Include="Stage_1.cpp" />
+    <ClCompile Include="Stage_2.cpp" />
+    <ClCompile Include="Stage_3.cpp" />
     <ClCompile Include="Stage_Test.cpp" />
     <ClCompile Include="TestGameScene.cpp" />
     <ClCompile Include="TitleScene.cpp" />
@@ -250,6 +252,8 @@
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="StageSelectScene.h" />
     <ClInclude Include="Stage_1.h" />
+    <ClInclude Include="Stage_2.h" />
+    <ClInclude Include="Stage_3.h" />
     <ClInclude Include="Stage_Test.h" />
     <ClInclude Include="TestGameScene.h" />
     <ClInclude Include="TitleScene.h" />

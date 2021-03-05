@@ -1,6 +1,6 @@
 #include "Actor.h"
 
-Player::Player(double first_x, double first_y, int _charge, int _volume, double _density) {
+Player::Player(double first_x, double first_y, int _charge, int _volume, double _density, int* _chargeTHandle, int* _accel_arrowGHandle) {
 	volume = _volume;
 	radius = 50 * pow(volume / 5.0, 1.0 / 3);
 	own_color = GetColor(0, 255, 255);
@@ -13,23 +13,23 @@ Player::Player(double first_x, double first_y, int _charge, int _volume, double 
 	speed_x = 0;
 	speed_y = 0;
 	charge = _charge;
-	Load_THandle();					//テキストハンドル読み込み
+	charge_THandle = _chargeTHandle;					//テキストハンドル読み込み
 	if (charge > 0) {
-		charge_text_width = GetDrawFormatStringWidthToHandle(charge_THandle, "+%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "+%d", charge);
 	}
 	else {
-		charge_text_width = GetDrawFormatStringWidthToHandle(charge_THandle, "%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
 	}
 	charge_temp_GHandle = MakeScreen(charge_text_width, 20, TRUE);							//調節必須:幅,高さ
 	SetDrawScreen(charge_temp_GHandle);
 	if (charge > 0) {
-		DrawFormatStringToHandle(0, -3, charge_text_color, charge_THandle, "+%d", charge);	//調節必須:起点y座標
+		DrawFormatStringToHandle(0, -3, charge_text_color, *charge_THandle, "+%d", charge);	//調節必須:起点y座標
 	}
 	else {
-		DrawFormatStringToHandle(0, -3, charge_text_color, charge_THandle, "%d", charge);
+		DrawFormatStringToHandle(0, -3, charge_text_color, *charge_THandle, "%d", charge);
 	}
 	SetDrawScreen(DX_SCREEN_BACK);
-	accel_arrowGHandle = LoadGraph("V_arrow_red.png");
+	accel_arrowGHandle = _accel_arrowGHandle;
 	accel_arrow_num = 0;
 	acceleration_x = 0;
 	acceleration_y = 0;
@@ -40,9 +40,8 @@ Player::Player(double first_x, double first_y, int _charge, int _volume, double 
 }
 
 Player::~Player() {
-	DeleteFontToHandle(charge_THandle);
+	DeleteFontToHandle(*charge_THandle);
 	DeleteGraph(charge_temp_GHandle);
-	DeleteGraph(accel_arrowGHandle);
 }
 
 void Player::Update() {
@@ -66,7 +65,7 @@ void Player::Draw()const {
 	DrawRotaGraph(position_x, position_y, 3.0 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);		//体積文字描画
 	//加速矢印描画
 	for (int i = 0; i < accel_arrow_num; i++) {
-		DrawRotaGraph(position_x - (i + 1) * (radius * 1.5) * cos(accel_arrow_direction), position_y - (i + 1) * (radius * 1.5) * sin(accel_arrow_direction), 0.3, accel_arrow_direction, accel_arrowGHandle, TRUE, FALSE);
+		DrawRotaGraph(position_x - (i + 1) * (radius * 1.5) * cos(accel_arrow_direction), position_y - (i + 1) * (radius * 1.5) * sin(accel_arrow_direction), 0.3, accel_arrow_direction, *accel_arrowGHandle, TRUE, FALSE);
 	}
 }
 
@@ -169,25 +168,21 @@ void Player::Add_force_y(double add_force) {
 
 void Player::Make_TGHandle() {
 	if (charge > 0) {
-		charge_text_width = GetDrawFormatStringWidthToHandle(charge_THandle, "+%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "+%d", charge);
 	}
 	else {
-		charge_text_width = GetDrawFormatStringWidthToHandle(charge_THandle, "%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
 	}
 	DeleteGraph(charge_temp_GHandle);
 	charge_temp_GHandle = MakeScreen(charge_text_width, 20, TRUE);
 	SetDrawScreen(charge_temp_GHandle);
 	if (charge > 0) {
-		DrawFormatStringToHandle(0, -3, charge_text_color, charge_THandle, "+%d", charge);
+		DrawFormatStringToHandle(0, -3, charge_text_color, *charge_THandle, "+%d", charge);
 	}
 	else {
-		DrawFormatStringToHandle(0, -3, charge_text_color, charge_THandle, "%d", charge);
+		DrawFormatStringToHandle(0, -3, charge_text_color, *charge_THandle, "%d", charge);
 	}
 	SetDrawScreen(DX_SCREEN_BACK);
-}
-
-void Player::Load_THandle() {
-	charge_THandle = CreateFontToHandle(NULL, 20, 6, DX_FONTTYPE_NORMAL);					//調節必須:フォントに適したフォントサイズ
 }
 
 void Player::Shoot_Operation() {
@@ -273,7 +268,7 @@ double NonMovableBall::Return_density() {
 	return density;
 }
 
-MovableChargedBall::MovableChargedBall(double first_x, double first_y, int _charge, int _volume, double _density) :NonMovableBall(first_x, first_y, _volume, _density) {
+MovableChargedBall::MovableChargedBall(double first_x, double first_y, int _charge, int _volume, double _density, int* _chargeTHandle) :NonMovableBall(first_x, first_y, _volume, _density) {
 	charge = _charge;
 	speed_x = 0;
 	speed_y = 0;
@@ -283,26 +278,25 @@ MovableChargedBall::MovableChargedBall(double first_x, double first_y, int _char
 	force_y = 0;
 	own_color = GetColor(0, 255, 0);
 	charge_text_color = GetColor(255, 0, 0);
-	Load_THandle();								//テキストハンドル読み込み
+	charge_THandle = _chargeTHandle;								//テキストハンドル読み込み
 	if (charge > 0) {
-		charge_text_width = GetDrawFormatStringWidthToHandle(charge_THandle, "+%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "+%d", charge);
 	}
 	else {
-		charge_text_width = GetDrawFormatStringWidthToHandle(charge_THandle, "%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
 	}
 	charge_temp_GHandle = MakeScreen(charge_text_width, 20, TRUE);							//調節必須:幅,高さ
 	SetDrawScreen(charge_temp_GHandle);
 	if (charge > 0) {
-		DrawFormatStringToHandle(0, -3, charge_text_color, charge_THandle, "+%d", charge);	//調節必須:起点y座標
+		DrawFormatStringToHandle(0, -3, charge_text_color, *charge_THandle, "+%d", charge);	//調節必須:起点y座標
 	}
 	else {
-		DrawFormatStringToHandle(0, -3, charge_text_color, charge_THandle, "%d", charge);
+		DrawFormatStringToHandle(0, -3, charge_text_color, *charge_THandle, "%d", charge);
 	}
 	SetDrawScreen(DX_SCREEN_BACK);
 }
 
 MovableChargedBall::~MovableChargedBall() {
-	DeleteFontToHandle(charge_THandle);
 	DeleteGraph(charge_temp_GHandle);
 }
 
@@ -395,23 +389,19 @@ void MovableChargedBall::Change_radiusbyvolume(int _volume) {
 
 void MovableChargedBall::Make_TGHandle() {
 	if (charge > 0) {
-		charge_text_width = GetDrawFormatStringWidthToHandle(charge_THandle, "+%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "+%d", charge);
 	}
 	else {
-		charge_text_width = GetDrawFormatStringWidthToHandle(charge_THandle, "%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
 	}
 	DeleteGraph(charge_temp_GHandle);
 	charge_temp_GHandle = MakeScreen(charge_text_width, 20, TRUE);
 	SetDrawScreen(charge_temp_GHandle);
 	if (charge > 0) {
-		DrawFormatStringToHandle(0, -3, charge_text_color, charge_THandle, "+%d", charge);
+		DrawFormatStringToHandle(0, -3, charge_text_color, *charge_THandle, "+%d", charge);
 	}
 	else {
-		DrawFormatStringToHandle(0, -3, charge_text_color, charge_THandle, "%d", charge);
+		DrawFormatStringToHandle(0, -3, charge_text_color, *charge_THandle, "%d", charge);
 	}
 	SetDrawScreen(DX_SCREEN_BACK);
-}
-
-void MovableChargedBall::Load_THandle() {
-	charge_THandle = CreateFontToHandle(NULL, 20, 6, DX_FONTTYPE_NORMAL);					//調節必須:フォントに適したフォントサイズ
 }

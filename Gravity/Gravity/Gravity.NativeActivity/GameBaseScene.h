@@ -9,6 +9,8 @@ class GameBaseScene :public SceneBase {
 protected:
 	double air_resistance_coefficient;
 	int player_num, size_up_ball_num, charged_ball_num;
+	int accel_arrowGHandle;
+	int charge_THandle;
 	std::shared_ptr<Player>* player;
 	std::shared_ptr<NonMovableBall>* size_up_ball;
 	std::shared_ptr<MovableChargedBall>* charged_ball;

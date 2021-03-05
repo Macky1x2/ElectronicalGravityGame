@@ -14,14 +14,16 @@ class Player {
 	double speed_x, speed_y;
 	int accel_start_x, accel_start_y, accel_end_x, accel_end_y, accel_temp_x, accel_temp_y;
 	double accel_power, accel_vector_size, accel_arrow_direction;
-	int accel_arrowGHandle, accel_arrow_num;
-	int charge, charge_THandle, charge_temp_GHandle, charge_text_width;
+	int accel_arrow_num;
+	int* accel_arrowGHandle;
+	int charge, charge_temp_GHandle, charge_text_width;
+	int* charge_THandle;
 	int shoot_num;
 	double acceleration_x, acceleration_y;
 	double force_x, force_y;
 	double density;
 public:
-	Player(double, double, int, int, double);		//引数(初期x座標, 初期y座標, 電荷, 体積, 密度)
+	Player(double, double, int, int, double, int*, int*);		//引数(初期x座標, 初期y座標, 電荷, 体積, 密度, テキストハンドル, V矢印画像ハンドル)
 	~Player();
 	void Update();
 	void Draw()const;
@@ -51,7 +53,6 @@ public:
 	void Decide_density(double);
 	void Make_TGHandle();
 	void Shoot_Operation();
-	void Load_THandle();
 };
 
 //動かない引力なしのボール
@@ -76,13 +77,14 @@ public:
 
 //可動な、電気を帯びたボール(電荷0も含む)
 class MovableChargedBall :public NonMovableBall {
-	int charge, charge_THandle, charge_temp_GHandle, charge_text_width;
+	int charge, charge_temp_GHandle, charge_text_width;
+	int* charge_THandle;
 	unsigned int charge_text_color;
 	double speed_x, speed_y;
 	double acceleration_x, acceleration_y;
 	double force_x, force_y;
 public:
-	MovableChargedBall(double, double, int, int, double);		//引数(初期x座標, 初期y座標, 電荷, 体積, 密度)
+	MovableChargedBall(double, double, int, int, double, int*);		//引数(初期x座標, 初期y座標, 電荷, 体積, 密度, テキストハンドル)
 	~MovableChargedBall();
 	void Update();
 	void Draw()const;
@@ -104,5 +106,4 @@ public:
 	void Add_charge(int);
 	void Change_radiusbyvolume(int);
 	void Make_TGHandle();
-	void Load_THandle();
 };

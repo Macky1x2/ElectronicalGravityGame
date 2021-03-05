@@ -7,6 +7,8 @@ GameBaseScene::GameBaseScene() {
 	time_advances = false;
 	operate = std::make_shared<OperationInGame>();
 	Scene_pointer_for_Reload = this;
+	accel_arrowGHandle = LoadGraph("V_arrow_red.png");
+	charge_THandle = CreateFontToHandle(NULL, 20, 5, DX_FONTTYPE_NORMAL);
 }
 
 GameBaseScene::~GameBaseScene() {
@@ -342,16 +344,7 @@ void GameBaseScene::ReloadFunction(void) {
 	ReloadFileGraphAll();						// ファイルから読み込んだ画像を復元する
 
 	//テキストハンドル復元
-	for (int i = 0; i < player_num; i++) {
-		if (player[i]) {
-			player[i]->Load_THandle();
-		}
-	}
-	for (int i = 0; i < charged_ball_num; i++) {
-		if (charged_ball[i]) {
-			charged_ball[i]->Load_THandle();
-		}
-	}
+	charge_THandle = CreateFontToHandle(NULL, 20, 5, DX_FONTTYPE_NORMAL);
 	
 	//MakeScreenのグラフィックハンドルを復元
 	for (int i = 0; i < player_num; i++) {
