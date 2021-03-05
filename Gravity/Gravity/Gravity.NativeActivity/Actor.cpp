@@ -61,7 +61,15 @@ void Player::Update() {
 
 void Player::Draw()const {
 	DrawCircle(position_x, position_y, radius, own_color, TRUE);							//Ž©•ª•`‰æ
-	DrawRotaGraph(position_x, position_y, 1.5 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);		//‘ÌÏ•¶Žš•`‰æ
+
+	//‘ÌÏ•¶Žš•`‰æ
+	if (charge_text_width > 55) {
+		DrawRotaGraph(position_x, position_y, (55.0 / charge_text_width) * 1.5 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);
+	}
+	else {
+		DrawRotaGraph(position_x, position_y, 1.5 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);
+	}
+
 	//‰Á‘¬–îˆó•`‰æ
 	for (int i = 0; i < accel_arrow_num; i++) {
 		DrawRotaGraph(position_x - (i + 1) * (radius * 1.5) * cos(accel_arrow_direction), position_y - (i + 1) * (radius * 1.5) * sin(accel_arrow_direction), 0.3, accel_arrow_direction, *accel_arrowGHandle, TRUE, FALSE);
@@ -314,7 +322,14 @@ void MovableChargedBall::Update() {
 
 void MovableChargedBall::Draw()const {
 	DrawCircle(position_x, position_y, radius, own_color, TRUE);							//Ž©•ª•`‰æ
-	DrawRotaGraph(position_x, position_y, 1.5 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);		//‘ÌÏ•¶Žš•`‰æ
+	
+	//‘ÌÏ•¶Žš•`‰æ
+	if (charge_text_width > 55) {
+		DrawRotaGraph(position_x, position_y, (55.0 / charge_text_width) * 1.5 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);
+	}
+	else {
+		DrawRotaGraph(position_x, position_y, 1.5 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);
+	}
 }
 
 int MovableChargedBall::Return_charge() {
