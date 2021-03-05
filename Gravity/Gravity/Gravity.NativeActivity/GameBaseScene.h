@@ -20,6 +20,7 @@ public:
 	void Update();
 	void Draw()const;
 	void HitConbine();
+	bool HitChecker_PlayerandPlayer(std::shared_ptr<Player>, std::shared_ptr<Player>);
 	bool HitChecker_PlayerandNonMovableBall(std::shared_ptr<Player>, std::shared_ptr<NonMovableBall>);
 	bool HitChecker_PlayerandMovableChargedBall(std::shared_ptr<Player>, std::shared_ptr<MovableChargedBall>);
 	bool HitChecker_MovableChargedBallandNonMovableBall(std::shared_ptr<MovableChargedBall>, std::shared_ptr<NonMovableBall>);

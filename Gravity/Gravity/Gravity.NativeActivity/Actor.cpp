@@ -40,7 +40,6 @@ Player::Player(double first_x, double first_y, int _charge, int _volume, double 
 }
 
 Player::~Player() {
-	DeleteFontToHandle(*charge_THandle);
 	DeleteGraph(charge_temp_GHandle);
 }
 
@@ -173,6 +172,7 @@ void Player::Make_TGHandle() {
 	else {
 		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
 	}
+	printfDx("%d\n", charge_text_width);
 	DeleteGraph(charge_temp_GHandle);
 	charge_temp_GHandle = MakeScreen(charge_text_width, 20, TRUE);
 	SetDrawScreen(charge_temp_GHandle);

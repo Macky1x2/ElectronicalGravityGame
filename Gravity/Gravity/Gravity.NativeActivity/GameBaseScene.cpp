@@ -28,9 +28,55 @@ GameBaseScene::~GameBaseScene() {
 		}
 	}
 	operate.reset();
+	DeleteGraph(accel_arrowGHandle);
+	DeleteFontToHandle(charge_THandle);
 }
 
 void GameBaseScene::HitConbine() {
+	//プレイヤー同士について
+	for (int i = 0; i < player_num; i++) {
+		for (int j = i + 1; j < player_num; j++) {
+			if (player[i] && player[j]) {
+				if (HitChecker_PlayerandPlayer(player[i], player[j])) {
+					if (player[i]->Return_volume() >= player[j]->Return_volume()) {				//でかい方の位置を合体後のボールの位置とする(ただし等しいならば真ん中)
+						//運動量保存則
+						double m = player[i]->Return_density() * player[i]->Return_volume() + player[j]->Return_density() * player[j]->Return_volume();
+						player[i]->Decide_speed_x((player[i]->Return_density() * player[i]->Return_volume() * player[i]->Return_speed_x() + player[j]->Return_density() * player[j]->Return_volume() * player[j]->Return_speed_x()) / m);
+						player[i]->Decide_speed_y((player[i]->Return_density() * player[i]->Return_volume() * player[i]->Return_speed_y() + player[j]->Return_density() * player[j]->Return_volume() * player[j]->Return_speed_y()) / m);
+
+						//等しいならば真ん中を中心座標にする
+						if (player[i]->Return_volume() == player[j]->Return_volume()) {
+							player[i]->Decide_position_x((player[i]->Return_position_x() + player[j]->Return_position_x()) / 2);
+							player[i]->Decide_position_y((player[i]->Return_position_y() + player[j]->Return_position_y()) / 2);
+						}
+
+						//プレイヤー側に加算
+						//密度計算
+						player[i]->Decide_density((player[i]->Return_density() * player[i]->Return_volume() + player[j]->Return_density() * player[j]->Return_volume()) / (player[i]->Return_volume() + player[j]->Return_volume()));
+						player[i]->Add_volume(player[j]->Return_volume());
+						player[i]->Add_charge(player[j]->Return_charge());
+						player[i]->Make_TGHandle();
+						player[j].reset();
+					}
+					else {
+						//運動量保存則
+						double m = player[j]->Return_density() * player[j]->Return_volume() + player[i]->Return_density() * player[i]->Return_volume();
+						player[j]->Decide_speed_x((player[i]->Return_density() * player[i]->Return_volume() * player[i]->Return_speed_x() + player[j]->Return_density() * player[j]->Return_volume() * player[j]->Return_speed_x()) / m);
+						player[j]->Decide_speed_y((player[i]->Return_density() * player[i]->Return_volume() * player[i]->Return_speed_y() + player[j]->Return_density() * player[j]->Return_volume() * player[j]->Return_speed_y()) / m);
+
+						//プレイヤー側に加算
+						//密度計算
+						player[j]->Decide_density((player[i]->Return_density() * player[i]->Return_volume() + player[j]->Return_density() * player[j]->Return_volume()) / (player[i]->Return_volume() + player[j]->Return_volume()));
+						player[j]->Add_volume(player[i]->Return_volume());
+						player[j]->Add_charge(player[i]->Return_charge());
+						player[j]->Make_TGHandle();
+						player[i].reset();
+					}
+				}
+			}
+		}
+	}
+
 	//プレイヤーと動かないボール間について
 	for (int i = 0; i < player_num; i++) {
 		for (int j = 0; j < size_up_ball_num; j++) {
@@ -110,7 +156,6 @@ void GameBaseScene::HitConbine() {
 							charged_ball[i]->Decide_position_y((charged_ball[i]->Return_position_y() + charged_ball[j]->Return_position_y()) / 2);
 						}
 
-						//プレイヤー側に加算
 						//密度計算
 						charged_ball[i]->Decide_density((charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume()) / (charged_ball[i]->Return_volume() + charged_ball[j]->Return_volume()));
 						charged_ball[i]->Add_volume(charged_ball[j]->Return_volume());
@@ -124,7 +169,6 @@ void GameBaseScene::HitConbine() {
 						charged_ball[j]->Decide_speed_x((charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_x() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume() * charged_ball[j]->Return_speed_x()) / m);
 						charged_ball[j]->Decide_speed_y((charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_y() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume() * charged_ball[j]->Return_speed_y()) / m);
 
-						//プレイヤー側に加算
 						//密度計算
 						charged_ball[j]->Decide_density((charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume()) / (charged_ball[i]->Return_volume() + charged_ball[j]->Return_volume()));
 						charged_ball[j]->Add_volume(charged_ball[i]->Return_volume());
@@ -150,6 +194,22 @@ void GameBaseScene::Gravity() {
 		if (charged_ball[i]) {
 			charged_ball[i]->Decide_force_x(0.0);
 			charged_ball[i]->Decide_force_y(0.0);
+		}
+	}
+
+	//プレイヤー同士のクーロン力
+	for (int i = 0; i < player_num; i++) {
+		for (int j = i + 1; j < player_num; j++) {
+			if (player[i] && player[j]) {
+				double r = pow((player[i]->Return_position_x() - player[j]->Return_position_x()) * (player[i]->Return_position_x() - player[j]->Return_position_x()) + (player[i]->Return_position_y() - player[j]->Return_position_y()) * (player[i]->Return_position_y() - player[j]->Return_position_y()), 1.0 / 2);
+				double temp_x, temp_y;
+				temp_x = -COULOMB_CONSTANT * player[j]->Return_charge() * player[i]->Return_charge() * (player[i]->Return_position_x() - player[j]->Return_position_x()) / (r * r * r);
+				temp_y = -COULOMB_CONSTANT * player[j]->Return_charge() * player[i]->Return_charge() * (player[i]->Return_position_y() - player[j]->Return_position_y()) / (r * r * r);
+				player[j]->Add_force_x(temp_x);
+				player[j]->Add_force_y(temp_y);
+				player[i]->Add_force_x(-temp_x);
+				player[i]->Add_force_y(-temp_y);
+			}
 		}
 	}
 
@@ -224,6 +284,16 @@ void GameBaseScene::Draw()const {
 		if (player[i]) {
 			player[i]->Draw();
 		}
+	}
+}
+
+bool GameBaseScene::HitChecker_PlayerandPlayer(std::shared_ptr<Player> _player1, std::shared_ptr<Player> _player2) {
+	//if(当たっているならば)
+	if ((_player1->Return_position_x() - _player2->Return_position_x()) * (_player1->Return_position_x() - _player2->Return_position_x()) + (_player1->Return_position_y() - _player2->Return_position_y()) * (_player1->Return_position_y() - _player2->Return_position_y()) < (_player1->Return_radius() + _player2->Return_radius()) * (_player1->Return_radius() + _player2->Return_radius())) {
+		return true;
+	}
+	else {
+		return false;
 	}
 }
 
