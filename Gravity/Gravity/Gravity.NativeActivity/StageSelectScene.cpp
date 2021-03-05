@@ -2,6 +2,7 @@
 #include "Stage_1.h"
 #include "Stage_2.h"
 #include "Stage_3.h"
+#include "Stage_4.h"
 #include "Stage_Test.h"
 
 extern SceneBase* Scene_pointer_for_Reload;
@@ -24,7 +25,7 @@ void StageSelectScene::Update() {
 				case 0:nextScene = make_shared<Stage_1>(); break;
 				case 1:nextScene = make_shared<Stage_2>(); break;
 				case 2:nextScene = make_shared<Stage_3>(); break;
-				case 3:nextScene = make_shared<Stage_1>(); break;
+				case 3:nextScene = make_shared<Stage_4>(); break;
 				case 4:nextScene = make_shared<Stage_Test>(); break;
 				default:break;
 				}

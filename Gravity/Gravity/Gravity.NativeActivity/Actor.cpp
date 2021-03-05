@@ -20,13 +20,13 @@ Player::Player(double first_x, double first_y, int _charge, int _volume, double 
 	else {
 		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
 	}
-	charge_temp_GHandle = MakeScreen(charge_text_width, 20, TRUE);							//’²ß•K{:•,‚‚³
+	charge_temp_GHandle = MakeScreen(charge_text_width, 40, TRUE);							//’²ß•K{:•,‚‚³
 	SetDrawScreen(charge_temp_GHandle);
 	if (charge > 0) {
-		DrawFormatStringToHandle(0, -3, charge_text_color, *charge_THandle, "+%d", charge);	//’²ß•K{:‹N“_yÀ•W
+		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "+%d", charge);	//’²ß•K{:‹N“_yÀ•W
 	}
 	else {
-		DrawFormatStringToHandle(0, -3, charge_text_color, *charge_THandle, "%d", charge);
+		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "%d", charge);
 	}
 	SetDrawScreen(DX_SCREEN_BACK);
 	accel_arrowGHandle = _accel_arrowGHandle;
@@ -61,7 +61,7 @@ void Player::Update() {
 
 void Player::Draw()const {
 	DrawCircle(position_x, position_y, radius, own_color, TRUE);							//©•ª•`‰æ
-	DrawRotaGraph(position_x, position_y, 3.0 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);		//‘ÌÏ•¶š•`‰æ
+	DrawRotaGraph(position_x, position_y, 1.5 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);		//‘ÌÏ•¶š•`‰æ
 	//‰Á‘¬–îˆó•`‰æ
 	for (int i = 0; i < accel_arrow_num; i++) {
 		DrawRotaGraph(position_x - (i + 1) * (radius * 1.5) * cos(accel_arrow_direction), position_y - (i + 1) * (radius * 1.5) * sin(accel_arrow_direction), 0.3, accel_arrow_direction, *accel_arrowGHandle, TRUE, FALSE);
@@ -172,15 +172,14 @@ void Player::Make_TGHandle() {
 	else {
 		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
 	}
-	printfDx("%d\n", charge_text_width);
 	DeleteGraph(charge_temp_GHandle);
-	charge_temp_GHandle = MakeScreen(charge_text_width, 20, TRUE);
+	charge_temp_GHandle = MakeScreen(charge_text_width, 40, TRUE);
 	SetDrawScreen(charge_temp_GHandle);
 	if (charge > 0) {
-		DrawFormatStringToHandle(0, -3, charge_text_color, *charge_THandle, "+%d", charge);
+		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "+%d", charge);
 	}
 	else {
-		DrawFormatStringToHandle(0, -3, charge_text_color, *charge_THandle, "%d", charge);
+		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "%d", charge);
 	}
 	SetDrawScreen(DX_SCREEN_BACK);
 }
@@ -285,13 +284,13 @@ MovableChargedBall::MovableChargedBall(double first_x, double first_y, int _char
 	else {
 		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
 	}
-	charge_temp_GHandle = MakeScreen(charge_text_width, 20, TRUE);							//’²ß•K{:•,‚‚³
+	charge_temp_GHandle = MakeScreen(charge_text_width, 40, TRUE);							//’²ß•K{:•,‚‚³
 	SetDrawScreen(charge_temp_GHandle);
 	if (charge > 0) {
-		DrawFormatStringToHandle(0, -3, charge_text_color, *charge_THandle, "+%d", charge);	//’²ß•K{:‹N“_yÀ•W
+		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "+%d", charge);	//’²ß•K{:‹N“_yÀ•W
 	}
 	else {
-		DrawFormatStringToHandle(0, -3, charge_text_color, *charge_THandle, "%d", charge);
+		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "%d", charge);
 	}
 	SetDrawScreen(DX_SCREEN_BACK);
 }
@@ -315,7 +314,7 @@ void MovableChargedBall::Update() {
 
 void MovableChargedBall::Draw()const {
 	DrawCircle(position_x, position_y, radius, own_color, TRUE);							//©•ª•`‰æ
-	DrawRotaGraph(position_x, position_y, 3.0 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);		//‘ÌÏ•¶š•`‰æ
+	DrawRotaGraph(position_x, position_y, 1.5 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);		//‘ÌÏ•¶š•`‰æ
 }
 
 int MovableChargedBall::Return_charge() {
@@ -395,13 +394,13 @@ void MovableChargedBall::Make_TGHandle() {
 		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
 	}
 	DeleteGraph(charge_temp_GHandle);
-	charge_temp_GHandle = MakeScreen(charge_text_width, 20, TRUE);
+	charge_temp_GHandle = MakeScreen(charge_text_width, 40, TRUE);
 	SetDrawScreen(charge_temp_GHandle);
 	if (charge > 0) {
-		DrawFormatStringToHandle(0, -3, charge_text_color, *charge_THandle, "+%d", charge);
+		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "+%d", charge);
 	}
 	else {
-		DrawFormatStringToHandle(0, -3, charge_text_color, *charge_THandle, "%d", charge);
+		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "%d", charge);
 	}
 	SetDrawScreen(DX_SCREEN_BACK);
 }

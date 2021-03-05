@@ -40,6 +40,9 @@
     <ClCompile Include="Stage_3.cpp">
       <Filter>ソースファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Stage_4.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h">
@@ -85,6 +88,9 @@
       <Filter>ヘッダーファイル</Filter>
     </ClInclude>
     <ClInclude Include="Stage_3.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage_4.h">
       <Filter>ヘッダーファイル</Filter>
     </ClInclude>
   </ItemGroup>

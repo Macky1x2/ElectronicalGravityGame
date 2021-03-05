@@ -8,7 +8,7 @@ GameBaseScene::GameBaseScene() {
 	operate = std::make_shared<OperationInGame>();
 	Scene_pointer_for_Reload = this;
 	accel_arrowGHandle = LoadGraph("V_arrow_red.png");
-	charge_THandle = CreateFontToHandle(NULL, 20, 5, DX_FONTTYPE_NORMAL);
+	charge_THandle = CreateFontToHandle(NULL, 40, 5, DX_FONTTYPE_NORMAL);
 }
 
 GameBaseScene::~GameBaseScene() {
@@ -381,9 +381,11 @@ void GameBaseScene::TimeControl() {
 	//時間停止時、プレイヤーショットをすると時が動き出す
 	if (!time_advances) {
 		for (int i = 0; i < player_num; i++) {
-			player[i]->Shoot_Operation();
-			if (player[i]->Return_checker_when_time_stopped()) {
-				time_advances = true;
+			if (player[i]) {
+				player[i]->Shoot_Operation();
+				if (player[i]->Return_checker_when_time_stopped()) {
+					time_advances = true;
+				}
 			}
 		}
 	}
@@ -414,7 +416,7 @@ void GameBaseScene::ReloadFunction(void) {
 	ReloadFileGraphAll();						// ファイルから読み込んだ画像を復元する
 
 	//テキストハンドル復元
-	charge_THandle = CreateFontToHandle(NULL, 20, 5, DX_FONTTYPE_NORMAL);
+	charge_THandle = CreateFontToHandle(NULL, 40, 5, DX_FONTTYPE_NORMAL);
 	
 	//MakeScreenのグラフィックハンドルを復元
 	for (int i = 0; i < player_num; i++) {
