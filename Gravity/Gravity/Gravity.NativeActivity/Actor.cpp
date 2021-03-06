@@ -1,4 +1,4 @@
-#include "Actor.h"
+ï»¿#include "Actor.h"
 
 Player::Player(double first_x, double first_y, int _charge, int _volume, double _density, int* _chargeTHandle, int* _accel_arrowGHandle) {
 	volume = _volume;
@@ -13,17 +13,17 @@ Player::Player(double first_x, double first_y, int _charge, int _volume, double 
 	speed_x = 0;
 	speed_y = 0;
 	charge = _charge;
-	charge_THandle = _chargeTHandle;					//ƒeƒLƒXƒgƒnƒ“ƒhƒ‹“Ç‚İ‚İ
+	charge_THandle = _chargeTHandle;					//ãƒ†ã‚­ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ«èª­ã¿è¾¼ã¿
 	if (charge > 0) {
 		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "+%d", charge);
 	}
 	else {
 		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
 	}
-	charge_temp_GHandle = MakeScreen(charge_text_width, 40, TRUE);							//’²ß•K{:•,‚‚³
+	charge_temp_GHandle = MakeScreen(charge_text_width, 40, TRUE);							//èª¿ç¯€å¿…é ˆ:å¹…,é«˜ã•
 	SetDrawScreen(charge_temp_GHandle);
 	if (charge > 0) {
-		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "+%d", charge);	//’²ß•K{:‹N“_yÀ•W
+		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "+%d", charge);	//èª¿ç¯€å¿…é ˆ:èµ·ç‚¹yåº§æ¨™
 	}
 	else {
 		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "%d", charge);
@@ -44,25 +44,25 @@ Player::~Player() {
 }
 
 void Player::Update() {
-	//—ÍŒˆ’èˆ—‚ªI—¹Œã
+	//åŠ›æ±ºå®šå‡¦ç†ãŒçµ‚äº†å¾Œ
 	acceleration_x = force_x / (density * volume);
 	acceleration_y = force_y / (density * volume);
-	//‰Á‘¬“xŒˆ’èˆ—‚ªI—¹Œã
+	//åŠ é€Ÿåº¦æ±ºå®šå‡¦ç†ãŒçµ‚äº†å¾Œ
 	speed_x += acceleration_x;
 	speed_y += acceleration_y;
 
-	Shoot_Operation();								//ˆÚ“®‘€ì
+	Shoot_Operation();								//ç§»å‹•æ“ä½œ
 
-	//‘¬“xŒˆ’èˆ—‚ªI—¹Œã
+	//é€Ÿåº¦æ±ºå®šå‡¦ç†ãŒçµ‚äº†å¾Œ
 	position_x += speed_x;
 	position_y += speed_y;
-	//‘ÌÏŒˆ’èˆ—‚ªI—¹Œã
+	//ä½“ç©æ±ºå®šå‡¦ç†ãŒçµ‚äº†å¾Œ
 }
 
 void Player::Draw()const {
-	DrawCircle(position_x, position_y, radius, own_color, TRUE);							//©•ª•`‰æ
+	DrawCircle(position_x, position_y, radius, own_color, TRUE);							//è‡ªåˆ†æç”»
 
-	//‘ÌÏ•¶š•`‰æ
+	//ä½“ç©æ–‡å­—æç”»
 	if (charge_text_width > 55) {
 		DrawRotaGraph(position_x, position_y, (55.0 / charge_text_width) * 1.5 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);
 	}
@@ -70,7 +70,7 @@ void Player::Draw()const {
 		DrawRotaGraph(position_x, position_y, 1.5 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);
 	}
 
-	//‰Á‘¬–îˆó•`‰æ
+	//åŠ é€ŸçŸ¢å°æç”»
 	for (int i = 0; i < accel_arrow_num; i++) {
 		DrawRotaGraph(position_x - (i + 1) * (radius * 1.5) * cos(accel_arrow_direction), position_y - (i + 1) * (radius * 1.5) * sin(accel_arrow_direction), 0.3, accel_arrow_direction, *accel_arrowGHandle, TRUE, FALSE);
 	}
@@ -158,7 +158,7 @@ void Player::Change_radiusbyvolume(int _volume) {
 
 void Player::Add_volume(int add_volume) {
 	volume += add_volume;
-	Change_radiusbyvolume(volume);			//‘ÌÏ‚ª•Ï‰»‚µ‚½‚½‚ß”¼Œa‚à•Ï‰»‚³‚¹‚é
+	Change_radiusbyvolume(volume);			//ä½“ç©ãŒå¤‰åŒ–ã—ãŸãŸã‚åŠå¾„ã‚‚å¤‰åŒ–ã•ã›ã‚‹
 }
 
 void Player::Add_charge(int add_charge) {
@@ -285,17 +285,17 @@ MovableChargedBall::MovableChargedBall(double first_x, double first_y, int _char
 	force_y = 0;
 	own_color = GetColor(0, 255, 0);
 	charge_text_color = GetColor(255, 0, 0);
-	charge_THandle = _chargeTHandle;								//ƒeƒLƒXƒgƒnƒ“ƒhƒ‹“Ç‚İ‚İ
+	charge_THandle = _chargeTHandle;								//ãƒ†ã‚­ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ«èª­ã¿è¾¼ã¿
 	if (charge > 0) {
 		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "+%d", charge);
 	}
 	else {
 		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
 	}
-	charge_temp_GHandle = MakeScreen(charge_text_width, 40, TRUE);							//’²ß•K{:•,‚‚³
+	charge_temp_GHandle = MakeScreen(charge_text_width, 40, TRUE);							//èª¿ç¯€å¿…é ˆ:å¹…,é«˜ã•
 	SetDrawScreen(charge_temp_GHandle);
 	if (charge > 0) {
-		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "+%d", charge);	//’²ß•K{:‹N“_yÀ•W
+		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "+%d", charge);	//èª¿ç¯€å¿…é ˆ:èµ·ç‚¹yåº§æ¨™
 	}
 	else {
 		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "%d", charge);
@@ -308,22 +308,22 @@ MovableChargedBall::~MovableChargedBall() {
 }
 
 void MovableChargedBall::Update() {
-	//—ÍŒˆ’èˆ—‚ªI—¹Œã
+	//åŠ›æ±ºå®šå‡¦ç†ãŒçµ‚äº†å¾Œ
 	acceleration_x = force_x / (density * volume);
 	acceleration_y = force_y / (density * volume);
-	//‰Á‘¬“xŒˆ’èˆ—‚ªI—¹Œã
+	//åŠ é€Ÿåº¦æ±ºå®šå‡¦ç†ãŒçµ‚äº†å¾Œ
 	speed_x += acceleration_x;
 	speed_y += acceleration_y;
-	//‘¬“xŒˆ’èˆ—‚ªI—¹Œã
+	//é€Ÿåº¦æ±ºå®šå‡¦ç†ãŒçµ‚äº†å¾Œ
 	position_x += speed_x;
 	position_y += speed_y;
-	//‘ÌÏŒˆ’èˆ—‚ªI—¹Œã
+	//ä½“ç©æ±ºå®šå‡¦ç†ãŒçµ‚äº†å¾Œ
 }
 
 void MovableChargedBall::Draw()const {
-	DrawCircle(position_x, position_y, radius, own_color, TRUE);							//©•ª•`‰æ
+	DrawCircle(position_x, position_y, radius, own_color, TRUE);							//è‡ªåˆ†æç”»
 	
-	//‘ÌÏ•¶š•`‰æ
+	//ä½“ç©æ–‡å­—æç”»
 	if (charge_text_width > 55) {
 		DrawRotaGraph(position_x, position_y, (55.0 / charge_text_width) * 1.5 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);
 	}
@@ -390,7 +390,7 @@ void MovableChargedBall::Add_force_y(double add_force) {
 
 void MovableChargedBall::Add_volume(int add_volume) {
 	volume += add_volume;
-	Change_radiusbyvolume(volume);			//‘ÌÏ‚ª•Ï‰»‚µ‚½‚½‚ß”¼Œa‚à•Ï‰»‚³‚¹‚é
+	Change_radiusbyvolume(volume);			//ä½“ç©ãŒå¤‰åŒ–ã—ãŸãŸã‚åŠå¾„ã‚‚å¤‰åŒ–ã•ã›ã‚‹
 }
 
 void MovableChargedBall::Add_charge(int add_charge) {

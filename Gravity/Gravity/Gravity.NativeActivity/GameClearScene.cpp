@@ -1,4 +1,4 @@
-#include "GameClearScene.h"
+ï»¿#include "GameClearScene.h"
 #include "StageSelectScene.h"
 
 extern SceneBase* Scene_pointer_for_Reload;
@@ -31,5 +31,5 @@ void GameClearScene::Draw()const {
 }
 
 void GameClearScene::ReloadFunction(void) {
-	ReloadFileGraphAll();						// ƒtƒ@ƒCƒ‹‚©‚ç“Ç‚İ‚ñ‚¾‰æ‘œ‚ğ•œŒ³‚·‚é
+	ReloadFileGraphAll();						// ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰èª­ã¿è¾¼ã‚“ã ç”»åƒã‚’å¾©å…ƒã™ã‚‹
 }

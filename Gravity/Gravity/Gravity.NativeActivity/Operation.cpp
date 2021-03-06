@@ -1,4 +1,4 @@
-#include "Operation.h"
+ï»¿#include "Operation.h"
 
 OperationInGame::OperationInGame() {
 	touch_num_pre = 1;
@@ -12,22 +12,22 @@ OperationInGame::~OperationInGame() {
 }
 
 void OperationInGame::Update() {
-	touch_num_now = GetTouchInputNum();												//Œ»İ‚Ìƒ^ƒbƒ`”‚ğæ“¾
+	touch_num_now = GetTouchInputNum();												//ç¾åœ¨ã®ã‚¿ãƒƒãƒæ•°ã‚’å–å¾—
 	if (one_touch_frame_result != -1) {
-		one_touch_frame_result = -1;												//one_touch‚ÌŒ‹‰Êo—ÍŒãƒŠƒZƒbƒg
+		one_touch_frame_result = -1;												//one_touchã®çµæœå‡ºåŠ›å¾Œãƒªã‚»ãƒƒãƒˆ
 	}
 
-	//è‚ğ1“x—£‚µ‚Ä‚©‚çƒQ[ƒ€‚ğŠJn‚³‚¹‚é‚½‚ß‚Ìchecker
+	//æ‰‹ã‚’1åº¦é›¢ã—ã¦ã‹ã‚‰ã‚²ãƒ¼ãƒ ã‚’é–‹å§‹ã•ã›ã‚‹ãŸã‚ã®checker
 	if (!checker_first && touch_num_pre == 0) {
 		checker_first = true;
 	}
 
-	//ƒ^ƒbƒ`Šeíî•ñ‚ğæ“¾
+	//ã‚¿ãƒƒãƒå„ç¨®æƒ…å ±ã‚’å–å¾—
 	for (int i = 0; i < touch_num_now; i++) {
 		GetTouchInput(i, &touch_positionX[i], &touch_positionY[i], NULL, NULL);
 	}
 
-	//1‰ÓŠƒ^ƒbƒ`‚µn‚ß‚é`1‰ÓŠƒ^ƒbƒ`‚µI‚¦‚é‚Æ‚«‚ÌŠÔ·‚ğŒv‘ª(ƒ^ƒbƒv‚É‚æ‚éŠÔ’â~Eis‚Ég‚¤),2“_ŠÔ(ŠJn“_,I—¹“_)‚Ì‹——£‚àŒv‘ª
+	//1ç®‡æ‰€ã‚¿ãƒƒãƒã—å§‹ã‚ã‚‹æ™‚ï½1ç®‡æ‰€ã‚¿ãƒƒãƒã—çµ‚ãˆã‚‹ã¨ãã®æ™‚é–“å·®ã‚’è¨ˆæ¸¬(ã‚¿ãƒƒãƒ—ã«ã‚ˆã‚‹æ™‚é–“åœæ­¢ãƒ»é€²è¡Œã«ä½¿ã†),2ç‚¹é–“(é–‹å§‹ç‚¹,çµ‚äº†ç‚¹)ã®è·é›¢ã‚‚è¨ˆæ¸¬
 	if (one_touch_frame != -1) {
 		if (touch_num_pre == 1) {
 			if (touch_num_now == 1) {

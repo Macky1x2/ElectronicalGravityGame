@@ -2,6 +2,9 @@
 #include "TitleScene.h"
 
 class StageSelectScene :public SceneBase {
+	int situation;
+	int explainTHandle;
+	int explain_color;
 public:
 	StageSelectScene();
 	~StageSelectScene();

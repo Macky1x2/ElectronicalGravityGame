@@ -1,4 +1,4 @@
-#include "Stage_3.h"
+ï»¿#include "Stage_3.h"
 
 Stage_3::Stage_3() {
 	air_resistance_coefficient = 0.01;
@@ -8,12 +8,12 @@ Stage_3::Stage_3() {
 	player = new std::shared_ptr<Player>[player_num];
 	size_up_ball = new std::shared_ptr<NonMovableBall>[size_up_ball_num];
 	charged_ball = new std::shared_ptr<MovableChargedBall>[charged_ball_num];
-	player[0] = std::make_shared<Player>(240, 1280, -50, 8, 5, &charge_THandle, &accel_arrowGHandle);			//ˆø”(‰ŠúxÀ•W, ‰ŠúyÀ•W, “d‰×, ‘ÌÏ, –§“x, &ƒeƒLƒXƒgƒnƒ“ƒhƒ‹, &V–îˆó‰æ‘œƒnƒ“ƒhƒ‹)//‰ŠúÀ•W‚Í•Êƒtƒ@ƒCƒ‹‚©‚ç“Ç‚İæ‚é‚Ì‚ª‚¢‚¢‚©‚à‚µ‚ê‚È‚¢
+	player[0] = std::make_shared<Player>(240, 1280, -50, 8, 5, &charge_THandle, &accel_arrowGHandle);			//å¼•æ•°(åˆæœŸxåº§æ¨™, åˆæœŸyåº§æ¨™, é›»è·, ä½“ç©, å¯†åº¦, &ãƒ†ã‚­ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ«, &VçŸ¢å°ç”»åƒãƒãƒ³ãƒ‰ãƒ«)//åˆæœŸåº§æ¨™ã¯åˆ¥ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰èª­ã¿å–ã‚‹ã®ãŒã„ã„ã‹ã‚‚ã—ã‚Œãªã„
 	player[1] = std::make_shared<Player>(540, 1280, -100, 12, 5, &charge_THandle, &accel_arrowGHandle);
 	player[2] = std::make_shared<Player>(840, 1280, -50, 8, 5, &charge_THandle, &accel_arrowGHandle);
 	for (int i = 0; i < 10; i++) {
 		for (int j = 0; j < 7; j++) {
-			charged_ball[10 * j + i] = std::make_shared<MovableChargedBall>(90 + 100 * i, 100 * (j + 1), 1, 2, 0.5, &charge_THandle);	//ˆø”(‰ŠúxÀ•W, ‰ŠúyÀ•W, “d‰×, ‘ÌÏ, –§“x, &ƒeƒLƒXƒgƒnƒ“ƒhƒ‹)
+			charged_ball[10 * j + i] = std::make_shared<MovableChargedBall>(90 + 100 * i, 100 * (j + 1), 1, 2, 0.5, &charge_THandle);	//å¼•æ•°(åˆæœŸxåº§æ¨™, åˆæœŸyåº§æ¨™, é›»è·, ä½“ç©, å¯†åº¦, &ãƒ†ã‚­ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ«)
 		}
 	}
 }

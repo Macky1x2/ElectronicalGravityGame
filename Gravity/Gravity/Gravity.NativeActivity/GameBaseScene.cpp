@@ -1,4 +1,4 @@
-#include "GameBaseScene.h"
+ï»¿#include "GameBaseScene.h"
 #include "GameClearScene.h"
 
 extern SceneBase* Scene_pointer_for_Reload;
@@ -33,25 +33,25 @@ GameBaseScene::~GameBaseScene() {
 }
 
 void GameBaseScene::HitConbine() {
-	//ƒvƒŒƒCƒ„[“¯m‚É‚Â‚¢‚Ä
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼åŒå£«ã«ã¤ã„ã¦
 	for (int i = 0; i < player_num; i++) {
 		for (int j = i + 1; j < player_num; j++) {
 			if (player[i] && player[j]) {
 				if (HitChecker_PlayerandPlayer(player[i], player[j])) {
-					if (player[i]->Return_volume() >= player[j]->Return_volume()) {				//‚Å‚©‚¢•û‚ÌˆÊ’u‚ğ‡‘ÌŒã‚Ìƒ{[ƒ‹‚ÌˆÊ’u‚Æ‚·‚é(‚½‚¾‚µ“™‚µ‚¢‚È‚ç‚Î^‚ñ’†)
-						//‰^“®—Ê•Û‘¶‘¥
+					if (player[i]->Return_volume() >= player[j]->Return_volume()) {				//ã§ã‹ã„æ–¹ã®ä½ç½®ã‚’åˆä½“å¾Œã®ãƒœãƒ¼ãƒ«ã®ä½ç½®ã¨ã™ã‚‹(ãŸã ã—ç­‰ã—ã„ãªã‚‰ã°çœŸã‚“ä¸­)
+						//é‹å‹•é‡ä¿å­˜å‰‡
 						double m = player[i]->Return_density() * player[i]->Return_volume() + player[j]->Return_density() * player[j]->Return_volume();
 						player[i]->Decide_speed_x((player[i]->Return_density() * player[i]->Return_volume() * player[i]->Return_speed_x() + player[j]->Return_density() * player[j]->Return_volume() * player[j]->Return_speed_x()) / m);
 						player[i]->Decide_speed_y((player[i]->Return_density() * player[i]->Return_volume() * player[i]->Return_speed_y() + player[j]->Return_density() * player[j]->Return_volume() * player[j]->Return_speed_y()) / m);
 
-						//“™‚µ‚¢‚È‚ç‚Î^‚ñ’†‚ğ’†SÀ•W‚É‚·‚é
+						//ç­‰ã—ã„ãªã‚‰ã°çœŸã‚“ä¸­ã‚’ä¸­å¿ƒåº§æ¨™ã«ã™ã‚‹
 						if (player[i]->Return_volume() == player[j]->Return_volume()) {
 							player[i]->Decide_position_x((player[i]->Return_position_x() + player[j]->Return_position_x()) / 2);
 							player[i]->Decide_position_y((player[i]->Return_position_y() + player[j]->Return_position_y()) / 2);
 						}
 
-						//ƒvƒŒƒCƒ„[‘¤‚É‰ÁZ
-						//–§“xŒvZ
+						//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å´ã«åŠ ç®—
+						//å¯†åº¦è¨ˆç®—
 						player[i]->Decide_density((player[i]->Return_density() * player[i]->Return_volume() + player[j]->Return_density() * player[j]->Return_volume()) / (player[i]->Return_volume() + player[j]->Return_volume()));
 						player[i]->Add_volume(player[j]->Return_volume());
 						player[i]->Add_charge(player[j]->Return_charge());
@@ -59,13 +59,13 @@ void GameBaseScene::HitConbine() {
 						player[j].reset();
 					}
 					else {
-						//‰^“®—Ê•Û‘¶‘¥
+						//é‹å‹•é‡ä¿å­˜å‰‡
 						double m = player[j]->Return_density() * player[j]->Return_volume() + player[i]->Return_density() * player[i]->Return_volume();
 						player[j]->Decide_speed_x((player[i]->Return_density() * player[i]->Return_volume() * player[i]->Return_speed_x() + player[j]->Return_density() * player[j]->Return_volume() * player[j]->Return_speed_x()) / m);
 						player[j]->Decide_speed_y((player[i]->Return_density() * player[i]->Return_volume() * player[i]->Return_speed_y() + player[j]->Return_density() * player[j]->Return_volume() * player[j]->Return_speed_y()) / m);
 
-						//ƒvƒŒƒCƒ„[‘¤‚É‰ÁZ
-						//–§“xŒvZ
+						//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å´ã«åŠ ç®—
+						//å¯†åº¦è¨ˆç®—
 						player[j]->Decide_density((player[i]->Return_density() * player[i]->Return_volume() + player[j]->Return_density() * player[j]->Return_volume()) / (player[i]->Return_volume() + player[j]->Return_volume()));
 						player[j]->Add_volume(player[i]->Return_volume());
 						player[j]->Add_charge(player[i]->Return_charge());
@@ -77,18 +77,18 @@ void GameBaseScene::HitConbine() {
 		}
 	}
 
-	//ƒvƒŒƒCƒ„[‚Æ“®‚©‚È‚¢ƒ{[ƒ‹ŠÔ‚É‚Â‚¢‚Ä
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨å‹•ã‹ãªã„ãƒœãƒ¼ãƒ«é–“ã«ã¤ã„ã¦
 	for (int i = 0; i < player_num; i++) {
 		for (int j = 0; j < size_up_ball_num; j++) {
 			if (player[i] && size_up_ball[j]) {
 				if (HitChecker_PlayerandNonMovableBall(player[i], size_up_ball[j])) {
-					//‰^“®—Ê•Û‘¶‘¥
+					//é‹å‹•é‡ä¿å­˜å‰‡
 					double m = player[i]->Return_density() * player[i]->Return_volume() + size_up_ball[j]->Return_density() * size_up_ball[j]->Return_volume();
 					player[i]->Decide_speed_x(player[i]->Return_density() * player[i]->Return_volume() * player[i]->Return_speed_x() / m);
 					player[i]->Decide_speed_y(player[i]->Return_density() * player[i]->Return_volume() * player[i]->Return_speed_y() / m);
 
-					//ƒvƒŒƒCƒ„[‘¤‚É‰ÁZ
-					//–§“xŒvZ
+					//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å´ã«åŠ ç®—
+					//å¯†åº¦è¨ˆç®—
 					player[i]->Decide_density((player[i]->Return_density() * player[i]->Return_volume() + size_up_ball[j]->Return_density() * size_up_ball[j]->Return_volume()) / (player[i]->Return_volume() + size_up_ball[j]->Return_volume()));
 					player[i]->Add_volume(size_up_ball[j]->Return_volume());
 					size_up_ball[j].reset();
@@ -97,18 +97,18 @@ void GameBaseScene::HitConbine() {
 		}
 	}
 
-	//ƒvƒŒƒCƒ„[‚Æ‰Â“®‚È“d‹C‚ğ‘Ñ‚Ñ‚½ƒ{[ƒ‹ŠÔ‚É‚Â‚¢‚Ä
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨å¯å‹•ãªé›»æ°—ã‚’å¸¯ã³ãŸãƒœãƒ¼ãƒ«é–“ã«ã¤ã„ã¦
 	for (int i = 0; i < player_num; i++){
 		for (int j = 0; j < charged_ball_num; j++) {
 			if (player[i] && charged_ball[j]) {
 				if (HitChecker_PlayerandMovableChargedBall(player[i], charged_ball[j])) {
-					//‰^“®—Ê•Û‘¶‘¥
+					//é‹å‹•é‡ä¿å­˜å‰‡
 					double m = player[i]->Return_density() * player[i]->Return_volume() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume();
 						player[i]->Decide_speed_x((player[i]->Return_density() * player[i]->Return_volume() * player[i]->Return_speed_x() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume() * charged_ball[j]->Return_speed_x()) / m);
 						player[i]->Decide_speed_y((player[i]->Return_density() * player[i]->Return_volume() * player[i]->Return_speed_y() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume() * charged_ball[j]->Return_speed_y()) / m);
 
-						//ƒvƒŒƒCƒ„[‘¤‚É‰ÁZ
-						//–§“xŒvZ
+						//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å´ã«åŠ ç®—
+						//å¯†åº¦è¨ˆç®—
 						player[i]->Decide_density((player[i]->Return_density() * player[i]->Return_volume() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume()) / (player[i]->Return_volume() + charged_ball[j]->Return_volume()));
 					player[i]->Add_volume(charged_ball[j]->Return_volume());
 					player[i]->Add_charge(charged_ball[j]->Return_charge());
@@ -119,18 +119,18 @@ void GameBaseScene::HitConbine() {
 		}
 	}
 
-	//‰Â“®‚È“d‹C‚ğ‘Ñ‚Ñ‚½ƒ{[ƒ‹‚Æ“®‚©‚È‚¢ƒ{[ƒ‹ŠÔ‚É‚Â‚¢‚Ä
+	//å¯å‹•ãªé›»æ°—ã‚’å¸¯ã³ãŸãƒœãƒ¼ãƒ«ã¨å‹•ã‹ãªã„ãƒœãƒ¼ãƒ«é–“ã«ã¤ã„ã¦
 	for (int i = 0; i < charged_ball_num; i++) {
 		for (int j = 0; j < size_up_ball_num; j++) {
 			if (charged_ball[i] && size_up_ball[j]) {
 				if (HitChecker_MovableChargedBallandNonMovableBall(charged_ball[i], size_up_ball[j])) {
-					//‰^“®—Ê•Û‘¶‘¥
+					//é‹å‹•é‡ä¿å­˜å‰‡
 					double m = charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() + size_up_ball[j]->Return_density() * size_up_ball[j]->Return_volume();
 					charged_ball[i]->Decide_speed_x(charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_x() / m);
 					charged_ball[i]->Decide_speed_y(charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_y() / m);
 
-					//‰Â“®‚È“d‹C‚ğ‘Ñ‚Ñ‚½ƒ{[ƒ‹‘¤‚É‰ÁZ
-					//–§“xŒvZ
+					//å¯å‹•ãªé›»æ°—ã‚’å¸¯ã³ãŸãƒœãƒ¼ãƒ«å´ã«åŠ ç®—
+					//å¯†åº¦è¨ˆç®—
 					charged_ball[i]->Decide_density((charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() + size_up_ball[j]->Return_density() * size_up_ball[j]->Return_volume()) / (charged_ball[i]->Return_volume() + size_up_ball[j]->Return_volume()));
 					charged_ball[i]->Add_volume(size_up_ball[j]->Return_volume());
 					size_up_ball[j].reset();
@@ -139,24 +139,24 @@ void GameBaseScene::HitConbine() {
 		}
 	}
 
-	//‰Â“®‚È“d‹C‚ğ‘Ñ‚Ñ‚½ƒ{[ƒ‹“¯m‚É‚Â‚¢‚Ä
+	//å¯å‹•ãªé›»æ°—ã‚’å¸¯ã³ãŸãƒœãƒ¼ãƒ«åŒå£«ã«ã¤ã„ã¦
 	for (int i = 0; i < charged_ball_num; i++) {
 		for (int j = i + 1; j < charged_ball_num; j++) {
 			if (charged_ball[i] && charged_ball[j]) {
-				if (HitChecker_MovableChargedBallandNonMovableBall(charged_ball[i], charged_ball[j])) {		//MovableChargedBall‚ÍNonMovableBall‚ÌŒp³ƒNƒ‰ƒX
-					if (charged_ball[i]->Return_volume() >= charged_ball[j]->Return_volume()) {				//‚Å‚©‚¢•û‚ÌˆÊ’u‚ğ‡‘ÌŒã‚Ìƒ{[ƒ‹‚ÌˆÊ’u‚Æ‚·‚é(‚½‚¾‚µ“™‚µ‚¢‚È‚ç‚Î^‚ñ’†)
-						//‰^“®—Ê•Û‘¶‘¥
+				if (HitChecker_MovableChargedBallandNonMovableBall(charged_ball[i], charged_ball[j])) {		//MovableChargedBallã¯NonMovableBallã®ç¶™æ‰¿ã‚¯ãƒ©ã‚¹
+					if (charged_ball[i]->Return_volume() >= charged_ball[j]->Return_volume()) {				//ã§ã‹ã„æ–¹ã®ä½ç½®ã‚’åˆä½“å¾Œã®ãƒœãƒ¼ãƒ«ã®ä½ç½®ã¨ã™ã‚‹(ãŸã ã—ç­‰ã—ã„ãªã‚‰ã°çœŸã‚“ä¸­)
+						//é‹å‹•é‡ä¿å­˜å‰‡
 						double m = charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume();
 						charged_ball[i]->Decide_speed_x((charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_x() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume() * charged_ball[j]->Return_speed_x()) / m);
 						charged_ball[i]->Decide_speed_y((charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_y() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume() * charged_ball[j]->Return_speed_y()) / m);
 
-						//“™‚µ‚¢‚È‚ç‚Î^‚ñ’†‚ğ’†SÀ•W‚É‚·‚é
+						//ç­‰ã—ã„ãªã‚‰ã°çœŸã‚“ä¸­ã‚’ä¸­å¿ƒåº§æ¨™ã«ã™ã‚‹
 						if (charged_ball[i]->Return_volume() == charged_ball[j]->Return_volume()) {
 							charged_ball[i]->Decide_position_x((charged_ball[i]->Return_position_x() + charged_ball[j]->Return_position_x()) / 2);
 							charged_ball[i]->Decide_position_y((charged_ball[i]->Return_position_y() + charged_ball[j]->Return_position_y()) / 2);
 						}
 
-						//–§“xŒvZ
+						//å¯†åº¦è¨ˆç®—
 						charged_ball[i]->Decide_density((charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume()) / (charged_ball[i]->Return_volume() + charged_ball[j]->Return_volume()));
 						charged_ball[i]->Add_volume(charged_ball[j]->Return_volume());
 						charged_ball[i]->Add_charge(charged_ball[j]->Return_charge());
@@ -164,12 +164,12 @@ void GameBaseScene::HitConbine() {
 						charged_ball[j].reset();
 					}
 					else {
-						//‰^“®—Ê•Û‘¶‘¥
+						//é‹å‹•é‡ä¿å­˜å‰‡
 						double m = charged_ball[j]->Return_density() * charged_ball[j]->Return_volume() + charged_ball[i]->Return_density() * charged_ball[i]->Return_volume();
 						charged_ball[j]->Decide_speed_x((charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_x() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume() * charged_ball[j]->Return_speed_x()) / m);
 						charged_ball[j]->Decide_speed_y((charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_y() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume() * charged_ball[j]->Return_speed_y()) / m);
 
-						//–§“xŒvZ
+						//å¯†åº¦è¨ˆç®—
 						charged_ball[j]->Decide_density((charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume()) / (charged_ball[i]->Return_volume() + charged_ball[j]->Return_volume()));
 						charged_ball[j]->Add_volume(charged_ball[i]->Return_volume());
 						charged_ball[j]->Add_charge(charged_ball[i]->Return_charge());
@@ -183,7 +183,7 @@ void GameBaseScene::HitConbine() {
 }
 
 void GameBaseScene::Gravity() {
-	//‰Šú‰»
+	//åˆæœŸåŒ–
 	for (int i = 0; i < player_num; i++) {
 		if (player[i]) {
 			player[i]->Decide_force_x(0.0);
@@ -197,7 +197,7 @@ void GameBaseScene::Gravity() {
 		}
 	}
 
-	//ƒvƒŒƒCƒ„[“¯m‚ÌƒN[ƒƒ“—Í
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼åŒå£«ã®ã‚¯ãƒ¼ãƒ­ãƒ³åŠ›
 	for (int i = 0; i < player_num; i++) {
 		for (int j = i + 1; j < player_num; j++) {
 			if (player[i] && player[j]) {
@@ -213,7 +213,7 @@ void GameBaseScene::Gravity() {
 		}
 	}
 
-	//ƒvƒŒƒCƒ„[E“d‰×‚ğ‘Ñ‚Ñ‚½‰Â“®‚Èƒ{[ƒ‹ŠÔ‚ÌƒN[ƒƒ“—Í
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒ»é›»è·ã‚’å¸¯ã³ãŸå¯å‹•ãªãƒœãƒ¼ãƒ«é–“ã®ã‚¯ãƒ¼ãƒ­ãƒ³åŠ›
 	for (int i = 0; i < player_num; i++) {
 		for (int j = 0; j < charged_ball_num; j++) {
 			if (player[i] && charged_ball[j]) {
@@ -229,7 +229,7 @@ void GameBaseScene::Gravity() {
 		}
 	}
 
-	//“d‰×‚ğ‘Ñ‚Ñ‚½‰Â“®‚Èƒ{[ƒ‹“¯m‚ÌƒN[ƒƒ“—Í
+	//é›»è·ã‚’å¸¯ã³ãŸå¯å‹•ãªãƒœãƒ¼ãƒ«åŒå£«ã®ã‚¯ãƒ¼ãƒ­ãƒ³åŠ›
 	for (int i = 0; i < charged_ball_num; i++) {
 		for (int j = i + 1; j < charged_ball_num; j++) {
 			if (charged_ball[i] && charged_ball[j]) {
@@ -247,11 +247,11 @@ void GameBaseScene::Gravity() {
 }
 
 void GameBaseScene::Update() {
-	operate->Update();			//‘€ìˆ—
-	TimeControl();				//ŠÔˆ—
-	Gravity();					//ƒN[ƒƒ“—Íˆ—
-	AirResistance();			//”}¿’ïRˆ—
-	if (time_advances) {		//‚ª~‚Ü‚Á‚Ä‚¢‚é‚Æ‚«‚ÍˆÈ‰º‚ÍXV‚µ‚È‚¢
+	operate->Update();			//æ“ä½œå‡¦ç†
+	TimeControl();				//æ™‚é–“å‡¦ç†
+	Gravity();					//ã‚¯ãƒ¼ãƒ­ãƒ³åŠ›å‡¦ç†
+	AirResistance();			//åª’è³ªæŠµæŠ—å‡¦ç†
+	if (time_advances) {		//æ™‚ãŒæ­¢ã¾ã£ã¦ã„ã‚‹ã¨ãã¯ä»¥ä¸‹ã¯æ›´æ–°ã—ãªã„
 		for (int i = 0; i < player_num; i++) {
 			if (player[i]) {
 				player[i]->Update();
@@ -262,9 +262,9 @@ void GameBaseScene::Update() {
 				charged_ball[i]->Update();
 			}
 		}
-		HitConbine();				//Õ“ËthenŒ‹‡ˆ—
+		HitConbine();				//è¡çªthençµåˆå‡¦ç†
 	}
-	if (ClearChecker()) {			//ƒNƒŠƒA”»’è‚Æ‚È‚ê‚ÎƒQ[ƒ€ƒNƒŠƒA
+	if (ClearChecker()) {			//ã‚¯ãƒªã‚¢åˆ¤å®šã¨ãªã‚Œã°ã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢
 		GameClear();
 	}
 }
@@ -288,7 +288,7 @@ void GameBaseScene::Draw()const {
 }
 
 bool GameBaseScene::HitChecker_PlayerandPlayer(std::shared_ptr<Player> _player1, std::shared_ptr<Player> _player2) {
-	//if(“–‚½‚Á‚Ä‚¢‚é‚È‚ç‚Î)
+	//if(å½“ãŸã£ã¦ã„ã‚‹ãªã‚‰ã°)
 	if ((_player1->Return_position_x() - _player2->Return_position_x()) * (_player1->Return_position_x() - _player2->Return_position_x()) + (_player1->Return_position_y() - _player2->Return_position_y()) * (_player1->Return_position_y() - _player2->Return_position_y()) < (_player1->Return_radius() + _player2->Return_radius()) * (_player1->Return_radius() + _player2->Return_radius())) {
 		return true;
 	}
@@ -298,7 +298,7 @@ bool GameBaseScene::HitChecker_PlayerandPlayer(std::shared_ptr<Player> _player1,
 }
 
 bool GameBaseScene::HitChecker_PlayerandNonMovableBall(std::shared_ptr<Player> _player, std::shared_ptr<NonMovableBall> _size_up_ball) {
-	//if(“–‚½‚Á‚Ä‚¢‚é‚È‚ç‚Î)
+	//if(å½“ãŸã£ã¦ã„ã‚‹ãªã‚‰ã°)
 	if ((_player->Return_position_x() - _size_up_ball->Return_position_x()) * (_player->Return_position_x() - _size_up_ball->Return_position_x()) + (_player->Return_position_y() - _size_up_ball->Return_position_y()) * (_player->Return_position_y() - _size_up_ball->Return_position_y()) < (_player->Return_radius() + _size_up_ball->Return_radius()) * (_player->Return_radius() + _size_up_ball->Return_radius())) {
 		return true;
 	}
@@ -308,7 +308,7 @@ bool GameBaseScene::HitChecker_PlayerandNonMovableBall(std::shared_ptr<Player> _
 }
 
 bool GameBaseScene::HitChecker_PlayerandMovableChargedBall(std::shared_ptr<Player> _player, std::shared_ptr<MovableChargedBall> _charged_ball) {
-	//if(“–‚½‚Á‚Ä‚¢‚é‚È‚ç‚Î)
+	//if(å½“ãŸã£ã¦ã„ã‚‹ãªã‚‰ã°)
 	if ((_player->Return_position_x() - _charged_ball->Return_position_x()) * (_player->Return_position_x() - _charged_ball->Return_position_x()) + (_player->Return_position_y() - _charged_ball->Return_position_y()) * (_player->Return_position_y() - _charged_ball->Return_position_y()) < (_player->Return_radius() + _charged_ball->Return_radius()) * (_player->Return_radius() + _charged_ball->Return_radius())) {
 		return true;
 	}
@@ -318,7 +318,7 @@ bool GameBaseScene::HitChecker_PlayerandMovableChargedBall(std::shared_ptr<Playe
 }
 
 bool GameBaseScene::HitChecker_MovableChargedBallandNonMovableBall(std::shared_ptr<MovableChargedBall> _charged_ball, std::shared_ptr<NonMovableBall> _size_up_ball) {
-	//if(“–‚½‚Á‚Ä‚¢‚é‚È‚ç‚Î)
+	//if(å½“ãŸã£ã¦ã„ã‚‹ãªã‚‰ã°)
 	if ((_charged_ball->Return_position_x() - _size_up_ball->Return_position_x()) * (_charged_ball->Return_position_x() - _size_up_ball->Return_position_x()) + (_charged_ball->Return_position_y() - _size_up_ball->Return_position_y()) * (_charged_ball->Return_position_y() - _size_up_ball->Return_position_y()) < (_charged_ball->Return_radius() + _size_up_ball->Return_radius()) * (_charged_ball->Return_radius() + _size_up_ball->Return_radius())) {
 		return true;
 	}
@@ -346,7 +346,7 @@ bool GameBaseScene::ClearChecker() {
 }
 
 void GameBaseScene::AirResistance() {
-	//ƒvƒŒƒCƒ„[‚É‚Â‚¢‚Ä
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«ã¤ã„ã¦
 	for (int i = 0; i < player_num; i++) {
 		if (player[i]) {
 			player[i]->Add_force_x(-air_resistance_coefficient * player[i]->Return_speed_x());
@@ -354,7 +354,7 @@ void GameBaseScene::AirResistance() {
 		}
 	}
 
-	//“d‰×‚ğ‘Ñ‚Ñ‚½‰Â“®‚Èƒ{[ƒ‹‚É‚Â‚¢‚Ä
+	//é›»è·ã‚’å¸¯ã³ãŸå¯å‹•ãªãƒœãƒ¼ãƒ«ã«ã¤ã„ã¦
 	for (int i = 0; i < charged_ball_num; i++) {
 		if (charged_ball[i]) {
 			charged_ball[i]->Add_force_x(-air_resistance_coefficient * charged_ball[i]->Return_speed_x());
@@ -364,7 +364,7 @@ void GameBaseScene::AirResistance() {
 }
 
 void GameBaseScene::TimeControl() {
-	//‰æ–Ê‚ğƒ^ƒbƒv‚·‚é‚ÆŠÔ’â~Eis‚ªØ‚è‘Ö‚í‚é
+	//ç”»é¢ã‚’ã‚¿ãƒƒãƒ—ã™ã‚‹ã¨æ™‚é–“åœæ­¢ãƒ»é€²è¡ŒãŒåˆ‡ã‚Šæ›¿ã‚ã‚‹
 	if (operate->Return_one_touch_frame_result() != -1) {
 		if (operate->Return_one_touch_frame_result() <= 10) {
 			if (operate->Return_one_touch_result_distance2() < 10) {
@@ -378,7 +378,7 @@ void GameBaseScene::TimeControl() {
 		}
 	}
 
-	//ŠÔ’â~AƒvƒŒƒCƒ„[ƒVƒ‡ƒbƒg‚ğ‚·‚é‚Æ‚ª“®‚«o‚·
+	//æ™‚é–“åœæ­¢æ™‚ã€ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚·ãƒ§ãƒƒãƒˆã‚’ã™ã‚‹ã¨æ™‚ãŒå‹•ãå‡ºã™
 	if (!time_advances) {
 		for (int i = 0; i < player_num; i++) {
 			if (player[i]) {
@@ -392,7 +392,7 @@ void GameBaseScene::TimeControl() {
 }
 
 void GameBaseScene::GameClear() {
-	int star, num;								//3:¯3‚Â, 2:¯2‚Â, 1:¯1‚Â
+	int star, num;								//3:æ˜Ÿ3ã¤, 2:æ˜Ÿ2ã¤, 1:æ˜Ÿ1ã¤
 	num = 5;
 	for (int i = 0; i < player_num; i++) {
 		if (player[i]) {
@@ -413,12 +413,12 @@ void GameBaseScene::GameClear() {
 }
 
 void GameBaseScene::ReloadFunction(void) {
-	ReloadFileGraphAll();						// ƒtƒ@ƒCƒ‹‚©‚ç“Ç‚İ‚ñ‚¾‰æ‘œ‚ğ•œŒ³‚·‚é
+	ReloadFileGraphAll();						// ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰èª­ã¿è¾¼ã‚“ã ç”»åƒã‚’å¾©å…ƒã™ã‚‹
 
-	//ƒeƒLƒXƒgƒnƒ“ƒhƒ‹•œŒ³
+	//ãƒ†ã‚­ã‚¹ãƒˆãƒãƒ³ãƒ‰ãƒ«å¾©å…ƒ
 	charge_THandle = CreateFontToHandle(NULL, 40, 5, DX_FONTTYPE_NORMAL);
 	
-	//MakeScreen‚ÌƒOƒ‰ƒtƒBƒbƒNƒnƒ“ƒhƒ‹‚ğ•œŒ³
+	//MakeScreenã®ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ãƒãƒ³ãƒ‰ãƒ«ã‚’å¾©å…ƒ
 	for (int i = 0; i < player_num; i++) {
 		if (player[i]) {
 			player[i]->Make_TGHandle();
