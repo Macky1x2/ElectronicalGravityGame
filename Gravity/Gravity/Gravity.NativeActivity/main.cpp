@@ -1,8 +1,8 @@
-﻿#include "DxLib.h"
-#include "define.h"
-#include "SceneManager.h"
-#include "TitleScene.h"
-#include <memory>
+﻿#include "TitleScene.h"
+
+extern SceneBase* Scene_pointer_for_Reload;
+
+void ReloadFunctionInGame();
 
 // プログラムは android_main から始まります
 int android_main(void)
@@ -13,6 +13,7 @@ int android_main(void)
 	}
 	SetGraphMode(ANDROID_WIDTH, ANDROID_HEIGHT, 32);
 	SetDrawScreen(DX_SCREEN_BACK);
+	SetRestoreGraphCallback(ReloadFunctionInGame);
 
 	//ゲーム処理
 	SceneManager scene(make_shared<TitleScene>());
@@ -24,4 +25,10 @@ int android_main(void)
 	//終了処理
 	DxLib_End();
 	return 0;
+}
+
+void ReloadFunctionInGame() {
+	if (Scene_pointer_for_Reload) {
+		Scene_pointer_for_Reload->ReloadFunction();
+	}
 }

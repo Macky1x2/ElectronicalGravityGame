@@ -120,6 +120,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <Content Include="assets\V_arrow_red.png" />
+    <Content Include="assets\star.png" />
     <Content Include="res\values\strings.xml" />
     <AntBuildXml Include="build.xml" />
     <AndroidManifest Include="AndroidManifest.xml" />

@@ -1,103 +1,78 @@
-#include "Actor.h"
-#include <cmath>
-#include <math.h>
+Ôªø#include "Actor.h"
 
-Player::Player() {
-	volume = 5;
-	radius = 50;
+Player::Player(double first_x, double first_y, int _charge, int _volume, double _density, int* _chargeTHandle, int* _accel_arrowGHandle) {
+	volume = _volume;
+	radius = 50 * pow(volume / 5.0, 1.0 / 3);
 	own_color = GetColor(0, 255, 255);
-	volume_text_color = GetColor(255, 0, 0);
-	position_x = 500;
-	position_y = 500;
+	charge_text_color = GetColor(255, 0, 0);
+	position_x = first_x;
+	position_y = first_y;
 	tap_checker_pre = false;
 	tap_checker_now = false;
+	checker_when_time_stopped = false;
 	speed_x = 0;
 	speed_y = 0;
-	volume_THandle= CreateFontToHandle(NULL, 20, 6, DX_FONTTYPE_NORMAL);					//í≤êﬂïKê{:ÉtÉHÉìÉgÇ…ìKÇµÇΩÉtÉHÉìÉgÉTÉCÉY
-	volume_text_width = GetDrawFormatStringWidthToHandle(volume_THandle, "%d", volume);
-	volume_temp_GHandle = MakeScreen(volume_text_width, 20, TRUE);							//í≤êﬂïKê{:ïù,çÇÇ≥
-	SetDrawScreen(volume_temp_GHandle);
-	DrawFormatStringToHandle(0, -3, volume_text_color, volume_THandle, "%d", volume);		//í≤êﬂïKê{:ãNì_yç¿ïW
+	charge = _charge;
+	charge_THandle = _chargeTHandle;					//„ÉÜ„Ç≠„Çπ„Éà„Éè„É≥„Éâ„É´Ë™≠„ÅøËæº„Åø
+	if (charge > 0) {
+		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "+%d", charge);
+	}
+	else {
+		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
+	}
+	charge_temp_GHandle = MakeScreen(charge_text_width, 40, TRUE);							//Ë™øÁØÄÂøÖÈ†à:ÂπÖ,È´ò„Åï
+	SetDrawScreen(charge_temp_GHandle);
+	if (charge > 0) {
+		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "+%d", charge);	//Ë™øÁØÄÂøÖÈ†à:Ëµ∑ÁÇπyÂ∫ßÊ®ô
+	}
+	else {
+		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "%d", charge);
+	}
 	SetDrawScreen(DX_SCREEN_BACK);
-	accel_arrowGHandle = LoadGraph("V_arrow_red.png");
+	accel_arrowGHandle = _accel_arrowGHandle;
 	accel_arrow_num = 0;
-	charge = 5;
 	acceleration_x = 0;
 	acceleration_y = 0;
 	force_x = 0;
 	force_y = 0;
-	density = 0.5;
+	density = _density;
+	shoot_num = 0;
 }
 
 Player::~Player() {
-	
+	DeleteGraph(charge_temp_GHandle);
 }
 
 void Player::Update() {
-	//óÕåàíËèàóùÇ™èIóπå„
+	//ÂäõÊ±∫ÂÆöÂá¶ÁêÜ„ÅåÁµÇ‰∫ÜÂæå
 	acceleration_x = force_x / (density * volume);
 	acceleration_y = force_y / (density * volume);
-	//â¡ë¨ìxåàíËèàóùÇ™èIóπå„
+	//Âä†ÈÄüÂ∫¶Ê±∫ÂÆöÂá¶ÁêÜ„ÅåÁµÇ‰∫ÜÂæå
 	speed_x += acceleration_x;
 	speed_y += acceleration_y;
 
-	if (GetTouchInputNum() == 1) {
-		tap_checker_now = true;
-	}
+	Shoot_Operation();								//ÁßªÂãïÊìç‰Ωú
 
-	//à⁄ìÆëÄçÏ
-	if (tap_checker_now == true && tap_checker_pre == false) {
-		GetTouchInput(0, &accel_start_x, &accel_start_y, NULL, NULL);
-		accel_temp_x = accel_start_x;
-		accel_temp_y = accel_start_y;
-	}
-	else if (tap_checker_now == false && tap_checker_pre == true) {
-		accel_end_x = accel_temp_x;
-		accel_end_y = accel_temp_y;
-		accel_vector_size = std::sqrt(((accel_start_x - accel_end_x) * (accel_start_x - accel_end_x) + (accel_start_y - accel_end_y) * (accel_start_y - accel_end_y))*1.0);
-		accel_power = accel_vector_size / 50;
-		accel_arrow_num = 0;
-		if (accel_vector_size != 0) {
-			speed_x += accel_power * ((accel_start_x - accel_end_x) / accel_vector_size);
-			speed_y += accel_power * ((accel_start_y - accel_end_y) / accel_vector_size);
-		}
-	}
-	else if(tap_checker_now == true && tap_checker_pre == true){
-		GetTouchInput(0, &accel_temp_x, &accel_temp_y, NULL, NULL);
-		if (!(accel_start_x - accel_temp_x == 0 && accel_start_y - accel_temp_y == 0)) {
-			accel_arrow_direction = std::atan2(accel_start_y - accel_temp_y, accel_start_x - accel_temp_x);
-			accel_arrow_num = std::sqrt(((accel_start_x - accel_temp_x) * (accel_start_x - accel_temp_x) + (accel_start_y - accel_temp_y) * (accel_start_y - accel_temp_y)) * 1.0) / 200;
-		}
-		else {
-			accel_arrow_num = 0;
-		}
-	}
-
-	//ë¨ìxåàíËèàóùÇ™èIóπå„
+	//ÈÄüÂ∫¶Ê±∫ÂÆöÂá¶ÁêÜ„ÅåÁµÇ‰∫ÜÂæå
 	position_x += speed_x;
 	position_y += speed_y;
-	//ëÃêœåàíËèàóùÇ™èIóπå„
-	volume_text_width = GetDrawFormatStringWidthToHandle(volume_THandle, "%d", volume);
-	volume_temp_GHandle = MakeScreen(volume_text_width, 20, TRUE);
-	SetDrawScreen(volume_temp_GHandle);
-	DrawFormatStringToHandle(0, -3, volume_text_color, volume_THandle, "%d", volume);
-	SetDrawScreen(DX_SCREEN_BACK);
-	//tapîªíËèàóùÇ™èIóπå„
-	if (tap_checker_now == true) {
-		tap_checker_now = false;
-		tap_checker_pre = true;
-	}
-	else if (tap_checker_now == false) {
-		tap_checker_pre = false;
-	}
+	//‰ΩìÁ©çÊ±∫ÂÆöÂá¶ÁêÜ„ÅåÁµÇ‰∫ÜÂæå
 }
 
 void Player::Draw()const {
-	DrawCircle(position_x, position_y, radius, own_color, TRUE);							//é©ï™ï`âÊ
-	DrawRotaGraph(position_x, position_y, 3.0, 0.0, volume_temp_GHandle, TRUE, FALSE);		//ëÃêœï∂éöï`âÊ
-	//â¡ë¨ñÓàÛï`âÊ
+	DrawCircle(position_x, position_y, radius, own_color, TRUE);							//Ëá™ÂàÜÊèèÁîª
+
+	//‰ΩìÁ©çÊñáÂ≠óÊèèÁîª
+	if (charge_text_width > 55) {
+		DrawRotaGraph(position_x, position_y, (55.0 / charge_text_width) * 1.5 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);
+	}
+	else {
+		DrawRotaGraph(position_x, position_y, 1.5 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);
+	}
+
+	//Âä†ÈÄüÁü¢Âç∞ÊèèÁîª
 	for (int i = 0; i < accel_arrow_num; i++) {
-		DrawRotaGraph(position_x - (i + 1) * (radius * 1.5) * cos(accel_arrow_direction), position_y - (i + 1) * (radius * 1.5) * sin(accel_arrow_direction), 0.3, accel_arrow_direction, accel_arrowGHandle, TRUE, FALSE);
+		DrawRotaGraph(position_x - (i + 1) * (radius * 1.5) * cos(accel_arrow_direction), position_y - (i + 1) * (radius * 1.5) * sin(accel_arrow_direction), 0.3, accel_arrow_direction, *accel_arrowGHandle, TRUE, FALSE);
 	}
 }
 
@@ -107,6 +82,10 @@ int Player::Return_volume() {
 
 int Player::Return_charge() {
 	return charge;
+}
+
+int Player::Return_shoot_num() {
+	return shoot_num;
 }
 
 double Player::Return_position_x() {
@@ -141,6 +120,18 @@ double Player::Return_density() {
 	return density;
 }
 
+bool Player::Return_checker_when_time_stopped() {
+	return checker_when_time_stopped;
+}
+
+void Player::Decide_position_x(double decide_x) {
+	position_x = decide_x;
+}
+
+void Player::Decide_position_y(double decide_y) {
+	position_y = decide_y;
+}
+
 void Player::Decide_force_x(double decide_x) {
 	force_x = decide_x;
 }
@@ -157,27 +148,99 @@ void Player::Decide_speed_y(double decide_y) {
 	speed_y = decide_y;
 }
 
+void Player::Decide_density(double decide_den) {
+	density = decide_den;
+}
+
 void Player::Change_radiusbyvolume(int _volume) {
 	radius = 50 * pow(_volume / 5.0, 1.0 / 3);
 }
 
 void Player::Add_volume(int add_volume) {
 	volume += add_volume;
-	Change_radiusbyvolume(volume);			//ëÃêœÇ™ïœâªÇµÇΩÇΩÇﬂîºåaÇ‡ïœâªÇ≥ÇπÇÈ
+	Change_radiusbyvolume(volume);			//‰ΩìÁ©ç„ÅåÂ§âÂåñ„Åó„Åü„Åü„ÇÅÂçäÂæÑ„ÇÇÂ§âÂåñ„Åï„Åõ„Çã
 }
 
 void Player::Add_charge(int add_charge) {
 	charge += add_charge;
 }
 
-NonMovableBall::NonMovableBall(double first_x, double first_y) {
-	volume = 3;
+void Player::Add_force_x(double add_force) {
+	force_x += add_force;
+}
+
+void Player::Add_force_y(double add_force) {
+	force_y += add_force;
+}
+
+void Player::Make_TGHandle() {
+	if (charge > 0) {
+		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "+%d", charge);
+	}
+	else {
+		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
+	}
+	DeleteGraph(charge_temp_GHandle);
+	charge_temp_GHandle = MakeScreen(charge_text_width, 40, TRUE);
+	SetDrawScreen(charge_temp_GHandle);
+	if (charge > 0) {
+		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "+%d", charge);
+	}
+	else {
+		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "%d", charge);
+	}
+	SetDrawScreen(DX_SCREEN_BACK);
+}
+
+void Player::Shoot_Operation() {
+	checker_when_time_stopped = false;
+	if (GetTouchInputNum() == 1) {
+		tap_checker_now = true;
+	}
+	if (tap_checker_now == true && tap_checker_pre == false) {
+		GetTouchInput(0, &accel_start_x, &accel_start_y, NULL, NULL);
+		accel_temp_x = accel_start_x;
+		accel_temp_y = accel_start_y;
+	}
+	else if (tap_checker_now == false && tap_checker_pre == true) {
+		accel_end_x = accel_temp_x;
+		accel_end_y = accel_temp_y;
+		accel_vector_size = std::sqrt(((accel_start_x - accel_end_x) * (accel_start_x - accel_end_x) + (accel_start_y - accel_end_y) * (accel_start_y - accel_end_y)) * 1.0);
+		accel_power = accel_vector_size / 50;
+		accel_arrow_num = 0;
+		if (accel_vector_size != 0) {
+			speed_x += (2.5 / sqrt(density * volume)) * accel_power * ((accel_start_x - accel_end_x) / accel_vector_size);
+			speed_y += (2.5 / sqrt(density * volume)) * accel_power * ((accel_start_y - accel_end_y) / accel_vector_size);
+			checker_when_time_stopped = true;
+			shoot_num++;
+		}
+	}
+	else if (tap_checker_now == true && tap_checker_pre == true) {
+		GetTouchInput(0, &accel_temp_x, &accel_temp_y, NULL, NULL);
+		if (!(accel_start_x - accel_temp_x == 0 && accel_start_y - accel_temp_y == 0)) {
+			accel_arrow_direction = std::atan2(accel_start_y - accel_temp_y, accel_start_x - accel_temp_x);
+			accel_arrow_num = std::sqrt(((accel_start_x - accel_temp_x) * (accel_start_x - accel_temp_x) + (accel_start_y - accel_temp_y) * (accel_start_y - accel_temp_y)) * 1.0) / 200;
+		}
+		else {
+			accel_arrow_num = 0;
+		}
+	}
+	if (tap_checker_now == true) {
+		tap_checker_now = false;
+		tap_checker_pre = true;
+	}
+	else if (tap_checker_now == false) {
+		tap_checker_pre = false;
+	}
+}
+
+NonMovableBall::NonMovableBall(double first_x, double first_y, int _volume, double _density) {
+	volume = _volume;
 	radius = 50 * pow(volume / 5.0, 1.0 / 3);
 	own_color = GetColor(255, 255, 255);
-	volume_text_color = GetColor(255, 0, 0);
 	position_x = first_x;
 	position_y = first_y;
-	density = 0.5;
+	density = _density;
 }
 
 NonMovableBall::~NonMovableBall() {
@@ -212,8 +275,8 @@ double NonMovableBall::Return_density() {
 	return density;
 }
 
-MovableChargedBall::MovableChargedBall(double first_x, double first_y) :NonMovableBall(first_x, first_y) {
-	charge = -5;
+MovableChargedBall::MovableChargedBall(double first_x, double first_y, int _charge, int _volume, double _density, int* _chargeTHandle) :NonMovableBall(first_x, first_y, _volume, _density) {
+	charge = _charge;
 	speed_x = 0;
 	speed_y = 0;
 	acceleration_x = 0;
@@ -221,22 +284,52 @@ MovableChargedBall::MovableChargedBall(double first_x, double first_y) :NonMovab
 	force_x = 0;
 	force_y = 0;
 	own_color = GetColor(0, 255, 0);
+	charge_text_color = GetColor(255, 0, 0);
+	charge_THandle = _chargeTHandle;								//„ÉÜ„Ç≠„Çπ„Éà„Éè„É≥„Éâ„É´Ë™≠„ÅøËæº„Åø
+	if (charge > 0) {
+		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "+%d", charge);
+	}
+	else {
+		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
+	}
+	charge_temp_GHandle = MakeScreen(charge_text_width, 40, TRUE);							//Ë™øÁØÄÂøÖÈ†à:ÂπÖ,È´ò„Åï
+	SetDrawScreen(charge_temp_GHandle);
+	if (charge > 0) {
+		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "+%d", charge);	//Ë™øÁØÄÂøÖÈ†à:Ëµ∑ÁÇπyÂ∫ßÊ®ô
+	}
+	else {
+		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "%d", charge);
+	}
+	SetDrawScreen(DX_SCREEN_BACK);
 }
 
 MovableChargedBall::~MovableChargedBall() {
-
+	DeleteGraph(charge_temp_GHandle);
 }
 
 void MovableChargedBall::Update() {
-	//óÕåàíËèàóùÇ™èIóπå„
+	//ÂäõÊ±∫ÂÆöÂá¶ÁêÜ„ÅåÁµÇ‰∫ÜÂæå
 	acceleration_x = force_x / (density * volume);
 	acceleration_y = force_y / (density * volume);
-	//â¡ë¨ìxåàíËèàóùÇ™èIóπå„
+	//Âä†ÈÄüÂ∫¶Ê±∫ÂÆöÂá¶ÁêÜ„ÅåÁµÇ‰∫ÜÂæå
 	speed_x += acceleration_x;
 	speed_y += acceleration_y;
-	//ë¨ìxåàíËèàóùÇ™èIóπå„
+	//ÈÄüÂ∫¶Ê±∫ÂÆöÂá¶ÁêÜ„ÅåÁµÇ‰∫ÜÂæå
 	position_x += speed_x;
 	position_y += speed_y;
+	//‰ΩìÁ©çÊ±∫ÂÆöÂá¶ÁêÜ„ÅåÁµÇ‰∫ÜÂæå
+}
+
+void MovableChargedBall::Draw()const {
+	DrawCircle(position_x, position_y, radius, own_color, TRUE);							//Ëá™ÂàÜÊèèÁîª
+	
+	//‰ΩìÁ©çÊñáÂ≠óÊèèÁîª
+	if (charge_text_width > 55) {
+		DrawRotaGraph(position_x, position_y, (55.0 / charge_text_width) * 1.5 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);
+	}
+	else {
+		DrawRotaGraph(position_x, position_y, 1.5 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);
+	}
 }
 
 int MovableChargedBall::Return_charge() {
@@ -251,10 +344,78 @@ double MovableChargedBall::Return_speed_y() {
 	return speed_y;
 }
 
+double MovableChargedBall::Return_force_x() {
+	return force_x;
+}
+
+double MovableChargedBall::Return_force_y() {
+	return force_y;
+}
+
+void MovableChargedBall::Decide_position_x(double decide_x) {
+	position_x = decide_x;
+}
+
+void MovableChargedBall::Decide_position_y(double decide_y) {
+	position_y = decide_y;
+}
+
 void MovableChargedBall::Decide_force_x(double decide_x) {
 	force_x = decide_x;
 }
 
 void MovableChargedBall::Decide_force_y(double decide_y) {
 	force_y = decide_y;
+}
+
+void MovableChargedBall::Decide_speed_x(double decide_x) {
+	speed_x = decide_x;
+}
+
+void MovableChargedBall::Decide_speed_y(double decide_y) {
+	speed_y = decide_y;
+}
+
+void MovableChargedBall::Decide_density(double decide_den) {
+	density = decide_den;
+}
+
+void MovableChargedBall::Add_force_x(double add_force) {
+	force_x += add_force;
+}
+
+void MovableChargedBall::Add_force_y(double add_force) {
+	force_y += add_force;
+}
+
+void MovableChargedBall::Add_volume(int add_volume) {
+	volume += add_volume;
+	Change_radiusbyvolume(volume);			//‰ΩìÁ©ç„ÅåÂ§âÂåñ„Åó„Åü„Åü„ÇÅÂçäÂæÑ„ÇÇÂ§âÂåñ„Åï„Åõ„Çã
+}
+
+void MovableChargedBall::Add_charge(int add_charge) {
+	charge += add_charge;
+}
+
+void MovableChargedBall::Change_radiusbyvolume(int _volume) {
+	radius = 50 * pow(_volume / 5.0, 1.0 / 3);
+}
+
+void MovableChargedBall::Make_TGHandle() {
+	if (charge > 0) {
+		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "+%d", charge);
+	}
+	else {
+		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
+	}
+	DeleteGraph(charge_temp_GHandle);
+	charge_temp_GHandle = MakeScreen(charge_text_width, 40, TRUE);
+	SetDrawScreen(charge_temp_GHandle);
+	if (charge > 0) {
+		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "+%d", charge);
+	}
+	else {
+		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "%d", charge);
+	}
+	SetDrawScreen(DX_SCREEN_BACK);
 }
