@@ -1,4 +1,5 @@
 ﻿#include "Stage_1.h"
+#include "GameClearScene.h"
 
 Stage_1::Stage_1() {
 	air_resistance_coefficient = 0.01;
@@ -16,4 +17,28 @@ Stage_1::Stage_1() {
 
 Stage_1::~Stage_1() {
 
+}
+
+void Stage_1::GameClear() {
+	int star, num;
+	num = 5;
+	for (int i = 0; i < player_num; i++) {
+		if (player[i]) {
+			num = player[i]->Return_shoot_num();
+			break;
+		}
+	}
+	if (num <= 1) {
+		star = 3;
+	}
+	else if (num <= 2) {
+		star = 2;
+	}
+	else if (num <= 4) {
+		star = 1;
+	}
+	else {
+		star = 0;
+	}
+	nextScene = std::make_shared<GameClearScene>(star);
 }

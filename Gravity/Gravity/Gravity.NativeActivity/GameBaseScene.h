@@ -4,9 +4,9 @@
 #include "Operation.h"
 
 class GameBaseScene :public SceneBase {
-	bool time_advances;
 	std::shared_ptr<OperationInGame> operate;
 protected:
+	bool time_advances;
 	double air_resistance_coefficient;
 	int player_num, size_up_ball_num, charged_ball_num;
 	int accel_arrowGHandle;

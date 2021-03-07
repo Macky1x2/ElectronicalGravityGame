@@ -1,4 +1,5 @@
 ﻿#include "Stage_3.h"
+#include "GameClearScene.h"
 
 Stage_3::Stage_3() {
 	air_resistance_coefficient = 0.01;
@@ -16,6 +17,7 @@ Stage_3::Stage_3() {
 			charged_ball[10 * j + i] = std::make_shared<MovableChargedBall>(90 + 100 * i, 100 * (j + 1), 1, 2, 0.5, &charge_THandle);	//引数(初期x座標, 初期y座標, 電荷, 体積, 密度, &テキストハンドル)
 		}
 	}
+	clear_count = 0;
 }
 
 Stage_3::~Stage_3() {
@@ -23,6 +25,9 @@ Stage_3::~Stage_3() {
 }
 
 bool Stage_3::ClearChecker() {
+	if (time_advances) {
+		clear_count++;		//クリアフレーム確認用
+	}
 	bool check = false;
 	int sum_check = 0;
 	for (int i = 0; i < player_num; i++) {
@@ -39,4 +44,21 @@ bool Stage_3::ClearChecker() {
 	else {
 		return false;
 	}
+}
+
+void Stage_3::GameClear() {
+	int star;
+	if (clear_count / 60.0 <= 17) {
+		star = 3;
+	}
+	else if (clear_count / 60.0 <= 20) {
+		star = 2;
+	}
+	else if (clear_count / 60.0 <= 30) {
+		star = 1;
+	}
+	else {
+		star = 0;
+	}
+	nextScene = std::make_shared<GameClearScene>(star);
 }

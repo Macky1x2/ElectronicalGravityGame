@@ -6,4 +6,5 @@ public:
 	Stage_4();
 	~Stage_4();
 	bool ClearChecker();
+	void GameClear();
 };

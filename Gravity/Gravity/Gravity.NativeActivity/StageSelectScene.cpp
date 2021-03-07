@@ -65,11 +65,27 @@ void StageSelectScene::Draw()const {
 	if (situation != 0) {
 		DrawBox(100, 100, 981, 1281, GetColor(0, 255, 0), TRUE);
 		DrawBox(250, 980, 831, 1181, GetColor(0, 0, 255), TRUE);
+		//ステージ開始前画面の説明テキスト
 		switch (situation) {
-		case 1:DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "チュートリアルA") / 2), 200, "チュートリアルA", explain_color, explainTHandle);
+		case 1:DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "チュートリアルA") / 2), 200, "チュートリアルA", explain_color, explainTHandle);		//タイトルや説明文も別ファイルから読み込む形式が望ましい
 			DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "クリア条件") / 2), 400, "クリア条件", explain_color, explainTHandle);
-			DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "球(-10)を取得すること") / 2), 500, "球(-10)を取得すること", explain_color, explainTHandle);
-			DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "　　　:1ショット以内でクリア\n　　　:2ショット以内でクリア\n　　　:4ショット以内でクリア") / 2), 800, "　　　:1ショット以内でクリア\n　　　:2ショット以内でクリア\n　　　:4ショット以内でクリア", explain_color, explainTHandle);
+			DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "球(-10)を取得する") / 2), 450, "球(-10)を取得する", explain_color, explainTHandle);
+			DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "　　　:4ショット以内でクリア\n　　　:2ショット以内でクリア\n　　　:1ショット以内でクリア") / 2), 750, "　　　:1ショット以内でクリア\n　　　:2ショット以内でクリア\n　　　:4ショット以内でクリア", explain_color, explainTHandle);
+			break;
+		case 2:DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "公転") / 2), 200, "公転", explain_color, explainTHandle);
+			DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "クリア条件") / 2), 400, "クリア条件", explain_color, explainTHandle);
+			DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "大きな球の周りを3週回る") / 2), 450, "大きな球の周りを3週回る", explain_color, explainTHandle);
+			DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "　　　:3ショット以内でクリア\n　　　:2ショット以内でクリア\n　　　:1ショット以内でクリア") / 2), 750, "　　　:3ショット以内でクリア\n　　　:2ショット以内でクリア\n　　　:1ショット以内でクリア", explain_color, explainTHandle);
+			break;
+		case 3:DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "分身") / 2), 200, "分身", explain_color, explainTHandle);
+			DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "クリア条件") / 2), 400, "クリア条件", explain_color, explainTHandle);
+			DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "小さな球を50個集める") / 2), 450, "小さな球を50個集める", explain_color, explainTHandle);
+			DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "　　　:30秒以内にクリア\n　　　:20秒以内にクリア\n　　　:17秒以内にクリア") / 2), 750, "　　　:30秒以内にクリア\n　　　:20秒以内にクリア\n　　　:17秒以内にクリア", explain_color, explainTHandle);
+			break;
+		case 4:DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "収容") / 2), 200, "収容", explain_color, explainTHandle);
+			DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "クリア条件") / 2), 400, "クリア条件", explain_color, explainTHandle);
+			DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "球(-9999)を取得する") / 2), 450, "球(-9999)を取得する", explain_color, explainTHandle);
+			DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "　　　:10ショット以内でクリア\n　　　:5ショット以内でクリア\n　　　:3ショット以内でクリア") / 2), 750, "　　　:10ショット以内でクリア\n　　　:5ショット以内でクリア\n　　　:3ショット以内でクリア", explain_color, explainTHandle);
 			break;
 		default:break;
 		}
