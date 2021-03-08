@@ -1,5 +1,6 @@
 ﻿//テスト開発用
 #include "Stage_Test.h"
+#include "GameClearScene.h"
 
 Stage_Test::Stage_Test() {
 	air_resistance_coefficient = 0.01;
@@ -17,4 +18,46 @@ Stage_Test::Stage_Test() {
 
 Stage_Test::~Stage_Test() {
 
+}
+
+bool Stage_Test::ClearChecker() {
+	bool check = false;
+	for (int i = 0; i < player_num; i++) {
+		if (player[i]) {
+			if (player[i]->Return_charge() <= -5) {
+				check = true;
+				break;
+			}
+		}
+	}
+	if (check) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+void Stage_Test::GameClear() {
+	int star, num;
+	num = 5;
+	for (int i = 0; i < player_num; i++) {
+		if (player[i]) {
+			num = player[i]->Return_shoot_num();
+			break;
+		}
+	}
+	if (num <= 1) {
+		star = 3;
+	}
+	else if (num <= 2) {
+		star = 2;
+	}
+	else if (num <= 4) {
+		star = 1;
+	}
+	else {
+		star = 0;
+	}
+	nextScene = std::make_shared<GameClearScene>(star);
 }

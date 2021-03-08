@@ -19,6 +19,24 @@ Stage_1::~Stage_1() {
 
 }
 
+bool Stage_1::ClearChecker() {
+	bool check = false;
+	for (int i = 0; i < player_num; i++) {
+		if (player[i]) {
+			if (player[i]->Return_charge() <= -5) {
+				check = true;
+				break;
+			}
+		}
+	}
+	if (check) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 void Stage_1::GameClear() {
 	int star, num;
 	num = 5;

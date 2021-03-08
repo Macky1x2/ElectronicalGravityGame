@@ -24,10 +24,11 @@ public:
 	bool HitChecker_PlayerandNonMovableBall(std::shared_ptr<Player>, std::shared_ptr<NonMovableBall>);
 	bool HitChecker_PlayerandMovableChargedBall(std::shared_ptr<Player>, std::shared_ptr<MovableChargedBall>);
 	bool HitChecker_MovableChargedBallandNonMovableBall(std::shared_ptr<MovableChargedBall>, std::shared_ptr<NonMovableBall>);
-	virtual bool ClearChecker();
+	virtual bool ClearChecker() = 0;
 	void Gravity();
 	void AirResistance();
 	void TimeControl();
-	virtual void GameClear();
+	virtual void GameClear() = 0;
 	void ReloadFunction(void);
+	void Draw_Purpose()const;
 };

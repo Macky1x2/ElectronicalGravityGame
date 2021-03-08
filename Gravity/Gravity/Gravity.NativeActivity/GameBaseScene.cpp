@@ -285,6 +285,7 @@ void GameBaseScene::Draw()const {
 			player[i]->Draw();
 		}
 	}
+	Draw_Purpose();
 }
 
 bool GameBaseScene::HitChecker_PlayerandPlayer(std::shared_ptr<Player> _player1, std::shared_ptr<Player> _player2) {
@@ -320,24 +321,6 @@ bool GameBaseScene::HitChecker_PlayerandMovableChargedBall(std::shared_ptr<Playe
 bool GameBaseScene::HitChecker_MovableChargedBallandNonMovableBall(std::shared_ptr<MovableChargedBall> _charged_ball, std::shared_ptr<NonMovableBall> _size_up_ball) {
 	//if(当たっているならば)
 	if ((_charged_ball->Return_position_x() - _size_up_ball->Return_position_x()) * (_charged_ball->Return_position_x() - _size_up_ball->Return_position_x()) + (_charged_ball->Return_position_y() - _size_up_ball->Return_position_y()) * (_charged_ball->Return_position_y() - _size_up_ball->Return_position_y()) < (_charged_ball->Return_radius() + _size_up_ball->Return_radius()) * (_charged_ball->Return_radius() + _size_up_ball->Return_radius())) {
-		return true;
-	}
-	else {
-		return false;
-	}
-}
-
-bool GameBaseScene::ClearChecker() {
-	bool check = false;
-	for (int i = 0; i < player_num; i++) {
-		if (player[i]) {
-			if (player[i]->Return_charge() <= -5) {
-				check = true;
-				break;
-			}
-		}
-	}
-	if (check) {
 		return true;
 	}
 	else {
@@ -391,27 +374,6 @@ void GameBaseScene::TimeControl() {
 	}
 }
 
-void GameBaseScene::GameClear() {
-	int star, num;								//3:星3つ, 2:星2つ, 1:星1つ
-	num = 5;
-	for (int i = 0; i < player_num; i++) {
-		if (player[i]) {
-			num = player[i]->Return_shoot_num();
-			break;
-		}
-	}
-	if (num <= 2) {
-		star = 3;
-	}
-	else if (num <= 4) {
-		star = 2;
-	}
-	else {
-		star = 1;
-	}
-	nextScene = make_shared<GameClearScene>(star);
-}
-
 void GameBaseScene::ReloadFunction(void) {
 	ReloadFileGraphAll();						// ファイルから読み込んだ画像を復元する
 
@@ -427,6 +389,17 @@ void GameBaseScene::ReloadFunction(void) {
 	for (int i = 0; i < charged_ball_num; i++) {
 		if (charged_ball[i]) {
 			charged_ball[i]->Make_TGHandle();
+		}
+	}
+}
+
+void GameBaseScene::Draw_Purpose()const {
+	DrawLine(100, 150, 300, 150, GetColor(0, 255, 0));
+	for (int i = 0; i < player_num; i++) {
+		if (player[i]) {
+			DrawFormatStringToHandle(100, 0, GetColor(255, 255, 255), charge_THandle, "クリア条件:球(-10)を取得する");
+			DrawFormatStringToHandle(100, 100, GetColor(255, 255, 255), charge_THandle, "%d回", player[i]->Return_shoot_num());
+			break;
 		}
 	}
 }
