@@ -6,4 +6,6 @@ class Stage_Test :public GameBaseScene {
 public:
 	Stage_Test();
 	~Stage_Test();
+	bool ClearChecker();
+	void GameClear();
 };
