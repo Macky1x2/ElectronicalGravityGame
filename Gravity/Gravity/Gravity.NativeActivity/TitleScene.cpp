@@ -7,6 +7,7 @@ TitleScene::TitleScene() {
 	Scene_pointer_for_Reload = this;
 	Tap_THandle = CreateFontToHandle(NULL, 40, 5, DX_FONTTYPE_NORMAL);
 	Tap_Color = GetColor(255, 255, 255);
+	go_stage_select_checker = false, pre_touch_checker = false;
 }
 
 TitleScene::~TitleScene() {
@@ -17,9 +18,23 @@ void TitleScene::Update() {
 	if (GetTouchInputNum() == 1) {
 		int x, y;
 		GetTouchInput(0, &x, &y, NULL, NULL);
-		if (y <= 700) {
-			nextScene = make_shared<StageSelectScene>();
+		pre_touch_x = x;
+		pre_touch_y = y;
+		if (!pre_touch_checker && y <= 700) {
+			go_stage_select_checker = true;
 		}
+		pre_touch_checker = true;
+	}
+	else {
+		if (go_stage_select_checker) {
+			if (pre_touch_y <= 700 && GetTouchInputNum() == 0) {
+				nextScene = make_shared<StageSelectScene>();
+			}
+			else {
+				go_stage_select_checker = false;
+			}
+		}
+		pre_touch_checker = false;
 	}
 }
 

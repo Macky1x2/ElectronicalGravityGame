@@ -18,6 +18,7 @@ Stage_3::Stage_3() {
 		}
 	}
 	clear_count = 0;
+	purpose = "小さな球を50個集める";
 }
 
 Stage_3::~Stage_3() {

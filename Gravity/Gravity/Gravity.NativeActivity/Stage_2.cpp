@@ -13,6 +13,7 @@ Stage_2::Stage_2() {
 	charged_ball[0] = std::make_shared<MovableChargedBall>(540, 740, -300, 100, 1000000, &charge_THandle);			//引数(初期x座標, 初期y座標, 電荷, 体積, 密度, &テキストハンドル)
 	check_radian = 0;
 	pre_radian = PI / 2;
+	purpose = "大きな球の周りを3週回る";
 }
 
 Stage_2::~Stage_2() {

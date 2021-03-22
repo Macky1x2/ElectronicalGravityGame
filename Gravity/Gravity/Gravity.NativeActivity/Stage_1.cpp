@@ -13,6 +13,7 @@ Stage_1::Stage_1() {
 	charged_ball[0] = std::make_shared<MovableChargedBall>(540, 200, -10, 8, 0.5, &charge_THandle);			//引数(初期x座標, 初期y座標, 電荷, 体積, 密度, &テキストハンドル)
 	charged_ball[1] = std::make_shared<MovableChargedBall>(270, 740, 5, 8, 0.5, &charge_THandle);
 	charged_ball[2] = std::make_shared<MovableChargedBall>(810, 740, 5, 8, 0.5, &charge_THandle);
+	purpose = "球(-10)を取得する";
 }
 
 Stage_1::~Stage_1() {

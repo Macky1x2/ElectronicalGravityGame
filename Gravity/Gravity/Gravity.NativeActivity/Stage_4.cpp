@@ -15,6 +15,7 @@ Stage_4::Stage_4() {
 	for (int i = 0; i < 36; i++) {
 		charged_ball[i + 1] = std::make_shared<MovableChargedBall>(540 + r * cos((PI / 18) * i), 960 + r * sin((PI / 18) * i), -2000, 2, 1000000000000, &charge_THandle);
 	}
+	purpose = "球(-9999)を取得する";
 }
 
 Stage_4::~Stage_4() {

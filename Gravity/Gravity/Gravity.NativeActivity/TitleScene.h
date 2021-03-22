@@ -4,6 +4,8 @@
 class TitleScene :public SceneBase {
 	int Tap_THandle;
 	int Tap_Color;
+	int pre_touch_x, pre_touch_y;
+	bool go_stage_select_checker, pre_touch_checker;
 public:
 	TitleScene();
 	~TitleScene();

@@ -394,10 +394,10 @@ void GameBaseScene::ReloadFunction(void) {
 }
 
 void GameBaseScene::Draw_Purpose()const {
+	DrawFormatStringToHandle(100, 0, GetColor(255, 255, 255), charge_THandle, "%s", purpose.c_str());
 	DrawLine(100, 150, 300, 150, GetColor(0, 255, 0));
 	for (int i = 0; i < player_num; i++) {
 		if (player[i]) {
-			DrawFormatStringToHandle(100, 0, GetColor(255, 255, 255), charge_THandle, "クリア条件:球(-10)を取得する");
 			DrawFormatStringToHandle(100, 100, GetColor(255, 255, 255), charge_THandle, "%d回", player[i]->Return_shoot_num());
 			break;
 		}
