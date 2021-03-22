@@ -7,6 +7,7 @@ GameClearScene::GameClearScene(int _star) {
 	star = _star;
 	starGHandle = LoadGraph("star.png");
 	Scene_pointer_for_Reload = this;
+	go_stage_select_button = make_shared<SquareButton>(0, 1500, ANDROID_WIDTH, ANDROID_HEIGHT - 1500);
 }
 
 GameClearScene::~GameClearScene() {
@@ -14,12 +15,8 @@ GameClearScene::~GameClearScene() {
 }
 
 void GameClearScene::Update() {
-	if (GetTouchInputNum() == 1) {
-		int x,y;
-		GetTouchInput(0, &x, &y, NULL, NULL);
-		if (y >= 1500) {
-			nextScene = make_shared<StageSelectScene>();
-		}
+	if (go_stage_select_button->Checker_specific_place_touch_in_out()) {
+		nextScene = make_shared<StageSelectScene>();
 	}
 }
 

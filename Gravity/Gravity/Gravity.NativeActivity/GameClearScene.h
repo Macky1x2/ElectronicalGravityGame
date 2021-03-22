@@ -3,6 +3,7 @@
 
 class GameClearScene :public SceneBase {
 	int star, starGHandle;
+	shared_ptr<SquareButton> go_stage_select_button;
 public:
 	GameClearScene(int);
 	~GameClearScene();

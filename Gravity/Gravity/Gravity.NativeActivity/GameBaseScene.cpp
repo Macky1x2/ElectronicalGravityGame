@@ -8,6 +8,7 @@ GameBaseScene::GameBaseScene() {
 	operate = std::make_shared<OperationInGame>();
 	Scene_pointer_for_Reload = this;
 	accel_arrowGHandle = LoadGraph("V_arrow_red.png");
+	backgroundGHandle = LoadGraph("note.jpg");
 	charge_THandle = CreateFontToHandle(NULL, 40, 5, DX_FONTTYPE_NORMAL);
 }
 
@@ -270,6 +271,7 @@ void GameBaseScene::Update() {
 }
 
 void GameBaseScene::Draw()const {
+	DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0, 2.0, 0, backgroundGHandle, FALSE, FALSE);
 	for (int i = 0; i < size_up_ball_num; i++) {
 		if (size_up_ball[i]) {
 			size_up_ball[i]->Draw();
