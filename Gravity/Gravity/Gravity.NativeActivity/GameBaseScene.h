@@ -8,7 +8,7 @@ protected:
 	bool time_advances;
 	double air_resistance_coefficient;
 	int player_num, size_up_ball_num, charged_ball_num;
-	int accel_arrowGHandle, backgroundGHandle;
+	int accel_arrowGHandle, backgroundGHandle, playerGHandle, charged_ballGHandle;
 	int charge_THandle;
 	string purpose;
 	std::shared_ptr<Player>* player;

@@ -17,13 +17,14 @@ class Player {
 	int accel_arrow_num;
 	int* accel_arrowGHandle;
 	int charge, charge_temp_GHandle, charge_text_width;
+	int* ownGHandle;
 	int* charge_THandle;
 	int shoot_num;
 	double acceleration_x, acceleration_y;
 	double force_x, force_y;
 	double density;
 public:
-	Player(double, double, int, int, double, int*, int*);		//引数(初期x座標, 初期y座標, 電荷, 体積, 密度, テキストハンドル, V矢印画像ハンドル)
+	Player(double, double, int, int, double, int*, int*, int*);		//引数(初期x座標, 初期y座標, 電荷, 体積, 密度, テキストハンドル, V矢印画像ハンドル, 丸画像ハンドル)
 	~Player();
 	void Update();
 	void Draw()const;
@@ -63,8 +64,9 @@ protected:
 	double position_x, position_y;
 	double radius;
 	double density;
+	int* ownGHandle;
 public:
-	NonMovableBall(double, double, int, double);				//引数(初期x座標, 初期y座標, 体積, 密度)
+	NonMovableBall(double, double, int, double, int*);				//引数(初期x座標, 初期y座標, 体積, 密度, 自身画像ハンドル)
 	~NonMovableBall();
 	void Update();
 	void Draw()const;
@@ -84,7 +86,7 @@ class MovableChargedBall :public NonMovableBall {
 	double acceleration_x, acceleration_y;
 	double force_x, force_y;
 public:
-	MovableChargedBall(double, double, int, int, double, int*);		//引数(初期x座標, 初期y座標, 電荷, 体積, 密度, テキストハンドル)
+	MovableChargedBall(double, double, int, int, double, int*, int*);		//引数(初期x座標, 初期y座標, 電荷, 体積, 密度, テキストハンドル, 自身画像ハンドル)
 	~MovableChargedBall();
 	void Update();
 	void Draw()const;

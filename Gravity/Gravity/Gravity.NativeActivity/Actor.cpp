@@ -1,6 +1,6 @@
 ﻿#include "Actor.h"
 
-Player::Player(double first_x, double first_y, int _charge, int _volume, double _density, int* _chargeTHandle, int* _accel_arrowGHandle) {
+Player::Player(double first_x, double first_y, int _charge, int _volume, double _density, int* _chargeTHandle, int* _accel_arrowGHandle, int* _ownGHandle) {
 	volume = _volume;
 	radius = 50 * pow(volume / 5.0, 1.0 / 3);
 	own_color = GetColor(0, 255, 255);
@@ -30,6 +30,7 @@ Player::Player(double first_x, double first_y, int _charge, int _volume, double 
 	}
 	SetDrawScreen(DX_SCREEN_BACK);
 	accel_arrowGHandle = _accel_arrowGHandle;
+	ownGHandle = _ownGHandle;
 	accel_arrow_num = 0;
 	acceleration_x = 0;
 	acceleration_y = 0;
@@ -60,7 +61,7 @@ void Player::Update() {
 }
 
 void Player::Draw()const {
-	DrawCircle(position_x, position_y, radius, own_color, TRUE);							//自分描画
+	DrawRotaGraph(position_x, position_y, 0.00185*radius, 0, *ownGHandle, TRUE, FALSE);		//自分描画
 
 	//体積文字描画
 	if (charge_text_width > 55) {
@@ -234,13 +235,14 @@ void Player::Shoot_Operation() {
 	}
 }
 
-NonMovableBall::NonMovableBall(double first_x, double first_y, int _volume, double _density) {
+NonMovableBall::NonMovableBall(double first_x, double first_y, int _volume, double _density, int* _ownGHandle) {
 	volume = _volume;
 	radius = 50 * pow(volume / 5.0, 1.0 / 3);
 	own_color = GetColor(255, 255, 255);
 	position_x = first_x;
 	position_y = first_y;
 	density = _density;
+	ownGHandle = _ownGHandle;
 }
 
 NonMovableBall::~NonMovableBall() {
@@ -252,7 +254,7 @@ void NonMovableBall::Update() {
 }
 
 void NonMovableBall::Draw()const {
-	DrawCircle(position_x, position_y, radius, own_color, TRUE);
+	DrawRotaGraph(position_x, position_y, 0.00185 * radius, 0, *ownGHandle, TRUE, FALSE);		//自分描画
 }
 
 int NonMovableBall::Return_volume() {
@@ -275,7 +277,7 @@ double NonMovableBall::Return_density() {
 	return density;
 }
 
-MovableChargedBall::MovableChargedBall(double first_x, double first_y, int _charge, int _volume, double _density, int* _chargeTHandle) :NonMovableBall(first_x, first_y, _volume, _density) {
+MovableChargedBall::MovableChargedBall(double first_x, double first_y, int _charge, int _volume, double _density, int* _chargeTHandle, int* _ownGHandle) :NonMovableBall(first_x, first_y, _volume, _density, _ownGHandle) {
 	charge = _charge;
 	speed_x = 0;
 	speed_y = 0;
@@ -284,7 +286,7 @@ MovableChargedBall::MovableChargedBall(double first_x, double first_y, int _char
 	force_x = 0;
 	force_y = 0;
 	own_color = GetColor(0, 255, 0);
-	charge_text_color = GetColor(255, 0, 0);
+	charge_text_color = GetColor(0, 0, 0);
 	charge_THandle = _chargeTHandle;								//テキストハンドル読み込み
 	if (charge > 0) {
 		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "+%d", charge);
@@ -321,7 +323,7 @@ void MovableChargedBall::Update() {
 }
 
 void MovableChargedBall::Draw()const {
-	DrawCircle(position_x, position_y, radius, own_color, TRUE);							//自分描画
+	DrawRotaGraph(position_x, position_y, 0.00185 * radius, 0, *ownGHandle, TRUE, FALSE);		//自分描画
 	
 	//体積文字描画
 	if (charge_text_width > 55) {
