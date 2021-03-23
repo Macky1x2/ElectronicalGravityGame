@@ -20,6 +20,7 @@ Stage_2::~Stage_2() {
 
 }
 
+//3回転したらクリア
 bool Stage_2::ClearChecker() {
 	if (player[0] && charged_ball[0]) {
 		double now_radian = atan2(player[0]->Return_position_y() - charged_ball[0]->Return_position_y(), player[0]->Return_position_x() - charged_ball[0]->Return_position_x());
@@ -61,6 +62,5 @@ void Stage_2::GameClear() {
 	else {
 		star = 0;
 	}
-	//nextScene = std::make_shared<GameClearScene>(star);
 	phase = 1;
 }

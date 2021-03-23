@@ -59,6 +59,5 @@ void Stage_1::GameClear() {
 	else {
 		star = 0;
 	}
-	//nextScene = std::make_shared<GameClearScene>(star);
 	phase = 1;
 }

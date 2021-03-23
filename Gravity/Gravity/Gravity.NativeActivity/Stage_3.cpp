@@ -25,6 +25,7 @@ Stage_3::~Stage_3() {
 
 }
 
+//50個集めたらクリア
 bool Stage_3::ClearChecker() {
 	if (time_advances) {
 		clear_count++;		//クリアフレーム確認用
@@ -60,6 +61,5 @@ void Stage_3::GameClear() {
 	else {
 		star = 0;
 	}
-	//nextScene = std::make_shared<GameClearScene>(star);
 	phase = 1;
 }

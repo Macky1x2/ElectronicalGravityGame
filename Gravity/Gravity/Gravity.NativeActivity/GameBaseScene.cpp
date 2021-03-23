@@ -282,6 +282,7 @@ void GameBaseScene::Update() {
 			GameClear();
 		}
 	}
+	//GameClearによってphage==1となった直後に、↓のif分内でphage==2となるようにした
 	if (phase == 1) {
 		SetAlwaysRunFlag(TRUE);
 		PlayMovieToGraph(page1_turnoverGHandle);

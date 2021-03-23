@@ -77,6 +77,7 @@ SquareButton::~SquareButton() {
 
 }
 
+//指定された範囲内をタップし、指定された範囲内で指を離せばtrueを返すボタン
 bool SquareButton::Checker_specific_place_touch_in_out() {
 	if (GetTouchInputNum() == 1) {
 		int x, y;
@@ -119,6 +120,7 @@ ReverseSquareButton::~ReverseSquareButton() {
 	}
 }
 
+//SquareButtonの、指定された範囲外バージョン
 bool ReverseSquareButton::Checker_reverse_specific_place_touch_in_out() {
 	if (button[0]->Checker_specific_place_touch_in_out() || button[1]->Checker_specific_place_touch_in_out() || button[2]->Checker_specific_place_touch_in_out() || button[3]->Checker_specific_place_touch_in_out()) {
 		return true;

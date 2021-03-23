@@ -53,6 +53,7 @@ void StageSelectScene::Update() {
 		}
 		if (situation == 0) {
 			for (int i = 0; i < 5; i++) {
+				//ステージiを選択したら
 				if (stage_button[i]->Checker_specific_place_touch_in_out()) {
 					situation = i + 1;
 					break;
@@ -60,10 +61,11 @@ void StageSelectScene::Update() {
 			}
 		}
 		else {
+			//枠外タッチしたら
 			if (select_cancel_button->Checker_reverse_specific_place_touch_in_out()) {
 				situation = 0;
 			}
-			else if (start_button->Checker_specific_place_touch_in_out()) {
+			else if (start_button->Checker_specific_place_touch_in_out()) {		//スタートボタン押したら
 				phase = 1;
 				SetAlwaysRunFlag(TRUE);
 				PlayMovieToGraph(pagemany_turnoverGHandle);
@@ -77,6 +79,7 @@ void StageSelectScene::Update() {
 		if (GetMovieStateToGraph(pagemany_turnoverGHandle) == 0) {
 			SetAlwaysRunFlag(FALSE);
 			SeekMovieToGraph(pagemany_turnoverGHandle, 0);
+			//アニメーション終了後phage0で選択したステージへgo
 			switch (situation) {
 			case 1:nextScene = make_shared<Stage_1>(); break;
 			case 2:nextScene = make_shared<Stage_2>(); break;
@@ -110,6 +113,7 @@ void StageSelectScene::Draw()const {
 		}
 		if (fade_out > 0) {
 			SetDrawBlendMode(DX_BLENDMODE_ALPHA, fade_out);
+			//ステージ説明部分(このときsituation!=0は明らか)
 			DrawBox(100, 100, 981, 1281, GetColor(0, 255, 0), TRUE);
 			DrawBox(250, 980, 831, 1181, GetColor(0, 0, 255), TRUE);
 			DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", stage_title[situation - 1].c_str()) / 2), 200, explain_color, explainTHandle, "%s", stage_title[situation - 1].c_str());
@@ -137,6 +141,7 @@ void StageSelectScene::Draw_Objects()const {
 
 void StageSelectScene::ReloadFunction(void) {
 	ReloadFileGraphAll();						// ファイルから読み込んだ画像を復元する
+	//動画ハンドル完全復元
 	if (GetMovieStateToGraph(page1_turnoverGHandle) == 0) {
 		page1_turnoverGHandle = LoadGraph("movie\\1page_turnover.ogv");
 	}

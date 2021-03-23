@@ -177,14 +177,17 @@ void Player::Add_force_y(double add_force) {
 }
 
 void Player::Make_TGHandle() {
+	//正ならば符号は+, 負ならば符号は-, 0ならば符号なし
 	if (charge > 0) {
 		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "+%d", charge);
 	}
 	else {
 		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
 	}
+	//復元時データが破損している恐れがあるため削除
 	DeleteGraph(charge_temp_GHandle);
 	charge_temp_GHandle = MakeScreen(charge_text_width, 64, TRUE);
+	//電荷描画用画像生成
 	SetDrawScreen(charge_temp_GHandle);
 	if (charge > 0) {
 		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, *charge_THandle, "+%d", charge);
@@ -195,6 +198,7 @@ void Player::Make_TGHandle() {
 	SetDrawScreen(DX_SCREEN_BACK);
 }
 
+//プレイヤー操作
 void Player::Shoot_Operation() {
 	checker_when_time_stopped = false;
 	if (GetTouchInputNum() == 1) {

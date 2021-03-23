@@ -19,6 +19,7 @@ TitleScene::~TitleScene() {
 }
 
 void TitleScene::Update() {
+	//phage==0:通常時, phase==1:シーンチェンジ時
 	if (phase == 0) {
 		if (GetTouchInputNum() == 1) {
 			int x, y;
@@ -85,6 +86,7 @@ void TitleScene::Draw_Objects()const {
 void TitleScene::ReloadFunction(void) {
 	ReloadFileGraphAll();						// ファイルから読み込んだ画像を復元する
 	Tap_THandle = CreateFontToHandle(NULL, 40, 5, DX_FONTTYPE_NORMAL);
+	//動画ハンドル完全復元
 	if (GetMovieStateToGraph(page1_turnoverGHandle) == 0) {
 		page1_turnoverGHandle = LoadGraph("movie\\1page_turnover.ogv");
 	}
