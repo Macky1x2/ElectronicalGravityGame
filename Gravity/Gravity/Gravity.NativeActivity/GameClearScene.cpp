@@ -2,6 +2,7 @@
 #include "StageSelectScene.h"
 
 extern SceneBase* Scene_pointer_for_Reload;
+extern int note_pageGHandle, page1_turnoverGHandle;
 
 GameClearScene::GameClearScene(int _star) {
 	star = _star;
@@ -21,6 +22,7 @@ void GameClearScene::Update() {
 }
 
 void GameClearScene::Draw()const {
+	DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0 + 6, 1.02, 0, note_pageGHandle, TRUE, FALSE);		//背景
 	DrawBox(0, 1500, 1081, 1921, GetColor(0, 0, 255), TRUE);
 	for (int i = 0; i < star; i++) {
 		DrawRotaGraph(300 * (i + 1), 500, 0.5, 0, starGHandle, TRUE, FALSE);

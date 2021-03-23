@@ -2,16 +2,17 @@
 #include "GameClearScene.h"
 
 extern SceneBase* Scene_pointer_for_Reload;
+extern int note_pageGHandle, page1_turnoverGHandle;
 
 GameBaseScene::GameBaseScene() {
 	time_advances = false;
 	operate = std::make_shared<OperationInGame>();
 	Scene_pointer_for_Reload = this;
 	accel_arrowGHandle = LoadGraph("V_arrow_red.png");
-	backgroundGHandle = LoadGraph("note.jpg");
 	playerGHandle = LoadGraph("red_circle.png");
 	charged_ballGHandle = LoadGraph("black_circle.png");
-	charge_THandle = CreateFontToHandle(NULL, 40, 5, DX_FONTTYPE_NORMAL);
+	//charge_THandle = CreateFontToHandle(NULL, 40, 5, DX_FONTTYPE_NORMAL);
+	charge_THandle = LoadFontDataToHandle("fonts\\makiba_font.dft");
 }
 
 GameBaseScene::~GameBaseScene() {
@@ -273,7 +274,7 @@ void GameBaseScene::Update() {
 }
 
 void GameBaseScene::Draw()const {
-	DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0, 4.0, 0, backgroundGHandle, FALSE, FALSE);
+	DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0 + 6, 1.02, 0, note_pageGHandle, TRUE, FALSE);		//背景
 	for (int i = 0; i < size_up_ball_num; i++) {
 		if (size_up_ball[i]) {
 			size_up_ball[i]->Draw();
@@ -382,7 +383,8 @@ void GameBaseScene::ReloadFunction(void) {
 	ReloadFileGraphAll();						// ファイルから読み込んだ画像を復元する
 
 	//テキストハンドル復元
-	charge_THandle = CreateFontToHandle(NULL, 40, 5, DX_FONTTYPE_NORMAL);
+	//charge_THandle = CreateFontToHandle(NULL, 40, 5, DX_FONTTYPE_NORMAL);
+	charge_THandle = LoadFontDataToHandle("fonts\\makiba_font.dft");
 	
 	//MakeScreenのグラフィックハンドルを復元
 	for (int i = 0; i < player_num; i++) {
@@ -398,11 +400,10 @@ void GameBaseScene::ReloadFunction(void) {
 }
 
 void GameBaseScene::Draw_Purpose()const {
-	DrawFormatStringToHandle(100, 0, GetColor(255, 255, 255), charge_THandle, "%s", purpose.c_str());
-	DrawLine(100, 150, 300, 150, GetColor(0, 255, 0));
+	DrawFormatStringToHandle(100, 0, GetColor(0, 0, 0), charge_THandle, "%s", purpose.c_str());
 	for (int i = 0; i < player_num; i++) {
 		if (player[i]) {
-			DrawFormatStringToHandle(100, 100, GetColor(255, 255, 255), charge_THandle, "%d回", player[i]->Return_shoot_num());
+			DrawFormatStringToHandle(100, 100, GetColor(0, 0, 0), charge_THandle, "%d回", player[i]->Return_shoot_num());
 			break;
 		}
 	}

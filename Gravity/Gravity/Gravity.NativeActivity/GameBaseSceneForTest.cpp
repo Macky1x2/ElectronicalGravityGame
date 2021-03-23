@@ -1,4 +1,4 @@
-﻿//テスト開発用
+﻿/*テスト開発用
 #include "GameBaseSceneForTest.h"
 #include "GameClearScene.h"
 
@@ -348,3 +348,4 @@ void GameBaseSceneForTest::ReloadFunction(void) {
 		}
 	}
 }
+*/

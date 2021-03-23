@@ -6,6 +6,7 @@
 #include "Stage_Test.h"
 
 extern SceneBase* Scene_pointer_for_Reload;
+extern int note_pageGHandle, page1_turnoverGHandle;
 
 StageSelectScene::StageSelectScene() {
 	Scene_pointer_for_Reload = this;
@@ -26,7 +27,7 @@ StageSelectScene::StageSelectScene() {
 }
 
 StageSelectScene::~StageSelectScene() {
-	for (int i; i < BUTTON_NUM; i++) {
+	for (int i = 0; i < BUTTON_NUM; i++) {
 		if (stage_button[i]) {
 			stage_button[i].reset();
 		}
@@ -67,6 +68,7 @@ void StageSelectScene::Update() {
 }
 
 void StageSelectScene::Draw()const {
+	DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0 + 6, 1.02, 0, note_pageGHandle, TRUE, FALSE);		//背景
 	for (int i = 0; i < 5; i++) {
 		DrawBox(100 + 195 * i, 200, 201 + 195 * i, 301, GetColor(0, 0, 255), TRUE);
 	}

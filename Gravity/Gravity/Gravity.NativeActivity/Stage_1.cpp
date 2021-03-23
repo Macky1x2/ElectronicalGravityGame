@@ -1,7 +1,7 @@
 ﻿#include "Stage_1.h"
 #include "GameClearScene.h"
 
-Stage_1::Stage_1() {
+Stage_1::Stage_1():GameBaseScene() {
 	air_resistance_coefficient = 0.01;
 	player_num = 1;
 	size_up_ball_num = 0;

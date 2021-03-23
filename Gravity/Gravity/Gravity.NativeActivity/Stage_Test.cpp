@@ -2,7 +2,7 @@
 #include "Stage_Test.h"
 #include "GameClearScene.h"
 
-Stage_Test::Stage_Test() {
+Stage_Test::Stage_Test():GameBaseScene() {
 	air_resistance_coefficient = 0.01;
 	player_num = 1;
 	size_up_ball_num = 0;
