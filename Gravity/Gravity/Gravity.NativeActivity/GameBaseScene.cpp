@@ -304,41 +304,11 @@ void GameBaseScene::Draw()const {
 		DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0 + 6, 1.02, 0, note_pageGHandle, TRUE, FALSE);		//背景
 		if (fade_in < 255) {
 			SetDrawBlendMode(DX_BLENDMODE_ALPHA, fade_in);
-			for (int i = 0; i < size_up_ball_num; i++) {
-				if (size_up_ball[i]) {
-					size_up_ball[i]->Draw();
-				}
-			}
-			for (int i = 0; i < charged_ball_num; i++) {
-				if (charged_ball[i]) {
-					charged_ball[i]->Draw();
-				}
-			}
-			for (int i = 0; i < player_num; i++) {
-				if (player[i]) {
-					player[i]->Draw();
-				}
-			}
-			Draw_Purpose();
+			Draw_Objects();
 			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 		}
 		else {
-			for (int i = 0; i < size_up_ball_num; i++) {
-				if (size_up_ball[i]) {
-					size_up_ball[i]->Draw();
-				}
-			}
-			for (int i = 0; i < charged_ball_num; i++) {
-				if (charged_ball[i]) {
-					charged_ball[i]->Draw();
-				}
-			}
-			for (int i = 0; i < player_num; i++) {
-				if (player[i]) {
-					player[i]->Draw();
-				}
-			}
-			Draw_Purpose();
+			Draw_Objects();
 		}
 	}
 	else if (phase == 2) {
@@ -350,30 +320,13 @@ void GameBaseScene::Draw()const {
 		}
 		if (fade_out > 0) {
 			SetDrawBlendMode(DX_BLENDMODE_ALPHA, fade_out);
-			for (int i = 0; i < size_up_ball_num; i++) {
-				if (size_up_ball[i]) {
-					size_up_ball[i]->Draw();
-				}
-			}
-			for (int i = 0; i < charged_ball_num; i++) {
-				if (charged_ball[i]) {
-					charged_ball[i]->Draw();
-				}
-			}
-			for (int i = 0; i < player_num; i++) {
-				if (player[i]) {
-					player[i]->Draw();
-				}
-			}
-			Draw_Purpose();
+			Draw_Objects();
 			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 		}
 	}
-	/*
-	DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0 + 6, 1.02, 0, note_pageGHandle, TRUE, FALSE);		//背景
-	if (GetMovieStateToGraph(page1_turnoverGHandle) == 1) {
-		DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0, 1.5, 0, page1_turnoverGHandle, TRUE, FALSE);
-	}
+}
+
+void GameBaseScene::Draw_Objects()const {
 	for (int i = 0; i < size_up_ball_num; i++) {
 		if (size_up_ball[i]) {
 			size_up_ball[i]->Draw();
@@ -389,7 +342,7 @@ void GameBaseScene::Draw()const {
 			player[i]->Draw();
 		}
 	}
-	Draw_Purpose();*/
+	Draw_Purpose();
 }
 
 bool GameBaseScene::HitChecker_PlayerandPlayer(std::shared_ptr<Player> _player1, std::shared_ptr<Player> _player2) {

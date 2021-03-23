@@ -60,8 +60,7 @@ void TitleScene::Update() {
 void TitleScene::Draw()const {
 	if (phase == 0) {
 		DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0 + 6, 1.02, 0, note_pageGHandle, TRUE, FALSE);		//背景
-		DrawBox(0, 0, 1081, 701, GetColor(0, 0, 255), TRUE);
-		DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(Tap_THandle, "TAP TO START") / 2), 350, "TAP TO START", Tap_Color, Tap_THandle);
+		Draw_Objects();
 	}
 	else if (phase == 1) {
 		if (GetMovieStateToGraph(page1_turnoverGHandle) == 1) {
@@ -72,19 +71,15 @@ void TitleScene::Draw()const {
 		}
 		if (fade_out > 0) {
 			SetDrawBlendMode(DX_BLENDMODE_ALPHA, fade_out);
-			DrawBox(0, 0, 1081, 701, GetColor(0, 0, 255), TRUE);
-			DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(Tap_THandle, "TAP TO START") / 2), 350, "TAP TO START", Tap_Color, Tap_THandle);
+			Draw_Objects();
 			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 		}
 	}
+}
 
-	/*DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0 + 6, 1.02, 0, note_pageGHandle, TRUE, FALSE);		//背景
-	if (GetMovieStateToGraph(page1_turnoverGHandle) == 1) {
-		DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0, 1.5, 0, page1_turnoverGHandle, TRUE, FALSE);
-	}
+void TitleScene::Draw_Objects()const {
 	DrawBox(0, 0, 1081, 701, GetColor(0, 0, 255), TRUE);
 	DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(Tap_THandle, "TAP TO START") / 2), 350, "TAP TO START", Tap_Color, Tap_THandle);
-	*/
 }
 
 void TitleScene::ReloadFunction(void) {

@@ -46,17 +46,11 @@ void GameClearScene::Draw()const {
 		DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0 + 6, 1.02, 0, note_pageGHandle, TRUE, FALSE);		//背景
 		if (fade_in < 255) {
 			SetDrawBlendMode(DX_BLENDMODE_ALPHA, fade_in);
-			DrawBox(0, 1500, 1081, 1921, GetColor(0, 0, 255), TRUE);
-			for (int i = 0; i < star; i++) {
-				DrawRotaGraph(300 * (i + 1), 500, 0.5, 0, starGHandle, TRUE, FALSE);
-			}
+			Draw_Objects();
 			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 		}
 		else {
-			DrawBox(0, 1500, 1081, 1921, GetColor(0, 0, 255), TRUE);
-			for (int i = 0; i < star; i++) {
-				DrawRotaGraph(300 * (i + 1), 500, 0.5, 0, starGHandle, TRUE, FALSE);
-			}
+			Draw_Objects();
 		}
 	}
 	else if (phase == 1) {
@@ -68,22 +62,17 @@ void GameClearScene::Draw()const {
 		}
 		if (fade_out > 0) {
 			SetDrawBlendMode(DX_BLENDMODE_ALPHA, fade_out);
-			DrawBox(0, 1500, 1081, 1921, GetColor(0, 0, 255), TRUE);
-			for (int i = 0; i < star; i++) {
-				DrawRotaGraph(300 * (i + 1), 500, 0.5, 0, starGHandle, TRUE, FALSE);
-			}
+			Draw_Objects();
 			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 		}
 	}
-	/*
-	DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0 + 6, 1.02, 0, note_pageGHandle, TRUE, FALSE);		//背景
-	if (GetMovieStateToGraph(reverse_pagemany_turnoverGHandle) == 1) {
-		DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0, 1.5, 0, reverse_pagemany_turnoverGHandle, TRUE, FALSE);
-	}
+}
+
+void GameClearScene::Draw_Objects()const {
 	DrawBox(0, 1500, 1081, 1921, GetColor(0, 0, 255), TRUE);
 	for (int i = 0; i < star; i++) {
 		DrawRotaGraph(300 * (i + 1), 500, 0.5, 0, starGHandle, TRUE, FALSE);
-	}*/
+	}
 }
 
 void GameClearScene::ReloadFunction(void) {

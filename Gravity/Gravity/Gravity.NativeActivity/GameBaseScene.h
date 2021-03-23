@@ -21,6 +21,7 @@ public:
 	~GameBaseScene();
 	void Update();
 	void Draw()const;
+	void Draw_Objects()const;
 	void HitConbine();
 	bool HitChecker_PlayerandPlayer(std::shared_ptr<Player>, std::shared_ptr<Player>);
 	bool HitChecker_PlayerandNonMovableBall(std::shared_ptr<Player>, std::shared_ptr<NonMovableBall>);

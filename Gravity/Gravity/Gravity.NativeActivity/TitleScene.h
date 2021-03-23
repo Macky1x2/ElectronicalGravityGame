@@ -12,5 +12,6 @@ public:
 	~TitleScene();
 	void Update();
 	void Draw()const;
+	void Draw_Objects()const;
 	void ReloadFunction(void);
 };
