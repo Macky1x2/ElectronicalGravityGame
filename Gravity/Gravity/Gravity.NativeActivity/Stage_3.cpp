@@ -48,7 +48,6 @@ bool Stage_3::ClearChecker() {
 }
 
 void Stage_3::GameClear() {
-	int star;
 	if (clear_count / 60.0 <= 17) {
 		star = 3;
 	}
@@ -61,5 +60,6 @@ void Stage_3::GameClear() {
 	else {
 		star = 0;
 	}
-	nextScene = std::make_shared<GameClearScene>(star);
+	//nextScene = std::make_shared<GameClearScene>(star);
+	phase = 1;
 }

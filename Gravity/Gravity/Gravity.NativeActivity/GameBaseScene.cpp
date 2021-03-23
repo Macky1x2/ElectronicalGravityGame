@@ -2,9 +2,15 @@
 #include "GameClearScene.h"
 
 extern SceneBase* Scene_pointer_for_Reload;
-extern int note_pageGHandle, page1_turnoverGHandle;
+extern int note_pageGHandle, page1_turnoverGHandle, pagemany_turnoverGHandle, reverse_page1_turnoverGHandle, reverse_pagemany_turnoverGHandle;
 
 GameBaseScene::GameBaseScene() {
+	phase = 0;
+	star = 0;
+	fade_in = 0;
+	fade_in_speed = 17;
+	fade_out = 255;
+	fade_out_speed = 17;
 	time_advances = false;
 	operate = std::make_shared<OperationInGame>();
 	Scene_pointer_for_Reload = this;
@@ -251,30 +257,123 @@ void GameBaseScene::Gravity() {
 }
 
 void GameBaseScene::Update() {
-	operate->Update();			//操作処理
-	TimeControl();				//時間処理
-	Gravity();					//クーロン力処理
-	AirResistance();			//媒質抵抗処理
-	if (time_advances) {		//時が止まっているときは以下は更新しない
-		for (int i = 0; i < player_num; i++) {
-			if (player[i]) {
-				player[i]->Update();
-			}
+	if (phase == 0) {
+		if (fade_in < 255) {
+			fade_in += fade_in_speed;
 		}
-		for (int i = 0; i < charged_ball_num; i++) {
-			if (charged_ball[i]) {
-				charged_ball[i]->Update();
+		operate->Update();			//操作処理
+		TimeControl();				//時間処理
+		Gravity();					//クーロン力処理
+		AirResistance();			//媒質抵抗処理
+		if (time_advances) {		//時が止まっているときは以下は更新しない
+			for (int i = 0; i < player_num; i++) {
+				if (player[i]) {
+					player[i]->Update();
+				}
 			}
+			for (int i = 0; i < charged_ball_num; i++) {
+				if (charged_ball[i]) {
+					charged_ball[i]->Update();
+				}
+			}
+			HitConbine();				//衝突then結合処理
 		}
-		HitConbine();				//衝突then結合処理
+		if (ClearChecker()) {			//クリア判定となればゲームクリア
+			GameClear();
+		}
 	}
-	if (ClearChecker()) {			//クリア判定となればゲームクリア
-		GameClear();
+	if (phase == 1) {
+		SetAlwaysRunFlag(TRUE);
+		PlayMovieToGraph(page1_turnoverGHandle);
+		phase = 2;
+	}
+	else if (phase == 2) {
+		if (fade_out > 0) {
+			fade_out -= fade_out_speed;
+		}
+		if (GetMovieStateToGraph(page1_turnoverGHandle) == 0) {
+			SetAlwaysRunFlag(FALSE);
+			SeekMovieToGraph(page1_turnoverGHandle, 0);
+			nextScene = std::make_shared<GameClearScene>(star);
+		}
 	}
 }
 
 void GameBaseScene::Draw()const {
+	if (phase == 0) {
+		DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0 + 6, 1.02, 0, note_pageGHandle, TRUE, FALSE);		//背景
+		if (fade_in < 255) {
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, fade_in);
+			for (int i = 0; i < size_up_ball_num; i++) {
+				if (size_up_ball[i]) {
+					size_up_ball[i]->Draw();
+				}
+			}
+			for (int i = 0; i < charged_ball_num; i++) {
+				if (charged_ball[i]) {
+					charged_ball[i]->Draw();
+				}
+			}
+			for (int i = 0; i < player_num; i++) {
+				if (player[i]) {
+					player[i]->Draw();
+				}
+			}
+			Draw_Purpose();
+			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		}
+		else {
+			for (int i = 0; i < size_up_ball_num; i++) {
+				if (size_up_ball[i]) {
+					size_up_ball[i]->Draw();
+				}
+			}
+			for (int i = 0; i < charged_ball_num; i++) {
+				if (charged_ball[i]) {
+					charged_ball[i]->Draw();
+				}
+			}
+			for (int i = 0; i < player_num; i++) {
+				if (player[i]) {
+					player[i]->Draw();
+				}
+			}
+			Draw_Purpose();
+		}
+	}
+	else if (phase == 2) {
+		if (GetMovieStateToGraph(page1_turnoverGHandle) == 1) {
+			DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0, 1.5, 0, page1_turnoverGHandle, TRUE, FALSE);
+		}
+		else {
+			DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0 + 6, 1.02, 0, note_pageGHandle, TRUE, FALSE);		//背景
+		}
+		if (fade_out > 0) {
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, fade_out);
+			for (int i = 0; i < size_up_ball_num; i++) {
+				if (size_up_ball[i]) {
+					size_up_ball[i]->Draw();
+				}
+			}
+			for (int i = 0; i < charged_ball_num; i++) {
+				if (charged_ball[i]) {
+					charged_ball[i]->Draw();
+				}
+			}
+			for (int i = 0; i < player_num; i++) {
+				if (player[i]) {
+					player[i]->Draw();
+				}
+			}
+			Draw_Purpose();
+			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		}
+	}
+	/*
 	DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0 + 6, 1.02, 0, note_pageGHandle, TRUE, FALSE);		//背景
+	if (GetMovieStateToGraph(page1_turnoverGHandle) == 1) {
+		DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0, 1.5, 0, page1_turnoverGHandle, TRUE, FALSE);
+	}
 	for (int i = 0; i < size_up_ball_num; i++) {
 		if (size_up_ball[i]) {
 			size_up_ball[i]->Draw();
@@ -290,7 +389,7 @@ void GameBaseScene::Draw()const {
 			player[i]->Draw();
 		}
 	}
-	Draw_Purpose();
+	Draw_Purpose();*/
 }
 
 bool GameBaseScene::HitChecker_PlayerandPlayer(std::shared_ptr<Player> _player1, std::shared_ptr<Player> _player2) {
@@ -381,6 +480,18 @@ void GameBaseScene::TimeControl() {
 
 void GameBaseScene::ReloadFunction(void) {
 	ReloadFileGraphAll();						// ファイルから読み込んだ画像を復元する
+	if (GetMovieStateToGraph(page1_turnoverGHandle) == 0) {
+		page1_turnoverGHandle = LoadGraph("movie\\1page_turnover.ogv");
+	}
+	if (GetMovieStateToGraph(pagemany_turnoverGHandle) == 0) {
+		pagemany_turnoverGHandle = LoadGraph("movie\\manypages_turnover.ogv");
+	}
+	if (GetMovieStateToGraph(reverse_page1_turnoverGHandle) == 0) {
+		reverse_page1_turnoverGHandle = LoadGraph("movie\\reverse_1page_turnover.ogv");
+	}
+	if (GetMovieStateToGraph(reverse_pagemany_turnoverGHandle) == 0) {
+		reverse_pagemany_turnoverGHandle = LoadGraph("movie\\reverse_manypages_turnover.ogv");
+	}
 
 	//テキストハンドル復元
 	//charge_THandle = CreateFontToHandle(NULL, 40, 5, DX_FONTTYPE_NORMAL);

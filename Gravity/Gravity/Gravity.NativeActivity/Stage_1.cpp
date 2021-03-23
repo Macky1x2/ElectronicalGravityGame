@@ -39,7 +39,7 @@ bool Stage_1::ClearChecker() {
 }
 
 void Stage_1::GameClear() {
-	int star, num;
+	int num;
 	num = 5;
 	for (int i = 0; i < player_num; i++) {
 		if (player[i]) {
@@ -59,5 +59,6 @@ void Stage_1::GameClear() {
 	else {
 		star = 0;
 	}
-	nextScene = std::make_shared<GameClearScene>(star);
+	//nextScene = std::make_shared<GameClearScene>(star);
+	phase = 1;
 }

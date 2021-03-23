@@ -1,6 +1,6 @@
 ﻿#include "TitleScene.h"
 
-int note_pageGHandle, page1_turnoverGHandle;
+int note_pageGHandle, page1_turnoverGHandle, pagemany_turnoverGHandle, reverse_page1_turnoverGHandle, reverse_pagemany_turnoverGHandle;
 extern SceneBase* Scene_pointer_for_Reload;
 
 void ReloadFunctionInGame();
@@ -17,6 +17,9 @@ int android_main(void)
 	SetRestoreGraphCallback(ReloadFunctionInGame);
 	note_pageGHandle = LoadGraph("graph\\note_page.png");
 	page1_turnoverGHandle = LoadGraph("movie\\1page_turnover.ogv");
+	pagemany_turnoverGHandle = LoadGraph("movie\\manypages_turnover.ogv");
+	reverse_page1_turnoverGHandle = LoadGraph("movie\\reverse_1page_turnover.ogv");
+	reverse_pagemany_turnoverGHandle = LoadGraph("movie\\reverse_manypages_turnover.ogv");
 
 	//ゲーム処理
 	SceneManager scene(make_shared<TitleScene>());
@@ -28,6 +31,9 @@ int android_main(void)
 	//終了処理
 	DeleteGraph(note_pageGHandle);
 	DeleteGraph(page1_turnoverGHandle);
+	DeleteGraph(pagemany_turnoverGHandle);
+	DeleteGraph(reverse_page1_turnoverGHandle);
+	DeleteGraph(reverse_pagemany_turnoverGHandle);
 	DxLib_End();
 	return 0;
 }

@@ -6,11 +6,16 @@
 #include "Stage_Test.h"
 
 extern SceneBase* Scene_pointer_for_Reload;
-extern int note_pageGHandle, page1_turnoverGHandle;
+extern int note_pageGHandle, page1_turnoverGHandle, pagemany_turnoverGHandle, reverse_page1_turnoverGHandle, reverse_pagemany_turnoverGHandle;
 
 StageSelectScene::StageSelectScene() {
 	Scene_pointer_for_Reload = this;
 	situation = 0;
+	phase = 0;
+	fade_in = 0;
+	fade_in_speed = 17;
+	fade_out = 255;
+	fade_out_speed = 17;
 	explainTHandle = CreateFontToHandle(NULL, 40, 5, DX_FONTTYPE_NORMAL);
 	explain_color = GetColor(255, 255, 255);
 	//ボタン
@@ -42,19 +47,36 @@ StageSelectScene::~StageSelectScene() {
 }
 
 void StageSelectScene::Update() {
-	if (situation == 0) {
-		for (int i = 0; i < 5; i++) {
-			if (stage_button[i]->Checker_specific_place_touch_in_out()) {
-				situation = i + 1;
-				break;
+	if (phase == 0) {
+		if (fade_in < 255) {
+			fade_in += fade_in_speed;
+		}
+		if (situation == 0) {
+			for (int i = 0; i < 5; i++) {
+				if (stage_button[i]->Checker_specific_place_touch_in_out()) {
+					situation = i + 1;
+					break;
+				}
+			}
+		}
+		else {
+			if (select_cancel_button->Checker_reverse_specific_place_touch_in_out()) {
+				situation = 0;
+			}
+			else if (start_button->Checker_specific_place_touch_in_out()) {
+				phase = 1;
+				SetAlwaysRunFlag(TRUE);
+				PlayMovieToGraph(pagemany_turnoverGHandle);
 			}
 		}
 	}
-	else{
-		if (select_cancel_button->Checker_reverse_specific_place_touch_in_out()) {
-			situation = 0;
+	else if (phase == 1) {
+		if (fade_out > 0) {
+			fade_out -= fade_out_speed;
 		}
-		else if (start_button->Checker_specific_place_touch_in_out()) {
+		if (GetMovieStateToGraph(pagemany_turnoverGHandle) == 0) {
+			SetAlwaysRunFlag(FALSE);
+			SeekMovieToGraph(pagemany_turnoverGHandle, 0);
 			switch (situation) {
 			case 1:nextScene = make_shared<Stage_1>(); break;
 			case 2:nextScene = make_shared<Stage_2>(); break;
@@ -68,7 +90,62 @@ void StageSelectScene::Update() {
 }
 
 void StageSelectScene::Draw()const {
+	if (phase == 0) {
+		DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0 + 6, 1.02, 0, note_pageGHandle, TRUE, FALSE);		//背景
+		if (fade_in < 255) {
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, fade_in);
+			for (int i = 0; i < 5; i++) {
+				DrawBox(100 + 195 * i, 200, 201 + 195 * i, 301, GetColor(0, 0, 255), TRUE);
+			}
+			if (situation != 0) {
+				DrawBox(100, 100, 981, 1281, GetColor(0, 255, 0), TRUE);
+				DrawBox(250, 980, 831, 1181, GetColor(0, 0, 255), TRUE);
+				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", stage_title[situation - 1].c_str()) / 2), 200, explain_color, explainTHandle, "%s", stage_title[situation - 1].c_str());
+				DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "クリア条件") / 2), 400, "クリア条件", explain_color, explainTHandle);
+				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", clear_terms[situation - 1].c_str()) / 2), 450, explain_color, explainTHandle, "%s", clear_terms[situation - 1].c_str());
+				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str()) / 2), 750, explain_color, explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str());
+			}
+			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		}
+		else {
+			for (int i = 0; i < 5; i++) {
+				DrawBox(100 + 195 * i, 200, 201 + 195 * i, 301, GetColor(0, 0, 255), TRUE);
+			}
+			if (situation != 0) {
+				DrawBox(100, 100, 981, 1281, GetColor(0, 255, 0), TRUE);
+				DrawBox(250, 980, 831, 1181, GetColor(0, 0, 255), TRUE);
+				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", stage_title[situation - 1].c_str()) / 2), 200, explain_color, explainTHandle, "%s", stage_title[situation - 1].c_str());
+				DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "クリア条件") / 2), 400, "クリア条件", explain_color, explainTHandle);
+				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", clear_terms[situation - 1].c_str()) / 2), 450, explain_color, explainTHandle, "%s", clear_terms[situation - 1].c_str());
+				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str()) / 2), 750, explain_color, explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str());
+			}
+		}
+	}
+	else if (phase == 1) {
+		if (GetMovieStateToGraph(pagemany_turnoverGHandle) == 1) {
+			DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0, 1.5, 0, pagemany_turnoverGHandle, TRUE, FALSE);
+		}
+		else {
+			DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0 + 6, 1.02, 0, note_pageGHandle, TRUE, FALSE);		//背景
+		}
+		if (fade_out > 0) {
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, fade_out);
+			if (situation != 0) {
+				DrawBox(100, 100, 981, 1281, GetColor(0, 255, 0), TRUE);
+				DrawBox(250, 980, 831, 1181, GetColor(0, 0, 255), TRUE);
+				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", stage_title[situation - 1].c_str()) / 2), 200, explain_color, explainTHandle, "%s", stage_title[situation - 1].c_str());
+				DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "クリア条件") / 2), 400, "クリア条件", explain_color, explainTHandle);
+				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", clear_terms[situation - 1].c_str()) / 2), 450, explain_color, explainTHandle, "%s", clear_terms[situation - 1].c_str());
+				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str()) / 2), 750, explain_color, explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str());
+			}
+			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		}
+	}
+	/*
 	DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0 + 6, 1.02, 0, note_pageGHandle, TRUE, FALSE);		//背景
+	if (GetMovieStateToGraph(pagemany_turnoverGHandle) == 1) {
+		DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0, 1.5, 0, pagemany_turnoverGHandle, TRUE, FALSE);
+	}
 	for (int i = 0; i < 5; i++) {
 		DrawBox(100 + 195 * i, 200, 201 + 195 * i, 301, GetColor(0, 0, 255), TRUE);
 	}
@@ -79,9 +156,21 @@ void StageSelectScene::Draw()const {
 		DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "クリア条件") / 2), 400, "クリア条件", explain_color, explainTHandle);
 		DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", clear_terms[situation - 1].c_str()) / 2), 450, explain_color, explainTHandle, "%s", clear_terms[situation - 1].c_str());
 		DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str()) / 2), 750, explain_color, explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str());
-	}
+	}*/
 }
 
 void StageSelectScene::ReloadFunction(void) {
 	ReloadFileGraphAll();						// ファイルから読み込んだ画像を復元する
+	if (GetMovieStateToGraph(page1_turnoverGHandle) == 0) {
+		page1_turnoverGHandle = LoadGraph("movie\\1page_turnover.ogv");
+	}
+	if (GetMovieStateToGraph(pagemany_turnoverGHandle) == 0) {
+		pagemany_turnoverGHandle = LoadGraph("movie\\manypages_turnover.ogv");
+	}
+	if (GetMovieStateToGraph(reverse_page1_turnoverGHandle) == 0) {
+		reverse_page1_turnoverGHandle = LoadGraph("movie\\reverse_1page_turnover.ogv");
+	}
+	if (GetMovieStateToGraph(reverse_pagemany_turnoverGHandle) == 0) {
+		reverse_pagemany_turnoverGHandle = LoadGraph("movie\\reverse_manypages_turnover.ogv");
+	}
 }

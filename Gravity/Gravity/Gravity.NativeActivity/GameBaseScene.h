@@ -10,6 +10,8 @@ protected:
 	int player_num, size_up_ball_num, charged_ball_num;
 	int accel_arrowGHandle, playerGHandle, charged_ballGHandle;
 	int charge_THandle;
+	int phase, star;
+	int fade_in, fade_in_speed, fade_out, fade_out_speed;
 	string purpose;
 	std::shared_ptr<Player>* player;
 	std::shared_ptr<NonMovableBall>* size_up_ball;
