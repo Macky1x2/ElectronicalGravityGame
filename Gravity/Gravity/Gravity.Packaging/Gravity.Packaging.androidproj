@@ -121,6 +121,7 @@
   <ItemGroup>
     <Content Include="assets\fonts\makiba_font.dft" />
     <Content Include="assets\graph\note_page.png" />
+    <Content Include="assets\graph\clipboard.png" />
     <Content Include="assets\movie\1page_turnover.ogv" />
     <Content Include="assets\movie\manypages_turnover.ogv" />
     <Content Include="assets\movie\reverse_1page_turnover.ogv" />

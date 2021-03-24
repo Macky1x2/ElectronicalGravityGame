@@ -12,10 +12,13 @@ StageSelectScene::StageSelectScene() {
 	Scene_pointer_for_Reload = this;
 	situation = 0;
 	phase = 0;
+	board_phase = 0;
 	fade_in = 0;
 	fade_in_speed = 17;
 	fade_out = 255;
 	fade_out_speed = 17;
+	board_accel = 11;
+	boardGHandle = LoadGraph("graph\\clipboard.png");
 	explainTHandle = CreateFontToHandle(NULL, 40, 5, DX_FONTTYPE_NORMAL);
 	explain_color = GetColor(255, 255, 255);
 	//ボタン
@@ -56,19 +59,62 @@ void StageSelectScene::Update() {
 				//ステージiを選択したら
 				if (stage_button[i]->Checker_specific_place_touch_in_out()) {
 					situation = i + 1;
+					board_phase = 0;
 					break;
 				}
 			}
 		}
 		else {
-			//枠外タッチしたら
-			if (select_cancel_button->Checker_reverse_specific_place_touch_in_out()) {
-				situation = 0;
+			switch (board_phase) {
+			case 0:board_x[0] = -385;
+				board_y[0] = ANDROID_HEIGHT / 2;
+				board_v = 142;
+				board_fade_in = 0;
+				board_phase = 1;
+				break;
+			case 1:
+				if (board_x[0] < 540) {
+					board_x[0] += board_v;
+					board_v -= board_accel;
+				}
+				else {
+					board_phase = 2;
+				}
+				break;
+			case 2:
+				if (board_fade_in < 255) {
+					board_fade_in += fade_in_speed;
+				}
+				break;
+			case 3:board_v = 142;
+				board_fade_out = 255;
+				board_phase = 4;
+				break;
+			case 4:
+				if (board_fade_out > 0) {
+					board_fade_out -= fade_in_speed;
+				}
+				if (board_x[0] > -385) {
+					board_x[0] -= board_v;
+					board_v -= board_accel;
+				}
+				else {
+					situation = 0;
+				}
+				break;
+			default:break;
 			}
-			else if (start_button->Checker_specific_place_touch_in_out()) {		//スタートボタン押したら
-				phase = 1;
-				SetAlwaysRunFlag(TRUE);
-				PlayMovieToGraph(pagemany_turnoverGHandle);
+			if (board_phase == 2 && board_fade_in >= 255) {
+				//枠外タッチしたら
+				if (select_cancel_button->Checker_reverse_specific_place_touch_in_out()) {
+					board_phase = 3;
+					//situation = 0;
+				}
+				else if (start_button->Checker_specific_place_touch_in_out()) {		//スタートボタン押したら
+					phase = 1;
+					SetAlwaysRunFlag(TRUE);
+					PlayMovieToGraph(pagemany_turnoverGHandle);
+				}
 			}
 		}
 	}
@@ -130,12 +176,51 @@ void StageSelectScene::Draw_Objects()const {
 		DrawBox(100 + 195 * i, 200, 201 + 195 * i, 301, GetColor(0, 0, 255), TRUE);
 	}
 	if (situation != 0) {
+		switch (board_phase) {
+		case 1:DrawRotaGraph(board_x[0], board_y[0], 1.5, 0, boardGHandle, TRUE, FALSE);
+			break;
+		case 2:DrawRotaGraph(board_x[0], board_y[0], 1.5, 0, boardGHandle, TRUE, FALSE);
+			if (board_fade_in < 255) {
+				SetDrawBlendMode(DX_BLENDMODE_ALPHA, board_fade_in);
+				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", stage_title[situation - 1].c_str()) / 2), 200, explain_color, explainTHandle, "%s", stage_title[situation - 1].c_str());
+				DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "クリア条件") / 2), 400, "クリア条件", explain_color, explainTHandle);
+				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", clear_terms[situation - 1].c_str()) / 2), 450, explain_color, explainTHandle, "%s", clear_terms[situation - 1].c_str());
+				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str()) / 2), 750, explain_color, explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str());
+				SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+			}
+			else {
+				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", stage_title[situation - 1].c_str()) / 2), 200, explain_color, explainTHandle, "%s", stage_title[situation - 1].c_str());
+				DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "クリア条件") / 2), 400, "クリア条件", explain_color, explainTHandle);
+				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", clear_terms[situation - 1].c_str()) / 2), 450, explain_color, explainTHandle, "%s", clear_terms[situation - 1].c_str());
+				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str()) / 2), 750, explain_color, explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str());
+			}
+			break;
+		case 3:DrawRotaGraph(board_x[0], board_y[0], 1.5, 0, boardGHandle, TRUE, FALSE);
+			DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", stage_title[situation - 1].c_str()) / 2), 200, explain_color, explainTHandle, "%s", stage_title[situation - 1].c_str());
+			DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "クリア条件") / 2), 400, "クリア条件", explain_color, explainTHandle);
+			DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", clear_terms[situation - 1].c_str()) / 2), 450, explain_color, explainTHandle, "%s", clear_terms[situation - 1].c_str());
+			DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str()) / 2), 750, explain_color, explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str());
+			break;
+		case 4:DrawRotaGraph(board_x[0], board_y[0], 1.5, 0, boardGHandle, TRUE, FALSE);
+			if (board_fade_out > 0) {
+				SetDrawBlendMode(DX_BLENDMODE_ALPHA, board_fade_out);
+				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", stage_title[situation - 1].c_str()) / 2), 200, explain_color, explainTHandle, "%s", stage_title[situation - 1].c_str());
+				DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "クリア条件") / 2), 400, "クリア条件", explain_color, explainTHandle);
+				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", clear_terms[situation - 1].c_str()) / 2), 450, explain_color, explainTHandle, "%s", clear_terms[situation - 1].c_str());
+				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str()) / 2), 750, explain_color, explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str());
+				SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+			}
+			break;
+		default:break;
+		}
+		/*
 		DrawBox(100, 100, 981, 1281, GetColor(0, 255, 0), TRUE);
 		DrawBox(250, 980, 831, 1181, GetColor(0, 0, 255), TRUE);
 		DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", stage_title[situation - 1].c_str()) / 2), 200, explain_color, explainTHandle, "%s", stage_title[situation - 1].c_str());
 		DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "クリア条件") / 2), 400, "クリア条件", explain_color, explainTHandle);
 		DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", clear_terms[situation - 1].c_str()) / 2), 450, explain_color, explainTHandle, "%s", clear_terms[situation - 1].c_str());
 		DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str()) / 2), 750, explain_color, explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str());
+		*/
 	}
 }
 
