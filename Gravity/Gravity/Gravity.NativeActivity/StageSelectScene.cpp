@@ -69,7 +69,6 @@ void StageSelectScene::Update() {
 			case 0:board_x[0] = -385;
 				board_y[0] = ANDROID_HEIGHT / 2;
 				board_v = 142;
-				board_fade_in = 0;
 				board_phase = 1;
 				break;
 			case 1:
@@ -82,18 +81,11 @@ void StageSelectScene::Update() {
 				}
 				break;
 			case 2:
-				if (board_fade_in < 255) {
-					board_fade_in += fade_in_speed;
-				}
 				break;
 			case 3:board_v = 142;
-				board_fade_out = 255;
 				board_phase = 4;
 				break;
 			case 4:
-				if (board_fade_out > 0) {
-					board_fade_out -= fade_in_speed;
-				}
 				if (board_x[0] > -385) {
 					board_x[0] -= board_v;
 					board_v -= board_accel;
@@ -104,7 +96,7 @@ void StageSelectScene::Update() {
 				break;
 			default:break;
 			}
-			if (board_phase == 2 && board_fade_in >= 255) {
+			if (board_phase == 2) {
 				//枠外タッチしたら
 				if (select_cancel_button->Checker_reverse_specific_place_touch_in_out()) {
 					board_phase = 3;
@@ -171,40 +163,19 @@ void StageSelectScene::Draw_Objects()const {
 		DrawBox(100 + 195 * i, 200, 201 + 195 * i, 301, GetColor(0, 0, 255), TRUE);
 	}
 	if (situation != 0) {
-		switch (board_phase) {
-		case 1:DrawRotaGraph(board_x[0], board_y[0], board_size, 0, boardGHandle, TRUE, FALSE);
-			break;
-		case 2:DrawRotaGraph(board_x[0], board_y[0], board_size, 0, boardGHandle, TRUE, FALSE);
-			if (board_fade_in < 255) {
-				SetDrawBlendMode(DX_BLENDMODE_ALPHA, board_fade_in);
-				Draw_Explain();
-				SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-			}
-			else {
-				Draw_Explain();
-			}
-			break;
-		case 3:DrawRotaGraph(board_x[0], board_y[0], board_size, 0, boardGHandle, TRUE, FALSE);
+		if (board_phase != 0) {
+			DrawRotaGraph(board_x[0], board_y[0], board_size, 0, boardGHandle, TRUE, FALSE);
 			Draw_Explain();
-			break;
-		case 4:DrawRotaGraph(board_x[0], board_y[0], board_size, 0, boardGHandle, TRUE, FALSE);
-			if (board_fade_out > 0) {
-				SetDrawBlendMode(DX_BLENDMODE_ALPHA, board_fade_out);
-				Draw_Explain();
-				SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-			}
-			break;
-		default:break;
 		}
 	}
 }
 
 void StageSelectScene::Draw_Explain()const {
-	DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "%s", stage_title[situation - 1].c_str()) / 2), 500, explain_color, makibaTH_S64_T7, "%s", stage_title[situation - 1].c_str());
-	DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "クリア条件") / 2), 700, "クリア条件", explain_color, makibaTH_S64_T7);
-	DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "%s", clear_terms[situation - 1].c_str()) / 2), 750, explain_color, makibaTH_S64_T7, "%s", clear_terms[situation - 1].c_str());
-	DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "□%s\n□%s\n□%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str()) / 2), 820, explain_color, makibaTH_S64_T7, "□%s\n□%s\n□%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str());
-	DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S128_T10, "はじめる") / 2), 1200, "はじめる", explain_color, makibaTH_S128_T10);
+	DrawFormatStringToHandle(board_x[0] - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "%s", stage_title[situation - 1].c_str()) / 2), 500, explain_color, makibaTH_S64_T7, "%s", stage_title[situation - 1].c_str());
+	DrawStringToHandle(board_x[0] - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "クリア条件") / 2), 700, "クリア条件", explain_color, makibaTH_S64_T7);
+	DrawFormatStringToHandle(board_x[0] - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "%s", clear_terms[situation - 1].c_str()) / 2), 750, explain_color, makibaTH_S64_T7, "%s", clear_terms[situation - 1].c_str());
+	DrawFormatStringToHandle(board_x[0] - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "□%s\n□%s\n□%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str()) / 2), 820, explain_color, makibaTH_S64_T7, "□%s\n□%s\n□%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str());
+	DrawStringToHandle(board_x[0] - (GetDrawFormatStringWidthToHandle(makibaTH_S128_T10, "はじめる") / 2), 1200, "はじめる", explain_color, makibaTH_S128_T10);
 }
 
 void StageSelectScene::ReloadFunction(void) {
