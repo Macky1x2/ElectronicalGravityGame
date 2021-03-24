@@ -66,7 +66,7 @@ void Player::Update() {
 void Player::Draw()const {
 	DrawRotaGraph(position_x, position_y, 0.00185*radius, 0, *ownGHandle, TRUE, FALSE);		//自分描画
 
-	//体積文字描画
+	//電荷描画
 	if (charge_text_width > 55) {
 		DrawRotaGraph(position_x, position_y, (55.0 / charge_text_width) * 1.5 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);
 	}
@@ -76,7 +76,7 @@ void Player::Draw()const {
 
 	//加速矢印描画
 	for (int i = 0; i < accel_arrow_num; i++) {
-		DrawRotaGraph(position_x - (i + 1) * (radius * 1.5) * cos(accel_arrow_direction), position_y - (i + 1) * (radius * 1.5) * sin(accel_arrow_direction), 0.3, accel_arrow_direction, *accel_arrowGHandle, TRUE, FALSE);
+		DrawRotaGraph(position_x - (i + 1) * (radius * 1.5) * cos(accel_arrow_direction), position_y - (i + 1) * (radius * 1.5) * sin(accel_arrow_direction), 0.4*radius/50, accel_arrow_direction, *accel_arrowGHandle, TRUE, FALSE);
 	}
 }
 
@@ -331,7 +331,7 @@ void MovableChargedBall::Update() {
 void MovableChargedBall::Draw()const {
 	DrawRotaGraph(position_x, position_y, 0.00185 * radius, 0, *ownGHandle, TRUE, FALSE);		//自分描画
 	
-	//体積文字描画
+	//電荷描画
 	if (charge_text_width > 55) {
 		DrawRotaGraph(position_x, position_y, (55.0 / charge_text_width) * 1.5 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);
 	}

@@ -15,7 +15,7 @@ GameBaseScene::GameBaseScene() {
 	time_advances = false;
 	operate = std::make_shared<OperationInGame>();
 	Scene_pointer_for_Reload = this;
-	accel_arrowGHandle = LoadGraph("V_arrow_red.png");
+	accel_arrowGHandle = LoadGraph("graph\\arrow\\V_arrow_red.png");
 	playerGHandle = LoadGraph("red_circle.png");
 	charged_ballGHandle = LoadGraph("black_circle.png");
 }

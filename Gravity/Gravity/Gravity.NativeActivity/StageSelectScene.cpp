@@ -22,10 +22,17 @@ StageSelectScene::StageSelectScene() {
 	board_size = 2.5;
 	boardGHandle = LoadGraph("graph\\clipboard.png");
 	explain_color = GetColor(0, 0, 0);
+	//四角
+	squareGHandle[0] = LoadGraph("graph\\square\\square_blue_1.png");
+	squareGHandle[1] = LoadGraph("graph\\square\\square_blue_2.png");
+	squareGHandle[2] = LoadGraph("graph\\square\\square_blue_3.png");
+	squareGHandle[3] = LoadGraph("graph\\square\\square_blue_4.png");
+	squareGHandle[4] = LoadGraph("graph\\square\\square_blue_5.png");
 	//ボタン
-	for (int i = 0; i < 5; i++) {
-		stage_button[i] = std::make_shared<SquareButton>(100 + 195 * i, 200, 100, 100);
+	for (int i = 0; i < 4; i++) {
+		stage_button[i] = std::make_shared<SquareButton>(136 + 236 * i, 300, 200, 200);
 	}
+	stage_button[4] = std::make_shared<SquareButton>(136, 536, 200, 200);
 	start_button = std::make_shared<SquareButton>(220, 1200, 640, 180);
 	select_cancel_button = std::make_shared<ReverseSquareButton>(130, 420, 830, 1150);
 	//ステージ開始前画面の説明テキスト//iniファイルロードが良き?
@@ -36,6 +43,9 @@ StageSelectScene::StageSelectScene() {
 }
 
 StageSelectScene::~StageSelectScene() {
+	for (int i = 0; i < 5; i++) {
+		DeleteGraph(squareGHandle[i]);
+	}
 	for (int i = 0; i < BUTTON_NUM; i++) {
 		if (stage_button[i]) {
 			stage_button[i].reset();
@@ -159,9 +169,14 @@ void StageSelectScene::Draw()const {
 }
 
 void StageSelectScene::Draw_Objects()const {
-	for (int i = 0; i < 5; i++) {
-		DrawBox(100 + 195 * i, 200, 201 + 195 * i, 301, GetColor(0, 0, 255), TRUE);
+	for (int i = 0; i < 4; i++) {
+		DrawRotaGraph(236 + 236 * i, 400, 1, 0, squareGHandle[i], TRUE, FALSE);
 	}
+	DrawRotaGraph(236, 636, 1, 0, squareGHandle[4], TRUE, FALSE);
+	for (int i = 0; i < 4; i++) {
+		DrawFormatStringToHandle(201 + 236 * i, 340, GetColor(0, 0, 255), makibaTH_S128_T10, "%d", i + 1);
+	}
+	DrawFormatStringToHandle(201, 576, GetColor(0, 0, 255), makibaTH_S128_T10, "%d", 5);
 	if (situation != 0) {
 		if (board_phase != 0) {
 			DrawRotaGraph(board_x[0], board_y[0], board_size, 0, boardGHandle, TRUE, FALSE);

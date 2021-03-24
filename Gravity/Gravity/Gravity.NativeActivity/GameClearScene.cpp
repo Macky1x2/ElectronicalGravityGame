@@ -3,7 +3,7 @@
 
 extern SceneBase* Scene_pointer_for_Reload;
 extern int note_pageGHandle, page1_turnoverGHandle, pagemany_turnoverGHandle, reverse_page1_turnoverGHandle, reverse_pagemany_turnoverGHandle;
-extern int makibaTH_S64_T7;
+extern int makibaTH_S128_T10, makibaTH_S64_T7;
 
 GameClearScene::GameClearScene(int _star) {
 	phase = 0;
@@ -12,13 +12,17 @@ GameClearScene::GameClearScene(int _star) {
 	fade_out = 255;
 	fade_out_speed = 17;
 	star = _star;
-	starGHandle = LoadGraph("star.png");
+	starGHandle[0] = LoadGraph("graph\\star\\star_1.png");
+	starGHandle[1] = LoadGraph("graph\\star\\star_2.png");
+	starGHandle[2] = LoadGraph("graph\\star\\star_3.png");
 	Scene_pointer_for_Reload = this;
-	go_stage_select_button = make_shared<SquareButton>(0, 1500, ANDROID_WIDTH, ANDROID_HEIGHT - 1500);
+	go_stage_select_button = make_shared<SquareButton>(400, 1480, 640, 200);
 }
 
 GameClearScene::~GameClearScene() {
-	DeleteGraph(starGHandle);
+	for (int i = 0; i < 3; i++) {
+		DeleteGraph(starGHandle[i]);
+	}
 }
 
 void GameClearScene::Update() {
@@ -72,9 +76,10 @@ void GameClearScene::Draw()const {
 }
 
 void GameClearScene::Draw_Objects()const {
-	DrawBox(0, 1500, 1081, 1921, GetColor(0, 0, 255), TRUE);
+	//DrawBox(0, 1500, 1081, 1921, GetColor(0, 0, 255), TRUE);
+	DrawFormatStringToHandle(400, 1500, GetColor(0, 0, 0), makibaTH_S64_T7, "ステージセレクト\n　　　　 　画面へ");
 	for (int i = 0; i < star; i++) {
-		DrawRotaGraph(300 * (i + 1), 500, 0.5, 0, starGHandle, TRUE, FALSE);
+		DrawRotaGraph(300 * (i + 1), 500, 0.9, 0, starGHandle[i], TRUE, FALSE);
 	}
 }
 
