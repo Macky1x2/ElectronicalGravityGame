@@ -3,6 +3,7 @@
 
 extern SceneBase* Scene_pointer_for_Reload;
 extern int note_pageGHandle, page1_turnoverGHandle, pagemany_turnoverGHandle, reverse_page1_turnoverGHandle, reverse_pagemany_turnoverGHandle;
+extern int makibaTH_S64_T7;
 
 GameBaseScene::GameBaseScene() {
 	phase = 0;
@@ -17,8 +18,6 @@ GameBaseScene::GameBaseScene() {
 	accel_arrowGHandle = LoadGraph("V_arrow_red.png");
 	playerGHandle = LoadGraph("red_circle.png");
 	charged_ballGHandle = LoadGraph("black_circle.png");
-	//charge_THandle = CreateFontToHandle(NULL, 40, 5, DX_FONTTYPE_NORMAL);
-	charge_THandle = LoadFontDataToHandle("fonts\\makiba_font.dft");
 }
 
 GameBaseScene::~GameBaseScene() {
@@ -39,7 +38,6 @@ GameBaseScene::~GameBaseScene() {
 	}
 	operate.reset();
 	DeleteGraph(accel_arrowGHandle);
-	DeleteFontToHandle(charge_THandle);
 }
 
 void GameBaseScene::HitConbine() {
@@ -433,24 +431,6 @@ void GameBaseScene::TimeControl() {
 }
 
 void GameBaseScene::ReloadFunction(void) {
-	ReloadFileGraphAll();						// ファイルから読み込んだ画像を復元する
-	if (GetMovieStateToGraph(page1_turnoverGHandle) == 0) {
-		page1_turnoverGHandle = LoadGraph("movie\\1page_turnover.ogv");
-	}
-	if (GetMovieStateToGraph(pagemany_turnoverGHandle) == 0) {
-		pagemany_turnoverGHandle = LoadGraph("movie\\manypages_turnover.ogv");
-	}
-	if (GetMovieStateToGraph(reverse_page1_turnoverGHandle) == 0) {
-		reverse_page1_turnoverGHandle = LoadGraph("movie\\reverse_1page_turnover.ogv");
-	}
-	if (GetMovieStateToGraph(reverse_pagemany_turnoverGHandle) == 0) {
-		reverse_pagemany_turnoverGHandle = LoadGraph("movie\\reverse_manypages_turnover.ogv");
-	}
-
-	//テキストハンドル復元
-	//charge_THandle = CreateFontToHandle(NULL, 40, 5, DX_FONTTYPE_NORMAL);
-	charge_THandle = LoadFontDataToHandle("fonts\\makiba_font.dft");
-	
 	//MakeScreenのグラフィックハンドルを復元
 	for (int i = 0; i < player_num; i++) {
 		if (player[i]) {
@@ -465,10 +445,10 @@ void GameBaseScene::ReloadFunction(void) {
 }
 
 void GameBaseScene::Draw_Purpose()const {
-	DrawFormatStringToHandle(100, 0, GetColor(0, 0, 0), charge_THandle, "%s", purpose.c_str());
+	DrawFormatStringToHandle(100, 0, GetColor(0, 0, 0), makibaTH_S64_T7, "%s", purpose.c_str());
 	for (int i = 0; i < player_num; i++) {
 		if (player[i]) {
-			DrawFormatStringToHandle(100, 100, GetColor(0, 0, 0), charge_THandle, "%d回", player[i]->Return_shoot_num());
+			DrawFormatStringToHandle(100, 100, GetColor(0, 0, 0), makibaTH_S64_T7, "%d回", player[i]->Return_shoot_num());
 			break;
 		}
 	}

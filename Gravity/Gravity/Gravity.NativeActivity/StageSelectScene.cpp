@@ -7,6 +7,7 @@
 
 extern SceneBase* Scene_pointer_for_Reload;
 extern int note_pageGHandle, page1_turnoverGHandle, pagemany_turnoverGHandle, reverse_page1_turnoverGHandle, reverse_pagemany_turnoverGHandle;
+extern int makibaTH_S64_T7;
 
 StageSelectScene::StageSelectScene() {
 	Scene_pointer_for_Reload = this;
@@ -18,9 +19,9 @@ StageSelectScene::StageSelectScene() {
 	fade_out = 255;
 	fade_out_speed = 17;
 	board_accel = 11;
+	board_size = 2.5;
 	boardGHandle = LoadGraph("graph\\clipboard.png");
-	explainTHandle = CreateFontToHandle(NULL, 40, 5, DX_FONTTYPE_NORMAL);
-	explain_color = GetColor(255, 255, 255);
+	explain_color = GetColor(0, 0, 0);
 	//ボタン
 	for (int i = 0; i < 5; i++) {
 		stage_button[i] = std::make_shared<SquareButton>(100 + 195 * i, 200, 100, 100);
@@ -46,7 +47,6 @@ StageSelectScene::~StageSelectScene() {
 	if (select_cancel_button) {
 		select_cancel_button.reset();
 	}
-	DeleteFontToHandle(explainTHandle);
 }
 
 void StageSelectScene::Update() {
@@ -160,12 +160,7 @@ void StageSelectScene::Draw()const {
 		if (fade_out > 0) {
 			SetDrawBlendMode(DX_BLENDMODE_ALPHA, fade_out);
 			//ステージ説明部分(このときsituation!=0は明らか)
-			DrawBox(100, 100, 981, 1281, GetColor(0, 255, 0), TRUE);
-			DrawBox(250, 980, 831, 1181, GetColor(0, 0, 255), TRUE);
-			DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", stage_title[situation - 1].c_str()) / 2), 200, explain_color, explainTHandle, "%s", stage_title[situation - 1].c_str());
-			DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "クリア条件") / 2), 400, "クリア条件", explain_color, explainTHandle);
-			DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", clear_terms[situation - 1].c_str()) / 2), 450, explain_color, explainTHandle, "%s", clear_terms[situation - 1].c_str());
-			DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str()) / 2), 750, explain_color, explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str());
+			Draw_Objects();
 			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 		}
 	}
@@ -177,66 +172,40 @@ void StageSelectScene::Draw_Objects()const {
 	}
 	if (situation != 0) {
 		switch (board_phase) {
-		case 1:DrawRotaGraph(board_x[0], board_y[0], 1.5, 0, boardGHandle, TRUE, FALSE);
+		case 1:DrawRotaGraph(board_x[0], board_y[0], board_size, 0, boardGHandle, TRUE, FALSE);
 			break;
-		case 2:DrawRotaGraph(board_x[0], board_y[0], 1.5, 0, boardGHandle, TRUE, FALSE);
+		case 2:DrawRotaGraph(board_x[0], board_y[0], board_size, 0, boardGHandle, TRUE, FALSE);
 			if (board_fade_in < 255) {
 				SetDrawBlendMode(DX_BLENDMODE_ALPHA, board_fade_in);
-				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", stage_title[situation - 1].c_str()) / 2), 200, explain_color, explainTHandle, "%s", stage_title[situation - 1].c_str());
-				DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "クリア条件") / 2), 400, "クリア条件", explain_color, explainTHandle);
-				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", clear_terms[situation - 1].c_str()) / 2), 450, explain_color, explainTHandle, "%s", clear_terms[situation - 1].c_str());
-				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str()) / 2), 750, explain_color, explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str());
+				Draw_Explain();
 				SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 			}
 			else {
-				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", stage_title[situation - 1].c_str()) / 2), 200, explain_color, explainTHandle, "%s", stage_title[situation - 1].c_str());
-				DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "クリア条件") / 2), 400, "クリア条件", explain_color, explainTHandle);
-				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", clear_terms[situation - 1].c_str()) / 2), 450, explain_color, explainTHandle, "%s", clear_terms[situation - 1].c_str());
-				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str()) / 2), 750, explain_color, explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str());
+				Draw_Explain();
 			}
 			break;
-		case 3:DrawRotaGraph(board_x[0], board_y[0], 1.5, 0, boardGHandle, TRUE, FALSE);
-			DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", stage_title[situation - 1].c_str()) / 2), 200, explain_color, explainTHandle, "%s", stage_title[situation - 1].c_str());
-			DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "クリア条件") / 2), 400, "クリア条件", explain_color, explainTHandle);
-			DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", clear_terms[situation - 1].c_str()) / 2), 450, explain_color, explainTHandle, "%s", clear_terms[situation - 1].c_str());
-			DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str()) / 2), 750, explain_color, explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str());
+		case 3:DrawRotaGraph(board_x[0], board_y[0], board_size, 0, boardGHandle, TRUE, FALSE);
+			Draw_Explain();
 			break;
-		case 4:DrawRotaGraph(board_x[0], board_y[0], 1.5, 0, boardGHandle, TRUE, FALSE);
+		case 4:DrawRotaGraph(board_x[0], board_y[0], board_size, 0, boardGHandle, TRUE, FALSE);
 			if (board_fade_out > 0) {
 				SetDrawBlendMode(DX_BLENDMODE_ALPHA, board_fade_out);
-				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", stage_title[situation - 1].c_str()) / 2), 200, explain_color, explainTHandle, "%s", stage_title[situation - 1].c_str());
-				DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "クリア条件") / 2), 400, "クリア条件", explain_color, explainTHandle);
-				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", clear_terms[situation - 1].c_str()) / 2), 450, explain_color, explainTHandle, "%s", clear_terms[situation - 1].c_str());
-				DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str()) / 2), 750, explain_color, explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str());
+				Draw_Explain();
 				SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 			}
 			break;
 		default:break;
 		}
-		/*
-		DrawBox(100, 100, 981, 1281, GetColor(0, 255, 0), TRUE);
-		DrawBox(250, 980, 831, 1181, GetColor(0, 0, 255), TRUE);
-		DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", stage_title[situation - 1].c_str()) / 2), 200, explain_color, explainTHandle, "%s", stage_title[situation - 1].c_str());
-		DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "クリア条件") / 2), 400, "クリア条件", explain_color, explainTHandle);
-		DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "%s", clear_terms[situation - 1].c_str()) / 2), 450, explain_color, explainTHandle, "%s", clear_terms[situation - 1].c_str());
-		DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str()) / 2), 750, explain_color, explainTHandle, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str());
-		*/
 	}
 }
 
+void StageSelectScene::Draw_Explain()const {
+	DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "%s", stage_title[situation - 1].c_str()) / 2), 200, explain_color, makibaTH_S64_T7, "%s", stage_title[situation - 1].c_str());
+	DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "クリア条件") / 2), 400, "クリア条件", explain_color, makibaTH_S64_T7);
+	DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "%s", clear_terms[situation - 1].c_str()) / 2), 450, explain_color, makibaTH_S64_T7, "%s", clear_terms[situation - 1].c_str());
+	DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str()) / 2), 750, explain_color, makibaTH_S64_T7, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str());
+}
+
 void StageSelectScene::ReloadFunction(void) {
-	ReloadFileGraphAll();						// ファイルから読み込んだ画像を復元する
-	//動画ハンドル完全復元
-	if (GetMovieStateToGraph(page1_turnoverGHandle) == 0) {
-		page1_turnoverGHandle = LoadGraph("movie\\1page_turnover.ogv");
-	}
-	if (GetMovieStateToGraph(pagemany_turnoverGHandle) == 0) {
-		pagemany_turnoverGHandle = LoadGraph("movie\\manypages_turnover.ogv");
-	}
-	if (GetMovieStateToGraph(reverse_page1_turnoverGHandle) == 0) {
-		reverse_page1_turnoverGHandle = LoadGraph("movie\\reverse_1page_turnover.ogv");
-	}
-	if (GetMovieStateToGraph(reverse_pagemany_turnoverGHandle) == 0) {
-		reverse_pagemany_turnoverGHandle = LoadGraph("movie\\reverse_manypages_turnover.ogv");
-	}
+	
 }

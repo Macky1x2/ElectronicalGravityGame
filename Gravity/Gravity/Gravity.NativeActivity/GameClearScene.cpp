@@ -3,6 +3,7 @@
 
 extern SceneBase* Scene_pointer_for_Reload;
 extern int note_pageGHandle, page1_turnoverGHandle, pagemany_turnoverGHandle, reverse_page1_turnoverGHandle, reverse_pagemany_turnoverGHandle;
+extern int makibaTH_S64_T7;
 
 GameClearScene::GameClearScene(int _star) {
 	phase = 0;
@@ -76,17 +77,5 @@ void GameClearScene::Draw_Objects()const {
 }
 
 void GameClearScene::ReloadFunction(void) {
-	ReloadFileGraphAll();						// ファイルから読み込んだ画像を復元する
-	if (GetMovieStateToGraph(page1_turnoverGHandle) == 0) {
-		page1_turnoverGHandle = LoadGraph("movie\\1page_turnover.ogv");
-	}
-	if (GetMovieStateToGraph(pagemany_turnoverGHandle) == 0) {
-		pagemany_turnoverGHandle = LoadGraph("movie\\manypages_turnover.ogv");
-	}
-	if (GetMovieStateToGraph(reverse_page1_turnoverGHandle) == 0) {
-		reverse_page1_turnoverGHandle = LoadGraph("movie\\reverse_1page_turnover.ogv");
-	}
-	if (GetMovieStateToGraph(reverse_pagemany_turnoverGHandle) == 0) {
-		reverse_pagemany_turnoverGHandle = LoadGraph("movie\\reverse_manypages_turnover.ogv");
-	}
+	
 }

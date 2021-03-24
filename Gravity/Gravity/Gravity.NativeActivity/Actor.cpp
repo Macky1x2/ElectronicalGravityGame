@@ -2,7 +2,9 @@
 
 #define MAKIBA_Y_CORRECTION -2
 
-Player::Player(double first_x, double first_y, int _charge, int _volume, double _density, int* _chargeTHandle, int* _accel_arrowGHandle, int* _ownGHandle) {
+extern int makibaTH_S64_T7;
+
+Player::Player(double first_x, double first_y, int _charge, int _volume, double _density, int* _accel_arrowGHandle, int* _ownGHandle) {
 	volume = _volume;
 	radius = 50 * pow(volume / 5.0, 1.0 / 3);
 	own_color = GetColor(0, 255, 255);
@@ -15,20 +17,19 @@ Player::Player(double first_x, double first_y, int _charge, int _volume, double 
 	speed_x = 0;
 	speed_y = 0;
 	charge = _charge;
-	charge_THandle = _chargeTHandle;					//テキストハンドル読み込み
 	if (charge > 0) {
-		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "+%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "+%d", charge);
 	}
 	else {
-		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "%d", charge);
 	}
 	charge_temp_GHandle = MakeScreen(charge_text_width, 64, TRUE);							//調節必須:幅,高さ
 	SetDrawScreen(charge_temp_GHandle);
 	if (charge > 0) {
-		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, *charge_THandle, "+%d", charge);	//調節必須:起点y座標
+		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, makibaTH_S64_T7, "+%d", charge);	//調節必須:起点y座標
 	}
 	else {
-		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, *charge_THandle, "%d", charge);
+		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, makibaTH_S64_T7, "%d", charge);
 	}
 	SetDrawScreen(DX_SCREEN_BACK);
 	accel_arrowGHandle = _accel_arrowGHandle;
@@ -179,10 +180,10 @@ void Player::Add_force_y(double add_force) {
 void Player::Make_TGHandle() {
 	//正ならば符号は+, 負ならば符号は-, 0ならば符号なし
 	if (charge > 0) {
-		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "+%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "+%d", charge);
 	}
 	else {
-		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "%d", charge);
 	}
 	//復元時データが破損している恐れがあるため削除
 	DeleteGraph(charge_temp_GHandle);
@@ -190,10 +191,10 @@ void Player::Make_TGHandle() {
 	//電荷描画用画像生成
 	SetDrawScreen(charge_temp_GHandle);
 	if (charge > 0) {
-		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, *charge_THandle, "+%d", charge);
+		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, makibaTH_S64_T7, "+%d", charge);
 	}
 	else {
-		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, *charge_THandle, "%d", charge);
+		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, makibaTH_S64_T7, "%d", charge);
 	}
 	SetDrawScreen(DX_SCREEN_BACK);
 }
@@ -283,7 +284,7 @@ double NonMovableBall::Return_density() {
 	return density;
 }
 
-MovableChargedBall::MovableChargedBall(double first_x, double first_y, int _charge, int _volume, double _density, int* _chargeTHandle, int* _ownGHandle) :NonMovableBall(first_x, first_y, _volume, _density, _ownGHandle) {
+MovableChargedBall::MovableChargedBall(double first_x, double first_y, int _charge, int _volume, double _density, int* _ownGHandle) :NonMovableBall(first_x, first_y, _volume, _density, _ownGHandle) {
 	charge = _charge;
 	speed_x = 0;
 	speed_y = 0;
@@ -293,20 +294,19 @@ MovableChargedBall::MovableChargedBall(double first_x, double first_y, int _char
 	force_y = 0;
 	own_color = GetColor(0, 255, 0);
 	charge_text_color = GetColor(0, 0, 0);
-	charge_THandle = _chargeTHandle;								//テキストハンドル読み込み
 	if (charge > 0) {
-		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "+%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "+%d", charge);
 	}
 	else {
-		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "%d", charge);
 	}
 	charge_temp_GHandle = MakeScreen(charge_text_width, 64, TRUE);							//調節必須:幅,高さ
 	SetDrawScreen(charge_temp_GHandle);
 	if (charge > 0) {
-		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, *charge_THandle, "+%d", charge);	//調節必須:起点y座標
+		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, makibaTH_S64_T7, "+%d", charge);	//調節必須:起点y座標
 	}
 	else {
-		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, *charge_THandle, "%d", charge);
+		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, makibaTH_S64_T7, "%d", charge);
 	}
 	SetDrawScreen(DX_SCREEN_BACK);
 }
@@ -411,19 +411,19 @@ void MovableChargedBall::Change_radiusbyvolume(int _volume) {
 
 void MovableChargedBall::Make_TGHandle() {
 	if (charge > 0) {
-		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "+%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "+%d", charge);
 	}
 	else {
-		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "%d", charge);
 	}
 	DeleteGraph(charge_temp_GHandle);
 	charge_temp_GHandle = MakeScreen(charge_text_width, 64, TRUE);
 	SetDrawScreen(charge_temp_GHandle);
 	if (charge > 0) {
-		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, *charge_THandle, "+%d", charge);
+		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, makibaTH_S64_T7, "+%d", charge);
 	}
 	else {
-		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, *charge_THandle, "%d", charge);
+		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, makibaTH_S64_T7, "%d", charge);
 	}
 	SetDrawScreen(DX_SCREEN_BACK);
 }

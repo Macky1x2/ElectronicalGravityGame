@@ -3,46 +3,32 @@
 
 SceneBase* Scene_pointer_for_Reload;
 extern int note_pageGHandle, page1_turnoverGHandle, pagemany_turnoverGHandle, reverse_page1_turnoverGHandle, reverse_pagemany_turnoverGHandle;
+extern int makibaTH_S64_T7;
 
 TitleScene::TitleScene() {
 	Scene_pointer_for_Reload = this;
-	Tap_THandle = CreateFontToHandle(NULL, 40, 5, DX_FONTTYPE_NORMAL);
-	Tap_Color = GetColor(255, 255, 255);
+	Tap_Color = GetColor(0, 0, 0);
 	go_stage_select_checker = false, pre_touch_checker = false;
 	phase = 0;
 	fade_out = 255;
 	fade_out_speed = 17;
+	//ボタン
+	start_button = std::make_shared<SquareButton>(250, 750, 580, 200);
 }
 
 TitleScene::~TitleScene() {
-	DeleteFontToHandle(Tap_THandle);
+	if (start_button) {
+		start_button.reset();
+	}
 }
 
 void TitleScene::Update() {
 	//phage==0:通常時, phase==1:シーンチェンジ時
 	if (phase == 0) {
-		if (GetTouchInputNum() == 1) {
-			int x, y;
-			GetTouchInput(0, &x, &y, NULL, NULL);
-			pre_touch_x = x;
-			pre_touch_y = y;
-			if (!pre_touch_checker && y <= 700) {
-				go_stage_select_checker = true;
-			}
-			pre_touch_checker = true;
-		}
-		else {
-			if (go_stage_select_checker) {
-				if (pre_touch_y <= 700 && GetTouchInputNum() == 0) {
-					phase = 1;
-					SetAlwaysRunFlag(TRUE);
-					PlayMovieToGraph(page1_turnoverGHandle);
-				}
-				else {
-					go_stage_select_checker = false;
-				}
-			}
-			pre_touch_checker = false;
+		if (start_button->Checker_specific_place_touch_in_out()) {
+			phase = 1;
+			SetAlwaysRunFlag(TRUE);
+			PlayMovieToGraph(page1_turnoverGHandle);
 		}
 	}
 	else if (phase == 1) {
@@ -79,24 +65,10 @@ void TitleScene::Draw()const {
 }
 
 void TitleScene::Draw_Objects()const {
-	DrawBox(0, 0, 1081, 701, GetColor(0, 0, 255), TRUE);
-	DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(Tap_THandle, "TAP TO START") / 2), 350, "TAP TO START", Tap_Color, Tap_THandle);
+	DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "Particle Puzzle\n訳して粒子パズル!") / 2), 200, "Particle Puzzle\n訳して粒子パズル!", Tap_Color, makibaTH_S64_T7);
+	DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "はじめる") / 2), 750, "はじめる", Tap_Color, makibaTH_S64_T7);
 }
 
 void TitleScene::ReloadFunction(void) {
-	ReloadFileGraphAll();						// ファイルから読み込んだ画像を復元する
-	Tap_THandle = CreateFontToHandle(NULL, 40, 5, DX_FONTTYPE_NORMAL);
-	//動画ハンドル完全復元
-	if (GetMovieStateToGraph(page1_turnoverGHandle) == 0) {
-		page1_turnoverGHandle = LoadGraph("movie\\1page_turnover.ogv");
-	}
-	if (GetMovieStateToGraph(pagemany_turnoverGHandle) == 0) {
-		pagemany_turnoverGHandle = LoadGraph("movie\\manypages_turnover.ogv");
-	}
-	if (GetMovieStateToGraph(reverse_page1_turnoverGHandle) == 0) {
-		reverse_page1_turnoverGHandle = LoadGraph("movie\\reverse_1page_turnover.ogv");
-	}
-	if (GetMovieStateToGraph(reverse_pagemany_turnoverGHandle) == 0) {
-		reverse_pagemany_turnoverGHandle = LoadGraph("movie\\reverse_manypages_turnover.ogv");
-	}
+	
 }
