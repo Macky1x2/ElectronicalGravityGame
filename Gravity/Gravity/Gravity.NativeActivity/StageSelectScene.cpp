@@ -7,7 +7,7 @@
 
 extern SceneBase* Scene_pointer_for_Reload;
 extern int note_pageGHandle, page1_turnoverGHandle, pagemany_turnoverGHandle, reverse_page1_turnoverGHandle, reverse_pagemany_turnoverGHandle;
-extern int makibaTH_S64_T7;
+extern int makibaTH_S128_T10, makibaTH_S64_T7, makibaTH_S32_T5;
 
 StageSelectScene::StageSelectScene() {
 	Scene_pointer_for_Reload = this;
@@ -26,8 +26,8 @@ StageSelectScene::StageSelectScene() {
 	for (int i = 0; i < 5; i++) {
 		stage_button[i] = std::make_shared<SquareButton>(100 + 195 * i, 200, 100, 100);
 	}
-	start_button = std::make_shared<SquareButton>(250, 980, 580, 200);
-	select_cancel_button = std::make_shared<ReverseSquareButton>(100, 100, 880, 1180);
+	start_button = std::make_shared<SquareButton>(220, 1200, 640, 180);
+	select_cancel_button = std::make_shared<ReverseSquareButton>(130, 420, 830, 1150);
 	//ステージ開始前画面の説明テキスト//iniファイルロードが良き?
 	stage_title[0] = "チュートリアルA", clear_terms[0] = "球(-10)を取得する", star1_terms[0] = "4ショット以内でクリア", star2_terms[0] = "2ショット以内でクリア", star3_terms[0] = "1ショット以内でクリア";
 	stage_title[1] = "公転", clear_terms[1] = "大きな球の周りを3週回る", star1_terms[1] = "3ショット以内でクリア", star2_terms[1] = "2ショット以内でクリア", star3_terms[1] = "1ショット以内でクリア";
@@ -200,10 +200,11 @@ void StageSelectScene::Draw_Objects()const {
 }
 
 void StageSelectScene::Draw_Explain()const {
-	DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "%s", stage_title[situation - 1].c_str()) / 2), 200, explain_color, makibaTH_S64_T7, "%s", stage_title[situation - 1].c_str());
-	DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "クリア条件") / 2), 400, "クリア条件", explain_color, makibaTH_S64_T7);
-	DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "%s", clear_terms[situation - 1].c_str()) / 2), 450, explain_color, makibaTH_S64_T7, "%s", clear_terms[situation - 1].c_str());
-	DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str()) / 2), 750, explain_color, makibaTH_S64_T7, "　　　:%s\n　　　:%s\n　　　:%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str());
+	DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "%s", stage_title[situation - 1].c_str()) / 2), 500, explain_color, makibaTH_S64_T7, "%s", stage_title[situation - 1].c_str());
+	DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "クリア条件") / 2), 700, "クリア条件", explain_color, makibaTH_S64_T7);
+	DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "%s", clear_terms[situation - 1].c_str()) / 2), 750, explain_color, makibaTH_S64_T7, "%s", clear_terms[situation - 1].c_str());
+	DrawFormatStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "□%s\n□%s\n□%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str()) / 2), 820, explain_color, makibaTH_S64_T7, "□%s\n□%s\n□%s", star1_terms[situation - 1].c_str(), star2_terms[situation - 1].c_str(), star3_terms[situation - 1].c_str());
+	DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S128_T10, "はじめる") / 2), 1200, "はじめる", explain_color, makibaTH_S128_T10);
 }
 
 void StageSelectScene::ReloadFunction(void) {

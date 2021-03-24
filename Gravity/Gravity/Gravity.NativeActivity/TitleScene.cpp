@@ -3,7 +3,7 @@
 
 SceneBase* Scene_pointer_for_Reload;
 extern int note_pageGHandle, page1_turnoverGHandle, pagemany_turnoverGHandle, reverse_page1_turnoverGHandle, reverse_pagemany_turnoverGHandle;
-extern int makibaTH_S64_T7;
+extern int makibaTH_S128_T10, makibaTH_S64_T7;
 
 TitleScene::TitleScene() {
 	Scene_pointer_for_Reload = this;
@@ -13,7 +13,7 @@ TitleScene::TitleScene() {
 	fade_out = 255;
 	fade_out_speed = 17;
 	//ボタン
-	start_button = std::make_shared<SquareButton>(250, 750, 580, 200);
+	start_button = std::make_shared<SquareButton>(200, 750, 680, 250);
 }
 
 TitleScene::~TitleScene() {
@@ -65,8 +65,8 @@ void TitleScene::Draw()const {
 }
 
 void TitleScene::Draw_Objects()const {
-	DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "Particle Puzzle\n訳して粒子パズル!") / 2), 200, "Particle Puzzle\n訳して粒子パズル!", Tap_Color, makibaTH_S64_T7);
-	DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "はじめる") / 2), 750, "はじめる", Tap_Color, makibaTH_S64_T7);
+	DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S128_T10, "Particle Puzzle\n訳して粒子パズル!") / 2), 200, "Particle Puzzle\n訳して粒子パズル!", Tap_Color, makibaTH_S128_T10);
+	DrawStringToHandle(540 - (GetDrawFormatStringWidthToHandle(makibaTH_S128_T10, "はじめる") / 2), 750, "はじめる", Tap_Color, makibaTH_S128_T10);
 }
 
 void TitleScene::ReloadFunction(void) {

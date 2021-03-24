@@ -119,7 +119,10 @@
     </AntPackage>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Content Include="assets\fonts\makiba_font.dft" />
+    <Content Include="assets\fonts\makiba_font_S64_T7.dft" />
+    <Content Include="assets\fonts\makiba_font_S16_T3.dft" />
+    <Content Include="assets\fonts\makiba_font_S32_T5.dft" />
+    <Content Include="assets\fonts\makiba_font_S128_T10.dft" />
     <Content Include="assets\graph\note_page.png" />
     <Content Include="assets\graph\clipboard.png" />
     <Content Include="assets\movie\1page_turnover.ogv" />

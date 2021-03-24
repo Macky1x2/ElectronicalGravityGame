@@ -1,7 +1,7 @@
 ﻿#include "TitleScene.h"
 
 int note_pageGHandle, page1_turnoverGHandle, pagemany_turnoverGHandle, reverse_page1_turnoverGHandle, reverse_pagemany_turnoverGHandle;		//背景(どのシーンでも使う),シーンチェンジアニメーションハンドル
-int makibaTH_S64_T7;
+int makibaTH_S128_T10, makibaTH_S64_T7, makibaTH_S32_T5, makibaTH_S16_T3;
 extern SceneBase* Scene_pointer_for_Reload;
 
 void ReloadFunctionInGame();
@@ -25,7 +25,10 @@ int android_main(void)
 	pagemany_turnoverGHandle = LoadGraph("movie\\manypages_turnover.ogv");
 	reverse_page1_turnoverGHandle = LoadGraph("movie\\reverse_1page_turnover.ogv");
 	reverse_pagemany_turnoverGHandle = LoadGraph("movie\\reverse_manypages_turnover.ogv");
-	makibaTH_S64_T7 = LoadFontDataToHandle("fonts\\makiba_font.dft");
+	makibaTH_S128_T10 = LoadFontDataToHandle("fonts\\makiba_font_S128_T10.dft");
+	makibaTH_S64_T7 = LoadFontDataToHandle("fonts\\makiba_font_S64_T7.dft");
+	makibaTH_S32_T5 = LoadFontDataToHandle("fonts\\makiba_font_S32_T5.dft");
+	makibaTH_S16_T3 = LoadFontDataToHandle("fonts\\makiba_font_S16_T3.dft");
 
 	//ゲーム処理
 	SceneManager scene(make_shared<TitleScene>());
@@ -41,7 +44,10 @@ int android_main(void)
 	DeleteGraph(pagemany_turnoverGHandle);
 	DeleteGraph(reverse_page1_turnoverGHandle);
 	DeleteGraph(reverse_pagemany_turnoverGHandle);
+	DeleteFontToHandle(makibaTH_S128_T10);
 	DeleteFontToHandle(makibaTH_S64_T7);
+	DeleteFontToHandle(makibaTH_S32_T5);
+	DeleteFontToHandle(makibaTH_S16_T3);
 	DxLib_End();
 	return 0;
 }
@@ -50,7 +56,10 @@ void ReloadFunctionInGame() {
 	ReloadFileGraphAll();						// ファイルから読み込んだ画像を復元する
 
 	//グローバル変数ハンドル復元
-	makibaTH_S64_T7 = LoadFontDataToHandle("fonts\\makiba_font.dft");
+	makibaTH_S128_T10 = LoadFontDataToHandle("fonts\\makiba_font_S128_T10.dft");
+	makibaTH_S64_T7 = LoadFontDataToHandle("fonts\\makiba_font_S64_T7.dft");
+	makibaTH_S32_T5 = LoadFontDataToHandle("fonts\\makiba_font_S32_T5.dft");
+	makibaTH_S16_T3 = LoadFontDataToHandle("fonts\\makiba_font_S16_T3.dft");
 	//動画ハンドル完全復元
 	if (GetMovieStateToGraph(page1_turnoverGHandle) == 0) {
 		page1_turnoverGHandle = LoadGraph("movie\\1page_turnover.ogv");

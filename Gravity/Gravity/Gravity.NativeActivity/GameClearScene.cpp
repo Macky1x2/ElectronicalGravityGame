@@ -37,6 +37,8 @@ void GameClearScene::Update() {
 			fade_out -= fade_out_speed;
 		}
 		if (GetMovieStateToGraph(reverse_pagemany_turnoverGHandle) == 0) {
+			SetAlwaysRunFlag(FALSE);
+			SeekMovieToGraph(reverse_pagemany_turnoverGHandle, 0);
 			nextScene = make_shared<StageSelectScene>();
 		}
 	}
