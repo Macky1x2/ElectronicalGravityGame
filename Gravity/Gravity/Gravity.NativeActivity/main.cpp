@@ -1,6 +1,7 @@
 ﻿#include "TitleScene.h"
 
 int note_pageGHandle, page1_turnoverGHandle, pagemany_turnoverGHandle, reverse_page1_turnoverGHandle, reverse_pagemany_turnoverGHandle;		//背景(どのシーンでも使う),シーンチェンジアニメーションハンドル
+int page_1turnoverSH, page_manyturnoverSH, page_1turnover_reverseSH, page_manyturnover_reverseSH;
 int makibaTH_S128_T10, makibaTH_S64_T7, makibaTH_S32_T5, makibaTH_S16_T3;
 extern SceneBase* Scene_pointer_for_Reload;
 
@@ -25,6 +26,10 @@ int android_main(void)
 	pagemany_turnoverGHandle = LoadGraph("movie\\manypages_turnover.ogv");
 	reverse_page1_turnoverGHandle = LoadGraph("movie\\reverse_1page_turnover.ogv");
 	reverse_pagemany_turnoverGHandle = LoadGraph("movie\\reverse_manypages_turnover.ogv");
+	page_1turnoverSH = LoadSoundMem("sound\\page_1turnover.ogg");
+	page_manyturnoverSH = LoadSoundMem("sound\\page_manyturnover.ogg");
+	page_1turnover_reverseSH = LoadSoundMem("sound\\page_1turnover_reverse.ogg");
+	page_manyturnover_reverseSH = LoadSoundMem("sound\\page_manyturnover_reverse.ogg");
 	makibaTH_S128_T10 = LoadFontDataToHandle("fonts\\makiba_font_S128_T10.dft");
 	makibaTH_S64_T7 = LoadFontDataToHandle("fonts\\makiba_font_S64_T7.dft");
 	makibaTH_S32_T5 = LoadFontDataToHandle("fonts\\makiba_font_S32_T5.dft");
@@ -48,6 +53,10 @@ int android_main(void)
 	DeleteFontToHandle(makibaTH_S64_T7);
 	DeleteFontToHandle(makibaTH_S32_T5);
 	DeleteFontToHandle(makibaTH_S16_T3);
+	DeleteSoundMem(page_1turnoverSH);
+	DeleteSoundMem(page_manyturnoverSH);
+	DeleteSoundMem(page_1turnover_reverseSH);
+	DeleteSoundMem(page_manyturnover_reverseSH);
 	DxLib_End();
 	return 0;
 }

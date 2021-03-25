@@ -3,6 +3,7 @@
 
 SceneBase* Scene_pointer_for_Reload;
 extern int note_pageGHandle, page1_turnoverGHandle, pagemany_turnoverGHandle, reverse_page1_turnoverGHandle, reverse_pagemany_turnoverGHandle;
+extern int page_1turnoverSH, page_manyturnoverSH, page_1turnover_reverseSH, page_manyturnover_reverseSH;
 extern int makibaTH_S128_T10, makibaTH_S64_T7;
 
 TitleScene::TitleScene() {
@@ -28,6 +29,7 @@ void TitleScene::Update() {
 		if (start_button->Checker_specific_place_touch_in_out()) {
 			phase = 1;
 			SetAlwaysRunFlag(TRUE);
+			PlaySoundMem(page_1turnoverSH, DX_PLAYTYPE_BACK, TRUE);
 			PlayMovieToGraph(page1_turnoverGHandle);
 		}
 	}

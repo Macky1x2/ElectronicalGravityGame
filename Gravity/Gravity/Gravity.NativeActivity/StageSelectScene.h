@@ -9,6 +9,7 @@ class StageSelectScene :public SceneBase {
 	int fade_in, fade_in_speed, fade_out, fade_out_speed;
 	int board_x[2], board_y[2], boardGHandle, board_phase, board_v, board_accel;
 	int squareGHandle[5];
+	int ui_suSH, ui_cancelSH;
 	double board_size;
 	string stage_title[100], clear_terms[100], star1_terms[100], star2_terms[100], star3_terms[100];
 	std::shared_ptr<SquareButton> stage_button[5];

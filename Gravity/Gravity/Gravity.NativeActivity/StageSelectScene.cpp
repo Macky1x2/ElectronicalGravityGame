@@ -7,6 +7,7 @@
 
 extern SceneBase* Scene_pointer_for_Reload;
 extern int note_pageGHandle, page1_turnoverGHandle, pagemany_turnoverGHandle, reverse_page1_turnoverGHandle, reverse_pagemany_turnoverGHandle;
+extern int page_1turnoverSH, page_manyturnoverSH, page_1turnover_reverseSH, page_manyturnover_reverseSH;
 extern int makibaTH_S128_T10, makibaTH_S64_T7, makibaTH_S32_T5;
 
 StageSelectScene::StageSelectScene() {
@@ -22,6 +23,9 @@ StageSelectScene::StageSelectScene() {
 	board_size = 2.5;
 	boardGHandle = LoadGraph("graph\\clipboard.png");
 	explain_color = GetColor(0, 0, 0);
+	//サウンド
+	ui_suSH = LoadSoundMem("sound\\ui\\su.ogg");
+	ui_cancelSH = LoadSoundMem("sound\\ui\\cancel.ogg");
 	//四角
 	squareGHandle[0] = LoadGraph("graph\\square\\square_blue_1.png");
 	squareGHandle[1] = LoadGraph("graph\\square\\square_blue_2.png");
@@ -43,6 +47,8 @@ StageSelectScene::StageSelectScene() {
 }
 
 StageSelectScene::~StageSelectScene() {
+	DeleteSoundMem(ui_suSH);
+	DeleteSoundMem(ui_cancelSH);
 	for (int i = 0; i < 5; i++) {
 		DeleteGraph(squareGHandle[i]);
 	}
@@ -68,6 +74,7 @@ void StageSelectScene::Update() {
 			for (int i = 0; i < 5; i++) {
 				//ステージiを選択したら
 				if (stage_button[i]->Checker_specific_place_touch_in_out()) {
+					PlaySoundMem(ui_suSH, DX_PLAYTYPE_BACK, TRUE);
 					situation = i + 1;
 					board_phase = 0;
 					break;
@@ -109,12 +116,13 @@ void StageSelectScene::Update() {
 			if (board_phase == 2) {
 				//枠外タッチしたら
 				if (select_cancel_button->Checker_reverse_specific_place_touch_in_out()) {
+					PlaySoundMem(ui_cancelSH, DX_PLAYTYPE_BACK, TRUE);
 					board_phase = 3;
-					//situation = 0;
 				}
 				else if (start_button->Checker_specific_place_touch_in_out()) {		//スタートボタン押したら
 					phase = 1;
 					SetAlwaysRunFlag(TRUE);
+					PlaySoundMem(page_manyturnoverSH, DX_PLAYTYPE_BACK, TRUE);
 					PlayMovieToGraph(pagemany_turnoverGHandle);
 				}
 			}
