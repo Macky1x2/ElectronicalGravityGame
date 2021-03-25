@@ -5,6 +5,7 @@ extern SceneBase* Scene_pointer_for_Reload;
 extern int note_pageGHandle, page1_turnoverGHandle, pagemany_turnoverGHandle, reverse_page1_turnoverGHandle, reverse_pagemany_turnoverGHandle;
 extern int page_1turnoverSH, page_manyturnoverSH, page_1turnover_reverseSH, page_manyturnover_reverseSH;
 extern int makibaTH_S64_T7;
+int accel_chargeSH, accel_downSH, player_shotSH;		//ゲームシーン時に使うサウンドハンドル
 
 GameBaseScene::GameBaseScene() {
 	phase = 0;
@@ -19,9 +20,17 @@ GameBaseScene::GameBaseScene() {
 	accel_arrowGHandle = LoadGraph("graph\\arrow\\V_arrow_red.png");
 	playerGHandle = LoadGraph("red_circle.png");
 	charged_ballGHandle = LoadGraph("black_circle.png");
+	accel_chargeSH = LoadSoundMem("sound\\player\\accel_charge.ogg");
+	accel_downSH = LoadSoundMem("sound\\player\\accel_down.ogg");
+	player_shotSH= LoadSoundMem("sound\\player\\shot_2.ogg");
+	combineSH = LoadSoundMem("sound\\water.ogg");
 }
 
 GameBaseScene::~GameBaseScene() {
+	DeleteSoundMem(accel_chargeSH);
+	DeleteSoundMem(accel_downSH);
+	DeleteSoundMem(player_shotSH);
+	DeleteSoundMem(combineSH);
 	for (int i = 0; i < player_num; i++) {
 		if (player[i]) {
 			player[i].reset();
@@ -47,6 +56,7 @@ void GameBaseScene::HitConbine() {
 		for (int j = i + 1; j < player_num; j++) {
 			if (player[i] && player[j]) {
 				if (HitChecker_PlayerandPlayer(player[i], player[j])) {
+					PlaySoundMem(combineSH, DX_PLAYTYPE_BACK, TRUE);
 					if (player[i]->Return_volume() >= player[j]->Return_volume()) {				//でかい方の位置を合体後のボールの位置とする(ただし等しいならば真ん中)
 						//運動量保存則
 						double m = player[i]->Return_density() * player[i]->Return_volume() + player[j]->Return_density() * player[j]->Return_volume();
@@ -91,6 +101,7 @@ void GameBaseScene::HitConbine() {
 		for (int j = 0; j < size_up_ball_num; j++) {
 			if (player[i] && size_up_ball[j]) {
 				if (HitChecker_PlayerandNonMovableBall(player[i], size_up_ball[j])) {
+					PlaySoundMem(combineSH, DX_PLAYTYPE_BACK, TRUE);
 					//運動量保存則
 					double m = player[i]->Return_density() * player[i]->Return_volume() + size_up_ball[j]->Return_density() * size_up_ball[j]->Return_volume();
 					player[i]->Decide_speed_x(player[i]->Return_density() * player[i]->Return_volume() * player[i]->Return_speed_x() / m);
@@ -111,6 +122,7 @@ void GameBaseScene::HitConbine() {
 		for (int j = 0; j < charged_ball_num; j++) {
 			if (player[i] && charged_ball[j]) {
 				if (HitChecker_PlayerandMovableChargedBall(player[i], charged_ball[j])) {
+					PlaySoundMem(combineSH, DX_PLAYTYPE_BACK, TRUE);
 					//運動量保存則
 					double m = player[i]->Return_density() * player[i]->Return_volume() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume();
 						player[i]->Decide_speed_x((player[i]->Return_density() * player[i]->Return_volume() * player[i]->Return_speed_x() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume() * charged_ball[j]->Return_speed_x()) / m);
@@ -133,6 +145,7 @@ void GameBaseScene::HitConbine() {
 		for (int j = 0; j < size_up_ball_num; j++) {
 			if (charged_ball[i] && size_up_ball[j]) {
 				if (HitChecker_MovableChargedBallandNonMovableBall(charged_ball[i], size_up_ball[j])) {
+					PlaySoundMem(combineSH, DX_PLAYTYPE_BACK, TRUE);
 					//運動量保存則
 					double m = charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() + size_up_ball[j]->Return_density() * size_up_ball[j]->Return_volume();
 					charged_ball[i]->Decide_speed_x(charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_x() / m);
@@ -153,6 +166,7 @@ void GameBaseScene::HitConbine() {
 		for (int j = i + 1; j < charged_ball_num; j++) {
 			if (charged_ball[i] && charged_ball[j]) {
 				if (HitChecker_MovableChargedBallandNonMovableBall(charged_ball[i], charged_ball[j])) {		//MovableChargedBallはNonMovableBallの継承クラス
+					PlaySoundMem(combineSH, DX_PLAYTYPE_BACK, TRUE);
 					if (charged_ball[i]->Return_volume() >= charged_ball[j]->Return_volume()) {				//でかい方の位置を合体後のボールの位置とする(ただし等しいならば真ん中)
 						//運動量保存則
 						double m = charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume();

@@ -14,7 +14,7 @@ class Player {
 	double speed_x, speed_y;
 	int accel_start_x, accel_start_y, accel_end_x, accel_end_y, accel_temp_x, accel_temp_y;
 	double accel_power, accel_vector_size, accel_arrow_direction;
-	int accel_arrow_num;
+	int accel_arrow_num, accel_arrow_num_pre;
 	int* accel_arrowGHandle;
 	int charge, charge_temp_GHandle, charge_text_width;
 	int* ownGHandle;

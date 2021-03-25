@@ -3,6 +3,7 @@
 #define MAKIBA_Y_CORRECTION -2
 
 extern int makibaTH_S64_T7;
+extern int accel_chargeSH, accel_downSH, player_shotSH;
 
 Player::Player(double first_x, double first_y, int _charge, int _volume, double _density, int* _accel_arrowGHandle, int* _ownGHandle) {
 	volume = _volume;
@@ -35,6 +36,7 @@ Player::Player(double first_x, double first_y, int _charge, int _volume, double 
 	accel_arrowGHandle = _accel_arrowGHandle;
 	ownGHandle = _ownGHandle;
 	accel_arrow_num = 0;
+	accel_arrow_num_pre = 0;
 	acceleration_x = 0;
 	acceleration_y = 0;
 	force_x = 0;
@@ -216,10 +218,13 @@ void Player::Shoot_Operation() {
 		accel_vector_size = std::sqrt(((accel_start_x - accel_end_x) * (accel_start_x - accel_end_x) + (accel_start_y - accel_end_y) * (accel_start_y - accel_end_y)) * 1.0);
 		accel_power = accel_vector_size / 50;
 		accel_arrow_num = 0;
+		accel_arrow_num_pre = 0;
 		if (accel_vector_size != 0) {
 			speed_x += (2.5 / sqrt(density * volume)) * accel_power * ((accel_start_x - accel_end_x) / accel_vector_size);
 			speed_y += (2.5 / sqrt(density * volume)) * accel_power * ((accel_start_y - accel_end_y) / accel_vector_size);
 			checker_when_time_stopped = true;
+			//発射サウンド
+			PlaySoundMem(player_shotSH, DX_PLAYTYPE_BACK, TRUE);
 			shoot_num++;
 		}
 	}
@@ -240,6 +245,14 @@ void Player::Shoot_Operation() {
 	else if (tap_checker_now == false) {
 		tap_checker_pre = false;
 	}
+	//チャージ変化サウンド
+	if (accel_arrow_num > accel_arrow_num_pre) {
+		PlaySoundMem(accel_chargeSH, DX_PLAYTYPE_BACK, TRUE);
+	}
+	else if (accel_arrow_num < accel_arrow_num_pre) {
+		PlaySoundMem(accel_downSH, DX_PLAYTYPE_BACK, TRUE);
+	}
+	accel_arrow_num_pre = accel_arrow_num;
 }
 
 NonMovableBall::NonMovableBall(double first_x, double first_y, int _volume, double _density, int* _ownGHandle) {

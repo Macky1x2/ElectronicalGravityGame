@@ -11,6 +11,7 @@ protected:
 	int accel_arrowGHandle, playerGHandle, charged_ballGHandle;
 	int phase, star;
 	int fade_in, fade_in_speed, fade_out, fade_out_speed;
+	int combineSH;
 	string purpose;
 	std::shared_ptr<Player>* player;
 	std::shared_ptr<NonMovableBall>* size_up_ball;

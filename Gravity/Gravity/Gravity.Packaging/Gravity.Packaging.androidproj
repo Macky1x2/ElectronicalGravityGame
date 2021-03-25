@@ -142,8 +142,13 @@
     <Content Include="assets\sound\page_1turnover_reverse.ogg" />
     <Content Include="assets\sound\page_manyturnover.ogg" />
     <Content Include="assets\sound\page_manyturnover_reverse.ogg" />
+    <Content Include="assets\sound\player\accel_charge.ogg" />
+    <Content Include="assets\sound\player\accel_down.ogg" />
+    <Content Include="assets\sound\player\shot.ogg" />
+    <Content Include="assets\sound\player\shot_2.ogg" />
     <Content Include="assets\sound\ui\cancel.ogg" />
     <Content Include="assets\sound\ui\su.ogg" />
+    <Content Include="assets\sound\water.ogg" />
     <Content Include="assets\V_arrow_red.png" />
     <Content Include="assets\note.jpg" />
     <Content Include="assets\red_circle.png" />
