@@ -28,9 +28,6 @@
     <ClCompile Include="StageSelectScene.cpp">
       <Filter>ソースファイル</Filter>
     </ClCompile>
-    <ClCompile Include="TestGameScene.cpp">
-      <Filter>ソースファイル</Filter>
-    </ClCompile>
     <ClCompile Include="TitleScene.cpp">
       <Filter>ソースファイル</Filter>
     </ClCompile>
@@ -76,9 +73,6 @@
       <Filter>ヘッダーファイル</Filter>
     </ClInclude>
     <ClInclude Include="StageSelectScene.h">
-      <Filter>ヘッダーファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="TestGameScene.h">
       <Filter>ヘッダーファイル</Filter>
     </ClInclude>
     <ClInclude Include="TitleScene.h">

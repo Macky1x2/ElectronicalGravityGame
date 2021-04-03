@@ -2,16 +2,35 @@
 #include "GameClearScene.h"
 
 extern SceneBase* Scene_pointer_for_Reload;
+extern int note_pageGHandle, page1_turnoverGHandle, pagemany_turnoverGHandle, reverse_page1_turnoverGHandle, reverse_pagemany_turnoverGHandle;
+extern int page_1turnoverSH, page_manyturnoverSH, page_1turnover_reverseSH, page_manyturnover_reverseSH;
+extern int makibaTH_S64_T7;
+int accel_chargeSH, accel_downSH, player_shotSH;		//ゲームシーン時に使うサウンドハンドル
 
 GameBaseScene::GameBaseScene() {
+	phase = 0;
+	star = 0;
+	fade_in = 0;
+	fade_in_speed = 17;
+	fade_out = 255;
+	fade_out_speed = 17;
 	time_advances = false;
 	operate = std::make_shared<OperationInGame>();
 	Scene_pointer_for_Reload = this;
-	accel_arrowGHandle = LoadGraph("V_arrow_red.png");
-	charge_THandle = CreateFontToHandle(NULL, 40, 5, DX_FONTTYPE_NORMAL);
+	accel_arrowGHandle = LoadGraph("graph\\arrow\\V_arrow_red.png");
+	playerGHandle = LoadGraph("red_circle.png");
+	charged_ballGHandle = LoadGraph("black_circle.png");
+	accel_chargeSH = LoadSoundMem("sound\\player\\accel_charge.ogg");
+	accel_downSH = LoadSoundMem("sound\\player\\accel_down.ogg");
+	player_shotSH= LoadSoundMem("sound\\player\\shot_2.ogg");
+	combineSH = LoadSoundMem("sound\\water.ogg");
 }
 
 GameBaseScene::~GameBaseScene() {
+	DeleteSoundMem(accel_chargeSH);
+	DeleteSoundMem(accel_downSH);
+	DeleteSoundMem(player_shotSH);
+	DeleteSoundMem(combineSH);
 	for (int i = 0; i < player_num; i++) {
 		if (player[i]) {
 			player[i].reset();
@@ -29,7 +48,6 @@ GameBaseScene::~GameBaseScene() {
 	}
 	operate.reset();
 	DeleteGraph(accel_arrowGHandle);
-	DeleteFontToHandle(charge_THandle);
 }
 
 void GameBaseScene::HitConbine() {
@@ -38,6 +56,7 @@ void GameBaseScene::HitConbine() {
 		for (int j = i + 1; j < player_num; j++) {
 			if (player[i] && player[j]) {
 				if (HitChecker_PlayerandPlayer(player[i], player[j])) {
+					PlaySoundMem(combineSH, DX_PLAYTYPE_BACK, TRUE);
 					if (player[i]->Return_volume() >= player[j]->Return_volume()) {				//でかい方の位置を合体後のボールの位置とする(ただし等しいならば真ん中)
 						//運動量保存則
 						double m = player[i]->Return_density() * player[i]->Return_volume() + player[j]->Return_density() * player[j]->Return_volume();
@@ -82,6 +101,7 @@ void GameBaseScene::HitConbine() {
 		for (int j = 0; j < size_up_ball_num; j++) {
 			if (player[i] && size_up_ball[j]) {
 				if (HitChecker_PlayerandNonMovableBall(player[i], size_up_ball[j])) {
+					PlaySoundMem(combineSH, DX_PLAYTYPE_BACK, TRUE);
 					//運動量保存則
 					double m = player[i]->Return_density() * player[i]->Return_volume() + size_up_ball[j]->Return_density() * size_up_ball[j]->Return_volume();
 					player[i]->Decide_speed_x(player[i]->Return_density() * player[i]->Return_volume() * player[i]->Return_speed_x() / m);
@@ -102,6 +122,7 @@ void GameBaseScene::HitConbine() {
 		for (int j = 0; j < charged_ball_num; j++) {
 			if (player[i] && charged_ball[j]) {
 				if (HitChecker_PlayerandMovableChargedBall(player[i], charged_ball[j])) {
+					PlaySoundMem(combineSH, DX_PLAYTYPE_BACK, TRUE);
 					//運動量保存則
 					double m = player[i]->Return_density() * player[i]->Return_volume() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume();
 						player[i]->Decide_speed_x((player[i]->Return_density() * player[i]->Return_volume() * player[i]->Return_speed_x() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume() * charged_ball[j]->Return_speed_x()) / m);
@@ -124,6 +145,7 @@ void GameBaseScene::HitConbine() {
 		for (int j = 0; j < size_up_ball_num; j++) {
 			if (charged_ball[i] && size_up_ball[j]) {
 				if (HitChecker_MovableChargedBallandNonMovableBall(charged_ball[i], size_up_ball[j])) {
+					PlaySoundMem(combineSH, DX_PLAYTYPE_BACK, TRUE);
 					//運動量保存則
 					double m = charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() + size_up_ball[j]->Return_density() * size_up_ball[j]->Return_volume();
 					charged_ball[i]->Decide_speed_x(charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() * charged_ball[i]->Return_speed_x() / m);
@@ -144,6 +166,7 @@ void GameBaseScene::HitConbine() {
 		for (int j = i + 1; j < charged_ball_num; j++) {
 			if (charged_ball[i] && charged_ball[j]) {
 				if (HitChecker_MovableChargedBallandNonMovableBall(charged_ball[i], charged_ball[j])) {		//MovableChargedBallはNonMovableBallの継承クラス
+					PlaySoundMem(combineSH, DX_PLAYTYPE_BACK, TRUE);
 					if (charged_ball[i]->Return_volume() >= charged_ball[j]->Return_volume()) {				//でかい方の位置を合体後のボールの位置とする(ただし等しいならば真ん中)
 						//運動量保存則
 						double m = charged_ball[i]->Return_density() * charged_ball[i]->Return_volume() + charged_ball[j]->Return_density() * charged_ball[j]->Return_volume();
@@ -247,29 +270,78 @@ void GameBaseScene::Gravity() {
 }
 
 void GameBaseScene::Update() {
-	operate->Update();			//操作処理
-	TimeControl();				//時間処理
-	Gravity();					//クーロン力処理
-	AirResistance();			//媒質抵抗処理
-	if (time_advances) {		//時が止まっているときは以下は更新しない
-		for (int i = 0; i < player_num; i++) {
-			if (player[i]) {
-				player[i]->Update();
-			}
+	if (phase == 0) {
+		if (fade_in < 255) {
+			fade_in += fade_in_speed;
 		}
-		for (int i = 0; i < charged_ball_num; i++) {
-			if (charged_ball[i]) {
-				charged_ball[i]->Update();
+		operate->Update();			//操作処理
+		TimeControl();				//時間処理
+		Gravity();					//クーロン力処理
+		AirResistance();			//媒質抵抗処理
+		if (time_advances) {		//時が止まっているときは以下は更新しない
+			for (int i = 0; i < player_num; i++) {
+				if (player[i]) {
+					player[i]->Update();
+				}
 			}
+			for (int i = 0; i < charged_ball_num; i++) {
+				if (charged_ball[i]) {
+					charged_ball[i]->Update();
+				}
+			}
+			HitConbine();				//衝突then結合処理
 		}
-		HitConbine();				//衝突then結合処理
+		if (ClearChecker()) {			//クリア判定となればゲームクリア
+			GameClear();
+		}
 	}
-	if (ClearChecker()) {			//クリア判定となればゲームクリア
-		GameClear();
+	//GameClearによってphage==1となった直後に、↓のif分内でphage==2となるようにした
+	if (phase == 1) {
+		SetAlwaysRunFlag(TRUE);
+		PlaySoundMem(page_1turnoverSH, DX_PLAYTYPE_BACK, TRUE);
+		PlayMovieToGraph(page1_turnoverGHandle);
+		phase = 2;
+	}
+	else if (phase == 2) {
+		if (fade_out > 0) {
+			fade_out -= fade_out_speed;
+		}
+		if (GetMovieStateToGraph(page1_turnoverGHandle) == 0) {
+			SetAlwaysRunFlag(FALSE);
+			SeekMovieToGraph(page1_turnoverGHandle, 0);
+			nextScene = std::make_shared<GameClearScene>(star);
+		}
 	}
 }
 
 void GameBaseScene::Draw()const {
+	if (phase == 0) {
+		DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0 + 6, 1.02, 0, note_pageGHandle, TRUE, FALSE);		//背景
+		if (fade_in < 255) {
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, fade_in);
+			Draw_Objects();
+			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		}
+		else {
+			Draw_Objects();
+		}
+	}
+	else if (phase == 2) {
+		if (GetMovieStateToGraph(page1_turnoverGHandle) == 1) {
+			DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0, 1.5, 0, page1_turnoverGHandle, TRUE, FALSE);
+		}
+		else {
+			DrawRotaGraph(ANDROID_WIDTH / 2.0, ANDROID_HEIGHT / 2.0 + 6, 1.02, 0, note_pageGHandle, TRUE, FALSE);		//背景
+		}
+		if (fade_out > 0) {
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, fade_out);
+			Draw_Objects();
+			SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		}
+	}
+}
+
+void GameBaseScene::Draw_Objects()const {
 	for (int i = 0; i < size_up_ball_num; i++) {
 		if (size_up_ball[i]) {
 			size_up_ball[i]->Draw();
@@ -375,11 +447,6 @@ void GameBaseScene::TimeControl() {
 }
 
 void GameBaseScene::ReloadFunction(void) {
-	ReloadFileGraphAll();						// ファイルから読み込んだ画像を復元する
-
-	//テキストハンドル復元
-	charge_THandle = CreateFontToHandle(NULL, 40, 5, DX_FONTTYPE_NORMAL);
-	
 	//MakeScreenのグラフィックハンドルを復元
 	for (int i = 0; i < player_num; i++) {
 		if (player[i]) {
@@ -394,11 +461,10 @@ void GameBaseScene::ReloadFunction(void) {
 }
 
 void GameBaseScene::Draw_Purpose()const {
-	DrawLine(100, 150, 300, 150, GetColor(0, 255, 0));
+	DrawFormatStringToHandle(100, 0, GetColor(0, 0, 0), makibaTH_S64_T7, "%s", purpose.c_str());
 	for (int i = 0; i < player_num; i++) {
 		if (player[i]) {
-			DrawFormatStringToHandle(100, 0, GetColor(255, 255, 255), charge_THandle, "クリア条件:球(-10)を取得する");
-			DrawFormatStringToHandle(100, 100, GetColor(255, 255, 255), charge_THandle, "%d回", player[i]->Return_shoot_num());
+			DrawFormatStringToHandle(100, 100, GetColor(0, 0, 0), makibaTH_S64_T7, "%d回", player[i]->Return_shoot_num());
 			break;
 		}
 	}

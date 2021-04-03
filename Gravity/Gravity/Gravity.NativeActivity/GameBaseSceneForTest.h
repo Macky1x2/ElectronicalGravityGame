@@ -1,3 +1,4 @@
+/*
 //テスト開発用
 #pragma once
 #include "StageSelectScene.h"
@@ -29,3 +30,4 @@ public:
 	virtual void GameClear();
 	void ReloadFunction(void);
 };
+*/

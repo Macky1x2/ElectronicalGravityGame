@@ -14,16 +14,16 @@ class Player {
 	double speed_x, speed_y;
 	int accel_start_x, accel_start_y, accel_end_x, accel_end_y, accel_temp_x, accel_temp_y;
 	double accel_power, accel_vector_size, accel_arrow_direction;
-	int accel_arrow_num;
+	int accel_arrow_num, accel_arrow_num_pre;
 	int* accel_arrowGHandle;
 	int charge, charge_temp_GHandle, charge_text_width;
-	int* charge_THandle;
+	int* ownGHandle;
 	int shoot_num;
 	double acceleration_x, acceleration_y;
 	double force_x, force_y;
 	double density;
 public:
-	Player(double, double, int, int, double, int*, int*);		//引数(初期x座標, 初期y座標, 電荷, 体積, 密度, テキストハンドル, V矢印画像ハンドル)
+	Player(double, double, int, int, double, int*, int*);		//引数(初期x座標, 初期y座標, 電荷, 体積, 密度, V矢印画像ハンドル, 丸画像ハンドル)
 	~Player();
 	void Update();
 	void Draw()const;
@@ -63,8 +63,9 @@ protected:
 	double position_x, position_y;
 	double radius;
 	double density;
+	int* ownGHandle;
 public:
-	NonMovableBall(double, double, int, double);				//引数(初期x座標, 初期y座標, 体積, 密度)
+	NonMovableBall(double, double, int, double, int*);				//引数(初期x座標, 初期y座標, 体積, 密度, 自身画像ハンドル)
 	~NonMovableBall();
 	void Update();
 	void Draw()const;
@@ -78,13 +79,12 @@ public:
 //可動な、電気を帯びたボール(電荷0も含む)
 class MovableChargedBall :public NonMovableBall {
 	int charge, charge_temp_GHandle, charge_text_width;
-	int* charge_THandle;
 	unsigned int charge_text_color;
 	double speed_x, speed_y;
 	double acceleration_x, acceleration_y;
 	double force_x, force_y;
 public:
-	MovableChargedBall(double, double, int, int, double, int*);		//引数(初期x座標, 初期y座標, 電荷, 体積, 密度, テキストハンドル)
+	MovableChargedBall(double, double, int, int, double, int*);		//引数(初期x座標, 初期y座標, 電荷, 体積, 密度, 自身画像ハンドル)
 	~MovableChargedBall();
 	void Update();
 	void Draw()const;

@@ -1,6 +1,11 @@
 ﻿#include "Actor.h"
 
-Player::Player(double first_x, double first_y, int _charge, int _volume, double _density, int* _chargeTHandle, int* _accel_arrowGHandle) {
+#define MAKIBA_Y_CORRECTION -2
+
+extern int makibaTH_S64_T7;
+extern int accel_chargeSH, accel_downSH, player_shotSH;
+
+Player::Player(double first_x, double first_y, int _charge, int _volume, double _density, int* _accel_arrowGHandle, int* _ownGHandle) {
 	volume = _volume;
 	radius = 50 * pow(volume / 5.0, 1.0 / 3);
 	own_color = GetColor(0, 255, 255);
@@ -13,24 +18,25 @@ Player::Player(double first_x, double first_y, int _charge, int _volume, double 
 	speed_x = 0;
 	speed_y = 0;
 	charge = _charge;
-	charge_THandle = _chargeTHandle;					//テキストハンドル読み込み
 	if (charge > 0) {
-		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "+%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "+%d", charge);
 	}
 	else {
-		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "%d", charge);
 	}
-	charge_temp_GHandle = MakeScreen(charge_text_width, 40, TRUE);							//調節必須:幅,高さ
+	charge_temp_GHandle = MakeScreen(charge_text_width, 64, TRUE);							//調節必須:幅,高さ
 	SetDrawScreen(charge_temp_GHandle);
 	if (charge > 0) {
-		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "+%d", charge);	//調節必須:起点y座標
+		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, makibaTH_S64_T7, "+%d", charge);	//調節必須:起点y座標
 	}
 	else {
-		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "%d", charge);
+		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, makibaTH_S64_T7, "%d", charge);
 	}
 	SetDrawScreen(DX_SCREEN_BACK);
 	accel_arrowGHandle = _accel_arrowGHandle;
+	ownGHandle = _ownGHandle;
 	accel_arrow_num = 0;
+	accel_arrow_num_pre = 0;
 	acceleration_x = 0;
 	acceleration_y = 0;
 	force_x = 0;
@@ -60,9 +66,9 @@ void Player::Update() {
 }
 
 void Player::Draw()const {
-	DrawCircle(position_x, position_y, radius, own_color, TRUE);							//自分描画
+	DrawRotaGraph(position_x, position_y, 0.00185*radius, 0, *ownGHandle, TRUE, FALSE);		//自分描画
 
-	//体積文字描画
+	//電荷描画
 	if (charge_text_width > 55) {
 		DrawRotaGraph(position_x, position_y, (55.0 / charge_text_width) * 1.5 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);
 	}
@@ -72,7 +78,7 @@ void Player::Draw()const {
 
 	//加速矢印描画
 	for (int i = 0; i < accel_arrow_num; i++) {
-		DrawRotaGraph(position_x - (i + 1) * (radius * 1.5) * cos(accel_arrow_direction), position_y - (i + 1) * (radius * 1.5) * sin(accel_arrow_direction), 0.3, accel_arrow_direction, *accel_arrowGHandle, TRUE, FALSE);
+		DrawRotaGraph(position_x - (i + 1) * (radius * 1.5) * cos(accel_arrow_direction), position_y - (i + 1) * (radius * 1.5) * sin(accel_arrow_direction), 0.4*radius/50, accel_arrow_direction, *accel_arrowGHandle, TRUE, FALSE);
 	}
 }
 
@@ -174,24 +180,28 @@ void Player::Add_force_y(double add_force) {
 }
 
 void Player::Make_TGHandle() {
+	//正ならば符号は+, 負ならば符号は-, 0ならば符号なし
 	if (charge > 0) {
-		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "+%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "+%d", charge);
 	}
 	else {
-		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "%d", charge);
 	}
+	//復元時データが破損している恐れがあるため削除
 	DeleteGraph(charge_temp_GHandle);
-	charge_temp_GHandle = MakeScreen(charge_text_width, 40, TRUE);
+	charge_temp_GHandle = MakeScreen(charge_text_width, 64, TRUE);
+	//電荷描画用画像生成
 	SetDrawScreen(charge_temp_GHandle);
 	if (charge > 0) {
-		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "+%d", charge);
+		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, makibaTH_S64_T7, "+%d", charge);
 	}
 	else {
-		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "%d", charge);
+		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, makibaTH_S64_T7, "%d", charge);
 	}
 	SetDrawScreen(DX_SCREEN_BACK);
 }
 
+//プレイヤー操作
 void Player::Shoot_Operation() {
 	checker_when_time_stopped = false;
 	if (GetTouchInputNum() == 1) {
@@ -208,10 +218,13 @@ void Player::Shoot_Operation() {
 		accel_vector_size = std::sqrt(((accel_start_x - accel_end_x) * (accel_start_x - accel_end_x) + (accel_start_y - accel_end_y) * (accel_start_y - accel_end_y)) * 1.0);
 		accel_power = accel_vector_size / 50;
 		accel_arrow_num = 0;
+		accel_arrow_num_pre = 0;
 		if (accel_vector_size != 0) {
 			speed_x += (2.5 / sqrt(density * volume)) * accel_power * ((accel_start_x - accel_end_x) / accel_vector_size);
 			speed_y += (2.5 / sqrt(density * volume)) * accel_power * ((accel_start_y - accel_end_y) / accel_vector_size);
 			checker_when_time_stopped = true;
+			//発射サウンド
+			PlaySoundMem(player_shotSH, DX_PLAYTYPE_BACK, TRUE);
 			shoot_num++;
 		}
 	}
@@ -232,15 +245,24 @@ void Player::Shoot_Operation() {
 	else if (tap_checker_now == false) {
 		tap_checker_pre = false;
 	}
+	//チャージ変化サウンド
+	if (accel_arrow_num > accel_arrow_num_pre) {
+		PlaySoundMem(accel_chargeSH, DX_PLAYTYPE_BACK, TRUE);
+	}
+	else if (accel_arrow_num < accel_arrow_num_pre) {
+		PlaySoundMem(accel_downSH, DX_PLAYTYPE_BACK, TRUE);
+	}
+	accel_arrow_num_pre = accel_arrow_num;
 }
 
-NonMovableBall::NonMovableBall(double first_x, double first_y, int _volume, double _density) {
+NonMovableBall::NonMovableBall(double first_x, double first_y, int _volume, double _density, int* _ownGHandle) {
 	volume = _volume;
 	radius = 50 * pow(volume / 5.0, 1.0 / 3);
 	own_color = GetColor(255, 255, 255);
 	position_x = first_x;
 	position_y = first_y;
 	density = _density;
+	ownGHandle = _ownGHandle;
 }
 
 NonMovableBall::~NonMovableBall() {
@@ -252,7 +274,7 @@ void NonMovableBall::Update() {
 }
 
 void NonMovableBall::Draw()const {
-	DrawCircle(position_x, position_y, radius, own_color, TRUE);
+	DrawRotaGraph(position_x, position_y, 0.00185 * radius, 0, *ownGHandle, TRUE, FALSE);		//自分描画
 }
 
 int NonMovableBall::Return_volume() {
@@ -275,7 +297,7 @@ double NonMovableBall::Return_density() {
 	return density;
 }
 
-MovableChargedBall::MovableChargedBall(double first_x, double first_y, int _charge, int _volume, double _density, int* _chargeTHandle) :NonMovableBall(first_x, first_y, _volume, _density) {
+MovableChargedBall::MovableChargedBall(double first_x, double first_y, int _charge, int _volume, double _density, int* _ownGHandle) :NonMovableBall(first_x, first_y, _volume, _density, _ownGHandle) {
 	charge = _charge;
 	speed_x = 0;
 	speed_y = 0;
@@ -284,21 +306,20 @@ MovableChargedBall::MovableChargedBall(double first_x, double first_y, int _char
 	force_x = 0;
 	force_y = 0;
 	own_color = GetColor(0, 255, 0);
-	charge_text_color = GetColor(255, 0, 0);
-	charge_THandle = _chargeTHandle;								//テキストハンドル読み込み
+	charge_text_color = GetColor(0, 0, 0);
 	if (charge > 0) {
-		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "+%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "+%d", charge);
 	}
 	else {
-		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "%d", charge);
 	}
-	charge_temp_GHandle = MakeScreen(charge_text_width, 40, TRUE);							//調節必須:幅,高さ
+	charge_temp_GHandle = MakeScreen(charge_text_width, 64, TRUE);							//調節必須:幅,高さ
 	SetDrawScreen(charge_temp_GHandle);
 	if (charge > 0) {
-		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "+%d", charge);	//調節必須:起点y座標
+		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, makibaTH_S64_T7, "+%d", charge);	//調節必須:起点y座標
 	}
 	else {
-		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "%d", charge);
+		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, makibaTH_S64_T7, "%d", charge);
 	}
 	SetDrawScreen(DX_SCREEN_BACK);
 }
@@ -321,9 +342,9 @@ void MovableChargedBall::Update() {
 }
 
 void MovableChargedBall::Draw()const {
-	DrawCircle(position_x, position_y, radius, own_color, TRUE);							//自分描画
+	DrawRotaGraph(position_x, position_y, 0.00185 * radius, 0, *ownGHandle, TRUE, FALSE);		//自分描画
 	
-	//体積文字描画
+	//電荷描画
 	if (charge_text_width > 55) {
 		DrawRotaGraph(position_x, position_y, (55.0 / charge_text_width) * 1.5 * radius / 50, 0.0, charge_temp_GHandle, TRUE, FALSE);
 	}
@@ -403,19 +424,19 @@ void MovableChargedBall::Change_radiusbyvolume(int _volume) {
 
 void MovableChargedBall::Make_TGHandle() {
 	if (charge > 0) {
-		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "+%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "+%d", charge);
 	}
 	else {
-		charge_text_width = GetDrawFormatStringWidthToHandle(*charge_THandle, "%d", charge);
+		charge_text_width = GetDrawFormatStringWidthToHandle(makibaTH_S64_T7, "%d", charge);
 	}
 	DeleteGraph(charge_temp_GHandle);
-	charge_temp_GHandle = MakeScreen(charge_text_width, 40, TRUE);
+	charge_temp_GHandle = MakeScreen(charge_text_width, 64, TRUE);
 	SetDrawScreen(charge_temp_GHandle);
 	if (charge > 0) {
-		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "+%d", charge);
+		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, makibaTH_S64_T7, "+%d", charge);
 	}
 	else {
-		DrawFormatStringToHandle(0, -6, charge_text_color, *charge_THandle, "%d", charge);
+		DrawFormatStringToHandle(0, MAKIBA_Y_CORRECTION, charge_text_color, makibaTH_S64_T7, "%d", charge);
 	}
 	SetDrawScreen(DX_SCREEN_BACK);
 }
