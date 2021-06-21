@@ -1,4 +1,4 @@
-﻿#include "TitleScene.h"
+﻿#include "GameScene.h"
 
 // プログラムは android_main から始まります
 int android_main(void)
@@ -13,7 +13,7 @@ int android_main(void)
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	//ゲーム処理
-	SceneManager scene(make_shared<TitleScene>());
+	SceneManager scene(make_shared<GameScene>());
 	while (ProcessMessage() == 0) {
 		scene.Update();
 		scene.Draw();

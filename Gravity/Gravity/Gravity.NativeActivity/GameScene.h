@@ -1,11 +1,11 @@
 ﻿#pragma once
 #include "SceneManager.h"
 
-class TitleScene :public SceneBase {
+class GameScene :public SceneBase {
 	
 public:
-	TitleScene();
-	~TitleScene();
+	GameScene();
+	~GameScene();
 	void Update();
 	void Draw()const;
 };

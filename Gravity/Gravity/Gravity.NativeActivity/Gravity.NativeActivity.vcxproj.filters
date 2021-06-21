@@ -4,7 +4,7 @@
     <ClCompile Include="main.cpp">
       <Filter>ソースファイル</Filter>
     </ClCompile>
-    <ClCompile Include="TitleScene.cpp">
+    <ClCompile Include="GameScene.cpp">
       <Filter>ソースファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -15,10 +15,10 @@
     <ClInclude Include="SceneManager.h">
       <Filter>ヘッダーファイル</Filter>
     </ClInclude>
-    <ClInclude Include="TitleScene.h">
+    <ClInclude Include="define.h">
       <Filter>ヘッダーファイル</Filter>
     </ClInclude>
-    <ClInclude Include="define.h">
+    <ClInclude Include="GameScene.h">
       <Filter>ヘッダーファイル</Filter>
     </ClInclude>
   </ItemGroup>
