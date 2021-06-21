@@ -1,6 +1,3 @@
-﻿#pragma once
-
-#define ANDROID_HEIGHT 1920
+#pragma once
 #define ANDROID_WIDTH 1080
-#define PI 3.14159265359
-#define COULOMB_CONSTANT 898.76
+#define ANDROID_HEIGHT 1920

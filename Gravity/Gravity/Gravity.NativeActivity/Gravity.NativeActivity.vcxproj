@@ -227,35 +227,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Actor.cpp" />
-    <ClCompile Include="GameBaseScene.cpp" />
-    <ClCompile Include="GameBaseSceneForTest.cpp" />
-    <ClCompile Include="GameClearScene.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Operation.cpp" />
-    <ClCompile Include="StageSelectScene.cpp" />
-    <ClCompile Include="Stage_1.cpp" />
-    <ClCompile Include="Stage_2.cpp" />
-    <ClCompile Include="Stage_3.cpp" />
-    <ClCompile Include="Stage_4.cpp" />
-    <ClCompile Include="Stage_Test.cpp" />
     <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Actor.h" />
     <ClInclude Include="define.h" />
-    <ClInclude Include="GameBaseScene.h" />
-    <ClInclude Include="GameBaseSceneForTest.h" />
-    <ClInclude Include="GameClearScene.h" />
-    <ClInclude Include="Operation.h" />
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="StageSelectScene.h" />
-    <ClInclude Include="Stage_1.h" />
-    <ClInclude Include="Stage_2.h" />
-    <ClInclude Include="Stage_3.h" />
-    <ClInclude Include="Stage_4.h" />
-    <ClInclude Include="Stage_Test.h" />
     <ClInclude Include="TitleScene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
