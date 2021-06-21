@@ -4,6 +4,8 @@
 #include <iostream>
 #include <memory>
 #include <math.h>
+#include <vector>
+#include <utility>
 
 using namespace std;
 
