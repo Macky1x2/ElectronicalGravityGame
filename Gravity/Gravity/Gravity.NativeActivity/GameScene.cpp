@@ -9,6 +9,14 @@ GameScene::GameScene() {
 	board[4][3] = 3;
 	board[4][2] = 4;
 	board[3][3] = 4;
+	give_board.board[2][3] = 1;
+	give_board.board[3][4] = 1;
+	give_board.board[3][5] = 2;
+	give_board.board[4][4] = 2;
+	give_board.board[5][4] = 3;
+	give_board.board[4][3] = 3;
+	give_board.board[4][2] = 4;
+	give_board.board[3][3] = 4;
 	backGHandle = MakeScreen(1080, 1920, FALSE);
 	Circle_Color[1] = GetColor(255, 255, 255);
 	Circle_Color[2] = GetColor(255, 0, 0);
@@ -56,7 +64,7 @@ void GameScene::Update() {
 		if (end_time - start_time < 1000) {
 			WaitTimer(1000 - (end_time - start_time));
 		}
-		Next_order();
+		Next_order(&order_count);
 	}
 }
 
@@ -66,9 +74,10 @@ void GameScene::Player() {
 		int loc_x = p_touch_x / 135;
 		int loc_y = (p_touch_y - 420) / 135;
 		if (loc_x >= 0 && loc_x < 8 && loc_y >= 0 && loc_y < 8) {
-			if (Can_put(loc_x, loc_y, 1)) {
-				Board_change(loc_x, loc_y, 1);
-				Next_order();
+			if (Can_put(loc_x, loc_y, 1,board)) {
+				Board_change(loc_x, loc_y, 1, board);
+				Board_change(loc_x, loc_y, 1, give_board.board);
+				Next_order(&order_count);
 			}
 		}
 	}
@@ -78,15 +87,88 @@ void GameScene::Enemy() {
 	vector<pair<int, int> > can_place;
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
-			if (Can_put(j, i, order[order_count])) {
+			if (Can_put(j, i, order[order_count],board)) {
 				can_place.push_back(make_pair(j, i));
 			}
 		}
 	}
 	if (can_place.size() > 0) {
-		pair<int, int> res = can_place[GetRand(can_place.size() - 1)];
-		Board_change(res.first, res.second, order[order_count]);
+		int* point = new int[can_place.size()];
+		for (int i = 0; i < can_place.size(); i++) {
+			point[i] = Enemy_cal(give_board, can_place[i].first, can_place[i].second, order_count, 1, false, 0);
+		}
+		int max = point[0];
+		int max_num = 0;
+		for (int i = 1; i < can_place.size(); i++) {
+			if (point[i] > max) {
+				max = point[i];
+				max_num = i;
+			}
+		}
+		Board_change(can_place[max_num].first, can_place[max_num].second, order[order_count], board);
+		Board_change(can_place[max_num].first, can_place[max_num].second, order[order_count], give_board.board);
 	}
+}
+
+int GameScene::Enemy_cal(Board _board,int _x,int _y, int _order_count, int deep, bool changed, int loop_count) {
+	if (loop_count == 4)return Evaluate_board(_board.board, order[order_count]);
+	if (!changed) {
+		Board_change(_x, _y, order[_order_count], _board.board);
+	}
+	Next_order(&_order_count);
+	if (deep < MIN_MAX_DEEP) {
+		vector<pair<int, int> > can_place;
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				if (Can_put(j, i, order[_order_count], _board.board)) {
+					can_place.push_back(make_pair(j, i));
+				}
+			}
+		}
+		if (can_place.size() > 0) {
+			int* point = new int[can_place.size()];
+			for (int i = 0; i < can_place.size(); i++) {
+				point[i] = Enemy_cal(_board, can_place[i].first, can_place[i].second, _order_count, deep + 1, false, 0);
+			}
+			int min_max = point[0];
+			for (int i = 1; i < can_place.size(); i++) {
+				if (_order_count == order_count) {
+					if (point[i] > min_max) {
+						min_max = point[i];
+					}
+				}
+				else {
+					if (point[i] < min_max) {
+						min_max = point[i];
+					}
+				}
+			}
+			return min_max;
+		}
+		else {
+			return Enemy_cal(_board, _x, _y, _order_count, deep, true, loop_count + 1);
+		}
+	}
+	else {
+		return Evaluate_board(_board.board, order[order_count]);
+	}
+}
+
+int GameScene::Evaluate_board(int _board[8][8], int who) {
+	int res = 0;
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 8; j++) {
+			if (_board[i][j] != 0) {
+				if (_board[i][j] == who) {
+					res += 3;
+				}
+				else {
+					res--;
+				}
+			}
+		}
+	}
+	return res;
 }
 
 void GameScene::Draw()const {
@@ -108,25 +190,25 @@ void GameScene::Draw_Piece()const {
 	}
 }
 
-bool GameScene::Can_put(int _x, int _y, int who) {
-	if (board[_y][_x] != 0)return false;
+bool GameScene::Can_put(int _x, int _y, int who, int _board[8][8]) {
+	if (_board[_y][_x] != 0)return false;
 	for (int i = 0; i < 8; i++) {
-		if (Can_put_details(_x, _y, who, i)) {
+		if (Can_put_details(_x, _y, who, i, _board)) {
 			return true;
 		}
 	}
 	return false;
 }
 
-bool GameScene::Can_put_details(int _x, int _y, int who, int vec_type) {
+bool GameScene::Can_put_details(int _x, int _y, int who, int vec_type, int _board[8][8]) {
 	int x = _x + vec_x[vec_type];
 	int y = _y + vec_y[vec_type];
 	int temp_x = x, temp_y = y;
 	bool first_checker = false;
 	while (temp_x >= 0 && temp_x < 8 && temp_y >= 0 && temp_y < 8) {
-		if (board[temp_y][temp_x] == 0)break;
+		if (_board[temp_y][temp_x] == 0)break;
 		if (!first_checker) {
-			if (board[temp_y][temp_x] != who) {
+			if (_board[temp_y][temp_x] != who) {
 				first_checker = true;
 			}
 			else {
@@ -134,7 +216,7 @@ bool GameScene::Can_put_details(int _x, int _y, int who, int vec_type) {
 			}
 		}
 		else {
-			if (board[temp_y][temp_x] == who) {
+			if (_board[temp_y][temp_x] == who) {
 				return true;
 			}
 		}
@@ -144,18 +226,24 @@ bool GameScene::Can_put_details(int _x, int _y, int who, int vec_type) {
 	return false;
 }
 
-void GameScene::Next_order() {
-	if (order_count == 4)order_count = 1;
-	else order_count++;
+void GameScene::Next_order(int* _order_count) {
+	if (*_order_count == 4)*_order_count = 1;
+	else (*_order_count)++;
 }
 
-void GameScene::Board_change(int _x, int _y, int who) {
-	board[_y][_x] = who;
+int GameScene::Return_Next_order(int _order_count) {
+	if (_order_count == 4)_order_count = 1;
+	else _order_count++;
+	return _order_count;
+}
+
+void GameScene::Board_change(int _x, int _y, int who, int _board[8][8]) {
+	_board[_y][_x] = who;
 	for (int i = 0; i < 8; i++) {
-		if (Can_put_details(_x, _y, who, i)) {
+		if (Can_put_details(_x, _y, who, i, _board)) {
 			int temp_x = _x + vec_x[i], temp_y = _y + vec_y[i];
-			while (board[temp_y][temp_x] != who) {
-				board[temp_y][temp_x] = who;
+			while (_board[temp_y][temp_x] != who) {
+				_board[temp_y][temp_x] = who;
 				temp_x += vec_x[i];
 				temp_y += vec_y[i];
 			}
