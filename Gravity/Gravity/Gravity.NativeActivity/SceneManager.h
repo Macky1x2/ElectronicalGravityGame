@@ -9,7 +9,6 @@ public:
 	SceneManager(shared_ptr<SceneBase> initialScene)
 		:currentScene(initialScene){}
 	void Update() {
-		//次のシーンが代入されていれば遷移
 		if (currentScene->nextScene) {
 			currentScene = move(currentScene->nextScene);
 		}

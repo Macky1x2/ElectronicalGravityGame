@@ -93,15 +93,12 @@ void GameScene::Enemy() {
 		}
 	}
 	if (can_place.size() > 0) {
-		int* point = new int[can_place.size()];
-		for (int i = 0; i < can_place.size(); i++) {
-			point[i] = Enemy_cal(give_board, can_place[i].first, can_place[i].second, order_count, 1, false, 0);
-		}
-		int max = point[0];
+		int max = NOT_COMPARE;
 		int max_num = 0;
-		for (int i = 1; i < can_place.size(); i++) {
-			if (point[i] > max) {
-				max = point[i];
+		for (int i = 0; i < can_place.size(); i++) {
+			int temp = Enemy_cal(give_board, can_place[i].first, can_place[i].second, order_count, 1, false, 0, 1, max);
+			if (temp > max||i==0) {
+				max = temp;
 				max_num = i;
 			}
 		}
@@ -110,7 +107,7 @@ void GameScene::Enemy() {
 	}
 }
 
-int GameScene::Enemy_cal(Board _board,int _x,int _y, int _order_count, int deep, bool changed, int loop_count) {
+int GameScene::Enemy_cal(Board _board,int _x,int _y, int _order_count, int deep, bool changed, int loop_count, int type, int ab) {		//type 0:通常, 1:最大→最小, 2:最小→最大
 	if (loop_count == 4)return Evaluate_board(_board.board, order[order_count]);
 	if (!changed) {
 		Board_change(_x, _y, order[_order_count], _board.board);
@@ -126,27 +123,28 @@ int GameScene::Enemy_cal(Board _board,int _x,int _y, int _order_count, int deep,
 			}
 		}
 		if (can_place.size() > 0) {
-			int* point = new int[can_place.size()];
+			int min_max = NOT_COMPARE;
 			for (int i = 0; i < can_place.size(); i++) {
-				point[i] = Enemy_cal(_board, can_place[i].first, can_place[i].second, _order_count, deep + 1, false, 0);
-			}
-			int min_max = point[0];
-			for (int i = 1; i < can_place.size(); i++) {
+				if (ab != NOT_COMPARE) {
+					if (type == 1 && i != 0 && min_max <= ab)break;
+					if (type == 0 && i != 0 && min_max >= ab)break;
+				}
+				int temp = Enemy_cal(_board, can_place[i].first, can_place[i].second, _order_count, deep + 1, false, 0, (type + 1) % 4, min_max);
 				if (_order_count == order_count) {
-					if (point[i] > min_max) {
-						min_max = point[i];
+					if (temp > min_max||i==0) {
+						min_max = temp;
 					}
 				}
 				else {
-					if (point[i] < min_max) {
-						min_max = point[i];
+					if (temp < min_max||i==0) {
+						min_max = temp;
 					}
 				}
 			}
 			return min_max;
 		}
 		else {
-			return Enemy_cal(_board, _x, _y, _order_count, deep, true, loop_count + 1);
+			return Enemy_cal(_board, _x, _y, _order_count, deep, true, loop_count + 1, (type + 1) % 4, NOT_COMPARE);
 		}
 	}
 	else {

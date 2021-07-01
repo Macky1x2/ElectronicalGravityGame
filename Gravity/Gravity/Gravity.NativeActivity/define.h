@@ -1,4 +1,5 @@
 #pragma once
 #define ANDROID_WIDTH 1080
 #define ANDROID_HEIGHT 1920
-#define MIN_MAX_DEEP 5
+#define MIN_MAX_DEEP 7
+#define NOT_COMPARE 100000000

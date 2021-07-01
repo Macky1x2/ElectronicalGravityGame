@@ -25,7 +25,7 @@ public:
 	void Draw_Piece()const;
 	void Player();
 	void Enemy();
-	int Enemy_cal(Board, int, int, int, int, bool, int);
+	int Enemy_cal(Board, int, int, int, int, bool, int, int, int);
 	bool Can_put(int, int, int, int _board[8][8]);
 	bool Can_put_details(int, int, int, int, int _board[8][8]);		//最後の引数: vec_x[i]のi
 	void Next_order(int*);
