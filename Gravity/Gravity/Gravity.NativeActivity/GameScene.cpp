@@ -107,7 +107,7 @@ void GameScene::Enemy() {
 	}
 }
 
-int GameScene::Enemy_cal(Board _board,int _x,int _y, int _order_count, int deep, bool changed, int loop_count, int type, int ab) {		//type 0:通常, 1:最大→最小, 2:最小→最大
+int GameScene::Enemy_cal(Board _board,int _x,int _y, int _order_count, int deep, bool changed, int loop_count, int type, int ab) {		//type 1:最大→最小, 0:最小→最大
 	if (loop_count == 4)return Evaluate_board(_board.board, order[order_count]);
 	if (!changed) {
 		Board_change(_x, _y, order[_order_count], _board.board);
